@@ -1,0 +1,122 @@
+[
+  {
+    "id": "market_bigtech_cost_cutting",
+    "displayName": "大厂降本增效",
+    "newsText": "大厂开始重新估价可加班、低风险肉。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [],
+    "effects": [],
+    "effectText": "大厂开始重新估价可加班、低风险肉。"
+  },
+  {
+    "id": "market_crazy_literature_hot",
+    "displayName": "发疯文学走红",
+    "newsText": "流量端追捧会发疯和抽象标签。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [],
+    "effects": [],
+    "effectText": "流量端追捧会发疯和抽象标签。"
+  },
+  {
+    "id": "market_spring_matchmaking_season",
+    "displayName": "春季相亲旺季",
+    "newsText": "稳定、体面、情绪稳定需求上涨。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [],
+    "effects": [],
+    "effectText": "稳定、体面、情绪稳定需求上涨。"
+  },
+  {
+    "id": "market_elite_fake_scandal",
+    "displayName": "名校水货翻车",
+    "newsText": "名校与水货组合被重点审视。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [],
+    "effects": [],
+    "effectText": "名校与水货组合被重点审视。"
+  },
+  {
+    "id": "market_labor_dispute_trending",
+    "displayName": "劳动纠纷上热搜",
+    "newsText": "维权意识和低薪接受组合风险提高。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [],
+    "effects": [],
+    "effectText": "维权意识和低薪接受组合风险提高。"
+  },
+  {
+    "id": "market_platform_persona_crackdown",
+    "displayName": "平台整治虚假人设",
+    "newsText": "空心人设与争议包装风险提高。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [],
+    "effects": [],
+    "effectText": "空心人设与争议包装风险提高。"
+  },
+  {
+    "id": "market_parent_decency_panic",
+    "displayName": "家长圈体面恐慌",
+    "newsText": "体面、安全、熟人背书需求上涨。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [],
+    "effects": [],
+    "effectText": "体面、安全、熟人背书需求上涨。"
+  },
+  {
+    "id": "market_returnee_value_correction",
+    "displayName": "海归身价回调",
+    "newsText": "海归溢价下降，水货风险更敏感。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [],
+    "effects": [],
+    "effectText": "海归溢价下降，水货风险更敏感。"
+  },
+  {
+    "id": "market_small_town_grind_story",
+    "displayName": "小镇做题家叙事回暖",
+    "newsText": "小镇做题家和抗压更受关注。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [],
+    "effects": [],
+    "effectText": "小镇做题家和抗压更受关注。"
+  },
+  {
+    "id": "market_startup_survival_mode",
+    "displayName": "创业公司生存模式",
+    "newsText": "创业老板偏好低价、加班、抗压组合。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [],
+    "effects": [],
+    "effectText": "创业老板偏好低价、加班、抗压组合。"
+  },
+  {
+    "id": "market_anti_work_discussion",
+    "displayName": "反内卷讨论升温",
+    "newsText": "低薪接受与能加班叙事变得更危险。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [],
+    "effects": [],
+    "effectText": "低薪接受与能加班叙事变得更危险。"
+  },
+  {
+    "id": "market_controversy_carnival",
+    "displayName": "争议流量狂欢",
+    "newsText": "争议、反骨、抽象带来更高价格和风险。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [],
+    "effects": [],
+    "effectText": "争议、反骨、抽象带来更高价格和风险。"
+  }
+]

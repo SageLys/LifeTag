@@ -1,0 +1,372 @@
+[
+  {
+    "id": "reward_add_card_low_salary_pitch",
+    "rewardType": "add_card",
+    "description": "获得卡牌：低薪叙事包装",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_low_salary_pitch"
+    }
+  },
+  {
+    "id": "reward_add_card_decent_package",
+    "rewardType": "add_card",
+    "description": "获得卡牌：体面包装",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_decent_package"
+    }
+  },
+  {
+    "id": "reward_add_card_crazy_persona",
+    "rewardType": "add_card",
+    "description": "获得卡牌：发疯人设",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_crazy_persona"
+    }
+  },
+  {
+    "id": "reward_add_card_elite_endorsement",
+    "rewardType": "add_card",
+    "description": "获得卡牌：名校背书",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_elite_endorsement"
+    }
+  },
+  {
+    "id": "reward_add_card_background_check",
+    "rewardType": "add_card",
+    "description": "获得卡牌：背调预检",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_background_check"
+    }
+  },
+  {
+    "id": "reward_add_card_pr_package",
+    "rewardType": "add_card",
+    "description": "获得卡牌：公关包装",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_pr_package"
+    }
+  },
+  {
+    "id": "reward_add_card_black_red_plan",
+    "rewardType": "add_card",
+    "description": "获得卡牌：黑红方案",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_black_red_plan"
+    }
+  },
+  {
+    "id": "reward_add_card_platform_hedge",
+    "rewardType": "add_card",
+    "description": "获得卡牌：平台对冲",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_platform_hedge"
+    }
+  },
+  {
+    "id": "reward_add_card_draw_two_filter_one",
+    "rewardType": "add_card",
+    "description": "获得卡牌：抽二滤一",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_draw_two_filter_one"
+    }
+  },
+  {
+    "id": "reward_add_card_hidden_label_probe",
+    "rewardType": "add_card",
+    "description": "获得卡牌：隐藏标签探针",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_hidden_label_probe"
+    }
+  },
+  {
+    "id": "reward_add_card_cheap_source_hunt",
+    "rewardType": "add_card",
+    "description": "获得卡牌：低价货源搜罗",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_cheap_source_hunt"
+    }
+  },
+  {
+    "id": "reward_add_card_duplicate_next_tag_tool",
+    "rewardType": "add_card",
+    "description": "获得卡牌：复读包装机",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_duplicate_next_tag_tool"
+    }
+  },
+  {
+    "id": "reward_upgrade_low_salary_pitch",
+    "rewardType": "upgrade_card",
+    "description": "升级卡牌：低薪叙事包装",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_low_salary_pitch"
+    }
+  },
+  {
+    "id": "reward_upgrade_decent_package",
+    "rewardType": "upgrade_card",
+    "description": "升级卡牌：体面包装",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_decent_package"
+    }
+  },
+  {
+    "id": "reward_upgrade_background_check",
+    "rewardType": "upgrade_card",
+    "description": "升级卡牌：背调预检",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_background_check"
+    }
+  },
+  {
+    "id": "reward_upgrade_pr_package",
+    "rewardType": "upgrade_card",
+    "description": "升级卡牌：公关包装",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_pr_package"
+    }
+  },
+  {
+    "id": "reward_upgrade_platform_hedge",
+    "rewardType": "upgrade_card",
+    "description": "升级卡牌：平台对冲",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_platform_hedge"
+    }
+  },
+  {
+    "id": "reward_upgrade_hidden_label_probe",
+    "rewardType": "upgrade_card",
+    "description": "升级卡牌：隐藏标签探针",
+    "weight": 100,
+    "payload": {
+      "cardId": "card_hidden_label_probe"
+    }
+  },
+  {
+    "id": "reward_remove_basic_noise",
+    "rewardType": "remove_card",
+    "description": "移除一张基础噪音卡",
+    "weight": 100,
+    "payload": {}
+  },
+  {
+    "id": "reward_remove_low_value_tool",
+    "rewardType": "remove_card",
+    "description": "移除一张低价值工具卡",
+    "weight": 100,
+    "payload": {}
+  },
+  {
+    "id": "reward_remove_risky_tool",
+    "rewardType": "remove_card",
+    "description": "移除一张高风险工具卡",
+    "weight": 100,
+    "payload": {}
+  },
+  {
+    "id": "reward_passive_black_red_is_red",
+    "rewardType": "add_passive",
+    "description": "获得被动：黑红也是红",
+    "weight": 100,
+    "payload": {
+      "passiveId": "passive_black_red_is_red"
+    }
+  },
+  {
+    "id": "reward_passive_wash_line",
+    "rewardType": "add_passive",
+    "description": "获得被动：洗标流水线",
+    "weight": 100,
+    "payload": {
+      "passiveId": "passive_wash_line"
+    }
+  },
+  {
+    "id": "reward_passive_bigtech_endorsement",
+    "rewardType": "add_passive",
+    "description": "获得被动：大厂背书",
+    "weight": 100,
+    "payload": {
+      "passiveId": "passive_bigtech_endorsement"
+    }
+  },
+  {
+    "id": "reward_passive_black_box_king",
+    "rewardType": "add_passive",
+    "description": "获得被动：盲盒之王",
+    "weight": 100,
+    "payload": {
+      "passiveId": "passive_black_box_king"
+    }
+  },
+  {
+    "id": "reward_passive_background_outsource",
+    "rewardType": "add_passive",
+    "description": "获得被动：背调外包",
+    "weight": 100,
+    "payload": {
+      "passiveId": "passive_background_outsource"
+    }
+  },
+  {
+    "id": "reward_passive_acquaintance_society",
+    "rewardType": "add_passive",
+    "description": "获得被动：熟人社会",
+    "weight": 100,
+    "payload": {
+      "passiveId": "passive_acquaintance_society"
+    }
+  },
+  {
+    "id": "reward_passive_parent_safe_pack",
+    "rewardType": "add_passive",
+    "description": "获得被动：家长安心包",
+    "weight": 100,
+    "payload": {
+      "passiveId": "passive_parent_safe_pack"
+    }
+  },
+  {
+    "id": "reward_passive_platform_grey_operation",
+    "rewardType": "add_passive",
+    "description": "获得被动：平台灰产运营",
+    "weight": 100,
+    "payload": {
+      "passiveId": "passive_platform_grey_operation"
+    }
+  },
+  {
+    "id": "reward_passive_low_salary_scaling",
+    "rewardType": "add_passive",
+    "description": "获得被动：低薪规模化",
+    "weight": 100,
+    "payload": {
+      "passiveId": "passive_low_salary_scaling"
+    }
+  },
+  {
+    "id": "reward_passive_public_opinion_stoploss",
+    "rewardType": "add_passive",
+    "description": "获得被动：舆情止损",
+    "weight": 100,
+    "payload": {
+      "passiveId": "passive_public_opinion_stoploss"
+    }
+  },
+  {
+    "id": "reward_supply_bigtech_leftover",
+    "rewardType": "add_supply_source",
+    "description": "新增货源：大厂边角料",
+    "weight": 100,
+    "payload": {
+      "supplySourceId": "supply_bigtech_leftover"
+    }
+  },
+  {
+    "id": "reward_supply_startup_clearance",
+    "rewardType": "add_supply_source",
+    "description": "新增货源：创业公司清仓",
+    "weight": 100,
+    "payload": {
+      "supplySourceId": "supply_startup_clearance"
+    }
+  },
+  {
+    "id": "reward_supply_matchmaking_channel",
+    "rewardType": "add_supply_source",
+    "description": "新增货源：相亲渠道货",
+    "weight": 100,
+    "payload": {
+      "supplySourceId": "supply_matchmaking_channel"
+    }
+  },
+  {
+    "id": "reward_supply_short_video_farm",
+    "rewardType": "add_supply_source",
+    "description": "新增货源：短视频养殖场",
+    "weight": 100,
+    "payload": {
+      "supplySourceId": "supply_short_video_farm"
+    }
+  },
+  {
+    "id": "reward_supply_returnee_packager",
+    "rewardType": "add_supply_source",
+    "description": "新增货源：海归包装商",
+    "weight": 100,
+    "payload": {
+      "supplySourceId": "supply_returnee_packager"
+    }
+  },
+  {
+    "id": "reward_supply_black_box_wholesale",
+    "rewardType": "add_supply_source",
+    "description": "新增货源：黑箱批发",
+    "weight": 100,
+    "payload": {
+      "supplySourceId": "supply_black_box_wholesale"
+    }
+  },
+  {
+    "id": "reward_gain_cash_30",
+    "rewardType": "gain_cash",
+    "description": "立即获得 30 资金",
+    "weight": 100,
+    "payload": {
+      "amount": 30
+    }
+  },
+  {
+    "id": "reward_gain_cash_50",
+    "rewardType": "gain_cash",
+    "description": "立即获得 50 资金",
+    "weight": 100,
+    "payload": {
+      "amount": 50
+    }
+  },
+  {
+    "id": "reward_gain_reputation_10",
+    "rewardType": "gain_reputation",
+    "description": "立即获得 10 声誉",
+    "weight": 100,
+    "payload": {
+      "amount": 10
+    }
+  },
+  {
+    "id": "reward_gain_insurance_1",
+    "rewardType": "gain_insurance",
+    "description": "获得 1 次事故保险",
+    "weight": 100,
+    "payload": {
+      "amount": 1
+    }
+  },
+  {
+    "id": "reward_reduce_next_risk",
+    "rewardType": "temporary_modifier",
+    "description": "下一次交易风险降低",
+    "weight": 100,
+    "payload": {}
+  }
+]

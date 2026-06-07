@@ -1,0 +1,218 @@
+[
+  {
+    "id": "tag_young",
+    "displayName": "年轻",
+    "category": "age / career",
+    "baseValue": 15,
+    "riskValue": 0,
+    "isNegative": false,
+    "isWashable": false
+  },
+  {
+    "id": "tag_elite_school",
+    "displayName": "名校",
+    "category": "education / status",
+    "baseValue": 20,
+    "riskValue": 5,
+    "isNegative": false,
+    "isWashable": false
+  },
+  {
+    "id": "tag_overtime",
+    "displayName": "能加班",
+    "category": "career / labor",
+    "baseValue": 20,
+    "riskValue": 5,
+    "isNegative": false,
+    "isWashable": true
+  },
+  {
+    "id": "tag_low_salary_acceptance",
+    "displayName": "低薪接受",
+    "category": "career / labor",
+    "baseValue": 15,
+    "riskValue": 10,
+    "isNegative": false,
+    "isWashable": true
+  },
+  {
+    "id": "tag_stable",
+    "displayName": "稳定",
+    "category": "family / personality",
+    "baseValue": 15,
+    "riskValue": 0,
+    "isNegative": false,
+    "isWashable": false
+  },
+  {
+    "id": "tag_decent",
+    "displayName": "体面",
+    "category": "family / status",
+    "baseValue": 20,
+    "riskValue": 5,
+    "isNegative": false,
+    "isWashable": true
+  },
+  {
+    "id": "tag_crazy",
+    "displayName": "会发疯",
+    "category": "flow / negative",
+    "baseValue": 25,
+    "riskValue": 25,
+    "isNegative": true,
+    "isWashable": true
+  },
+  {
+    "id": "tag_absurd",
+    "displayName": "抽象",
+    "category": "flow / negative",
+    "baseValue": 20,
+    "riskValue": 20,
+    "isNegative": true,
+    "isWashable": true
+  },
+  {
+    "id": "tag_fake_quality",
+    "displayName": "水货",
+    "category": "fraud / negative",
+    "baseValue": -10,
+    "riskValue": 30,
+    "isNegative": true,
+    "isWashable": true
+  },
+  {
+    "id": "tag_rights_awareness",
+    "displayName": "维权意识强",
+    "category": "labor / negative",
+    "baseValue": -5,
+    "riskValue": 25,
+    "isNegative": true,
+    "isWashable": true
+  },
+  {
+    "id": "tag_empty_persona",
+    "displayName": "空心人设",
+    "category": "persona / negative",
+    "baseValue": 5,
+    "riskValue": 25,
+    "isNegative": true,
+    "isWashable": true
+  },
+  {
+    "id": "tag_age_35_plus",
+    "displayName": "35+",
+    "category": "age / career",
+    "baseValue": 5,
+    "riskValue": 15,
+    "isNegative": true,
+    "isWashable": false
+  },
+  {
+    "id": "tag_outsider",
+    "displayName": "外地人",
+    "category": "background / career",
+    "baseValue": 10,
+    "riskValue": 5,
+    "isNegative": false,
+    "isWashable": false
+  },
+  {
+    "id": "tag_resilient",
+    "displayName": "抗压",
+    "category": "career / personality",
+    "baseValue": 20,
+    "riskValue": 5,
+    "isNegative": false,
+    "isWashable": true
+  },
+  {
+    "id": "tag_small_town_grinder",
+    "displayName": "小镇做题家",
+    "category": "education / career",
+    "baseValue": 20,
+    "riskValue": 10,
+    "isNegative": false,
+    "isWashable": false
+  },
+  {
+    "id": "tag_experienced",
+    "displayName": "经验丰富",
+    "category": "career / skill",
+    "baseValue": 20,
+    "riskValue": 10,
+    "isNegative": false,
+    "isWashable": false
+  },
+  {
+    "id": "tag_oversea_returnee",
+    "displayName": "海归",
+    "category": "status / family",
+    "baseValue": 25,
+    "riskValue": 10,
+    "isNegative": false,
+    "isWashable": false
+  },
+  {
+    "id": "tag_emotionally_stable",
+    "displayName": "情绪稳定",
+    "category": "family / personality",
+    "baseValue": 20,
+    "riskValue": 0,
+    "isNegative": false,
+    "isWashable": true
+  },
+  {
+    "id": "tag_social_savvy",
+    "displayName": "会来事",
+    "category": "family / social",
+    "baseValue": 15,
+    "riskValue": 5,
+    "isNegative": false,
+    "isWashable": true
+  },
+  {
+    "id": "tag_controversial",
+    "displayName": "争议感",
+    "category": "flow / negative",
+    "baseValue": 25,
+    "riskValue": 25,
+    "isNegative": true,
+    "isWashable": true
+  },
+  {
+    "id": "tag_rebellious",
+    "displayName": "反骨",
+    "category": "flow / labor / negative",
+    "baseValue": 15,
+    "riskValue": 25,
+    "isNegative": true,
+    "isWashable": true
+  },
+  {
+    "id": "tag_fragile_heart",
+    "displayName": "玻璃心",
+    "category": "persona / negative",
+    "baseValue": 5,
+    "riskValue": 20,
+    "isNegative": true,
+    "isWashable": true
+  },
+  {
+    "id": "tag_job_hopping_risk",
+    "displayName": "跳槽风险高",
+    "category": "career / negative",
+    "baseValue": -5,
+    "riskValue": 25,
+    "isNegative": true,
+    "isWashable": true
+  },
+  {
+    "id": "tag_boring",
+    "displayName": "无聊",
+    "category": "flow / negative",
+    "baseValue": -5,
+    "riskValue": 5,
+    "isNegative": true,
+    "isWashable": true
+  }
+]

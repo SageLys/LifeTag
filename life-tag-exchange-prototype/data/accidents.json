@@ -1,0 +1,47 @@
+[
+  {
+    "id": "accident_none",
+    "level": "none",
+    "displayName": "无事故",
+    "minRisk": 0,
+    "maxRisk": 29,
+    "loss": 0,
+    "accidentText": "没有发生明显事故。"
+  },
+  {
+    "id": "accident_minor",
+    "level": "minor",
+    "displayName": "轻微事故",
+    "minRisk": 30,
+    "maxRisk": 49,
+    "loss": 10,
+    "accidentText": "轻微售后争议。"
+  },
+  {
+    "id": "accident_medium",
+    "level": "medium",
+    "displayName": "中等事故",
+    "minRisk": 50,
+    "maxRisk": 69,
+    "loss": 25,
+    "accidentText": "舆情或客户投诉开始发酵。"
+  },
+  {
+    "id": "accident_major",
+    "level": "major",
+    "displayName": "重大事故",
+    "minRisk": 70,
+    "maxRisk": 89,
+    "loss": 45,
+    "accidentText": "爆雷造成明显损失。"
+  },
+  {
+    "id": "accident_severe",
+    "level": "severe",
+    "displayName": "严重事故",
+    "minRisk": 90,
+    "maxRisk": 999,
+    "loss": 70,
+    "accidentText": "严重爆雷，店铺承压。"
+  }
+]

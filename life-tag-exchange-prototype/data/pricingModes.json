@@ -1,0 +1,34 @@
+[
+  {
+    "id": "pricing_cheap",
+    "displayName": "便宜卖",
+    "mode": "cheap",
+    "priceMultiplier": 0.8,
+    "riskDelta": -10,
+    "successDelta": 15
+  },
+  {
+    "id": "pricing_normal",
+    "displayName": "正常卖",
+    "mode": "normal",
+    "priceMultiplier": 1,
+    "riskDelta": 0,
+    "successDelta": 0
+  },
+  {
+    "id": "pricing_high",
+    "displayName": "高价卖",
+    "mode": "high",
+    "priceMultiplier": 1.25,
+    "riskDelta": 10,
+    "successDelta": -10
+  },
+  {
+    "id": "pricing_blind_box",
+    "displayName": "盲盒卖",
+    "mode": "blind_box",
+    "priceMultiplier": 1.1,
+    "riskDelta": 15,
+    "successDelta": 5
+  }
+]

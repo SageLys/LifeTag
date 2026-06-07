@@ -1,0 +1,118 @@
+[
+  {
+    "id": "customer_bigtech_hr",
+    "displayName": "大厂 HR",
+    "description": "要体面、稳定、可控的职场标签组合。",
+    "preferredTagIds": [
+      "tag_young",
+      "tag_elite_school",
+      "tag_overtime",
+      "tag_resilient",
+      "tag_small_town_grinder"
+    ],
+    "tabooTagIds": [
+      "tag_crazy",
+      "tag_rights_awareness",
+      "tag_fake_quality",
+      "tag_job_hopping_risk"
+    ],
+    "riskTolerance": 40,
+    "priceSensitivity": 50,
+    "preferredPricingModeIds": [
+      "pricing_normal",
+      "pricing_high"
+    ]
+  },
+  {
+    "id": "customer_startup_boss",
+    "displayName": "创业老板",
+    "description": "压成本、要执行、愿意赌一点风险。",
+    "preferredTagIds": [
+      "tag_overtime",
+      "tag_low_salary_acceptance",
+      "tag_resilient",
+      "tag_experienced"
+    ],
+    "tabooTagIds": [
+      "tag_rights_awareness",
+      "tag_fragile_heart",
+      "tag_job_hopping_risk"
+    ],
+    "riskTolerance": 55,
+    "priceSensitivity": 70,
+    "preferredPricingModeIds": [
+      "pricing_cheap",
+      "pricing_normal"
+    ]
+  },
+  {
+    "id": "customer_matchmaker",
+    "displayName": "相亲中介",
+    "description": "偏好稳定、体面、情绪稳定的包装。",
+    "preferredTagIds": [
+      "tag_stable",
+      "tag_decent",
+      "tag_emotionally_stable",
+      "tag_oversea_returnee",
+      "tag_social_savvy"
+    ],
+    "tabooTagIds": [
+      "tag_crazy",
+      "tag_absurd",
+      "tag_empty_persona",
+      "tag_fragile_heart"
+    ],
+    "riskTolerance": 35,
+    "priceSensitivity": 45,
+    "preferredPricingModeIds": [
+      "pricing_normal",
+      "pricing_high"
+    ]
+  },
+  {
+    "id": "customer_parent_committee",
+    "displayName": "家长委员会",
+    "description": "重视安全、熟人评价和家庭叙事。",
+    "preferredTagIds": [
+      "tag_stable",
+      "tag_decent",
+      "tag_emotionally_stable",
+      "tag_social_savvy",
+      "tag_small_town_grinder"
+    ],
+    "tabooTagIds": [
+      "tag_fake_quality",
+      "tag_rebellious",
+      "tag_controversial",
+      "tag_crazy"
+    ],
+    "riskTolerance": 30,
+    "priceSensitivity": 40,
+    "preferredPricingModeIds": [
+      "pricing_normal"
+    ]
+  },
+  {
+    "id": "customer_short_video_mcn",
+    "displayName": "短视频 MCN",
+    "description": "追求流量和争议，但害怕平台事故。",
+    "preferredTagIds": [
+      "tag_absurd",
+      "tag_crazy",
+      "tag_controversial",
+      "tag_rebellious",
+      "tag_empty_persona"
+    ],
+    "tabooTagIds": [
+      "tag_boring",
+      "tag_stable",
+      "tag_emotionally_stable"
+    ],
+    "riskTolerance": 65,
+    "priceSensitivity": 55,
+    "preferredPricingModeIds": [
+      "pricing_normal",
+      "pricing_blind_box"
+    ]
+  }
+]

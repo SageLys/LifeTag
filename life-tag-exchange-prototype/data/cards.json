@@ -1,0 +1,306 @@
+[
+  {
+    "id": "card_low_salary_pitch",
+    "displayName": "低薪叙事包装",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "给商品添加或强化“低薪接受”叙事。"
+  },
+  {
+    "id": "card_decent_package",
+    "displayName": "体面包装",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "给商品添加或强化“体面”叙事。"
+  },
+  {
+    "id": "card_crazy_persona",
+    "displayName": "发疯人设",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "给商品添加或强化“会发疯”标签。"
+  },
+  {
+    "id": "card_elite_endorsement",
+    "displayName": "名校背书",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "给商品添加或强化“名校”标签。"
+  },
+  {
+    "id": "card_struggle_narrative",
+    "displayName": "奋斗叙事",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "强化年轻、小镇做题家、抗压方向。"
+  },
+  {
+    "id": "card_emotional_stability_cert",
+    "displayName": "情绪稳定证明",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "给商品添加或强化“情绪稳定”标签。"
+  },
+  {
+    "id": "card_high_end_talent_label",
+    "displayName": "高端人才标签",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "强化名校、海归、体面方向。"
+  },
+  {
+    "id": "card_overtime_glory",
+    "displayName": "加班光荣",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "给商品添加或强化“能加班”标签。"
+  },
+  {
+    "id": "card_family_friendly_package",
+    "displayName": "家庭友好包装",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "强化稳定、会来事、体面方向。"
+  },
+  {
+    "id": "card_resilience_medal",
+    "displayName": "抗压勋章",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "给商品添加或强化“抗压”标签。"
+  },
+  {
+    "id": "card_controversy_hook",
+    "displayName": "争议钩子",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "给商品添加或强化“争议感”标签。"
+  },
+  {
+    "id": "card_returnee_aura",
+    "displayName": "海归光环",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "给商品添加或强化“海归”标签。"
+  },
+  {
+    "id": "card_social_savvy_script",
+    "displayName": "会来事话术",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "给商品添加或强化“会来事”标签。"
+  },
+  {
+    "id": "card_small_town_success_story",
+    "displayName": "小镇逆袭故事",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "给商品添加或强化“小镇做题家”标签。"
+  },
+  {
+    "id": "card_boring_but_safe",
+    "displayName": "无聊但安全",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "给商品添加或强化“无聊”标签。"
+  },
+  {
+    "id": "card_rebellious_spirit_package",
+    "displayName": "反骨精神包装",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "给商品添加或强化“反骨”标签。"
+  },
+  {
+    "id": "card_no_complaint_promise",
+    "displayName": "不投诉承诺",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "压低维权叙事，强化低薪接受。"
+  },
+  {
+    "id": "card_meme_packaging",
+    "displayName": "梗化包装",
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effects": [],
+    "effectText": "强化抽象或争议方向。"
+  },
+  {
+    "id": "card_background_check",
+    "displayName": "背调预检",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "预先查看或降低职业背景类暗风险。"
+  },
+  {
+    "id": "card_trial_transfer",
+    "displayName": "试用期转嫁",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "处理试用期相关风险。"
+  },
+  {
+    "id": "card_pr_package",
+    "displayName": "公关包装",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "降低人设与平台侧风险。"
+  },
+  {
+    "id": "card_hot_search_warmup",
+    "displayName": "热搜预热",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "提升流量标签价格，同时增加风险。"
+  },
+  {
+    "id": "card_risk_underwriting",
+    "displayName": "风险承保",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "为一次交易提供事故缓冲。"
+  },
+  {
+    "id": "card_file_deletion",
+    "displayName": "黑历史删除",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "处理旧料或人设相关风险。"
+  },
+  {
+    "id": "card_parent_background_check",
+    "displayName": "家长背调",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "面向家长委员会降低风险。"
+  },
+  {
+    "id": "card_decent_repair",
+    "displayName": "体面修补",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "修补体面相关冲突。"
+  },
+  {
+    "id": "card_acquaintance_guarantee",
+    "displayName": "熟人担保",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "降低相亲和家长客户的疑虑。"
+  },
+  {
+    "id": "card_black_red_plan",
+    "displayName": "黑红方案",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "提高流量价格并承担额外风险。"
+  },
+  {
+    "id": "card_platform_hedge",
+    "displayName": "平台对冲",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "降低平台事故影响。"
+  },
+  {
+    "id": "card_seal_package",
+    "displayName": "封口套餐",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "降低爆雷后的事故升级。"
+  },
+  {
+    "id": "card_draw_two_filter_one",
+    "displayName": "抽二滤一",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "补充手牌并筛选。"
+  },
+  {
+    "id": "card_emergency_refund_talk",
+    "displayName": "紧急退款话术",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "事故后降低损失。"
+  },
+  {
+    "id": "card_cheap_source_hunt",
+    "displayName": "低价货源搜罗",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "降低进货成本。"
+  },
+  {
+    "id": "card_legalese_cover",
+    "displayName": "免责话术",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "降低交易后追责风险。"
+  },
+  {
+    "id": "card_shadow_pr",
+    "displayName": "影子公关",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "隐藏或转移部分负面信息。"
+  },
+  {
+    "id": "card_reputation_exchange",
+    "displayName": "口碑置换",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "用价格换取更低风险。"
+  },
+  {
+    "id": "card_hidden_label_probe",
+    "displayName": "隐藏标签探针",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "查看隐藏标签。"
+  },
+  {
+    "id": "card_duplicate_next_tag_tool",
+    "displayName": "复读包装机",
+    "cardType": "operation",
+    "cost": 2,
+    "effects": [],
+    "effectText": "复制下一张标签工具效果。"
+  }
+]

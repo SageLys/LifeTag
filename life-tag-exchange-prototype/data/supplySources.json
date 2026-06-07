@@ -1,0 +1,38 @@
+[
+  {
+    "id": "supply_bigtech_leftover",
+    "displayName": "大厂边角料",
+    "description": "偏向年轻、名校、加班、背调风险。",
+    "templateWeightModifiers": []
+  },
+  {
+    "id": "supply_startup_clearance",
+    "displayName": "创业公司清仓",
+    "description": "偏向低薪、加班、抗压、试用期风险。",
+    "templateWeightModifiers": []
+  },
+  {
+    "id": "supply_matchmaking_channel",
+    "displayName": "相亲渠道货",
+    "description": "偏向稳定、体面、情绪稳定、人设风险。",
+    "templateWeightModifiers": []
+  },
+  {
+    "id": "supply_short_video_farm",
+    "displayName": "短视频养殖场",
+    "description": "偏向抽象、争议、会发疯、平台风险。",
+    "templateWeightModifiers": []
+  },
+  {
+    "id": "supply_returnee_packager",
+    "displayName": "海归包装商",
+    "description": "偏向海归、体面、水货、熟人爆料。",
+    "templateWeightModifiers": []
+  },
+  {
+    "id": "supply_black_box_wholesale",
+    "displayName": "黑箱批发",
+    "description": "低价高风险，标签池更杂。",
+    "templateWeightModifiers": []
+  }
+]

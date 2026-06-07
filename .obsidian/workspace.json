@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "6adae8f4736aeaed",
+        "id": "f864fab76ae07bdb",
         "type": "tabs",
         "children": [
           {
-            "id": "e86960ec6536215d",
+            "id": "59775812e4fe8dac",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "devdoc/04_首版配置表说明.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "04_首版配置表说明"
+              "title": "新标签页"
             }
           }
         ]
@@ -94,7 +90,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "devdoc/04_首版配置表说明.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +99,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "04_首版配置表说明 的反向链接列表"
+              "title": "反向链接"
             }
           },
           {
@@ -113,12 +108,11 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "devdoc/04_首版配置表说明.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "04_首版配置表说明 的出链列表"
+              "title": "出链"
             }
           },
           {
@@ -142,13 +136,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "devdoc/04_首版配置表说明.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "04_首版配置表说明 的大纲"
+              "title": "大纲"
             }
           }
         ]
@@ -168,46 +161,50 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "e86960ec6536215d",
+  "active": "59775812e4fe8dac",
   "lastOpenFiles": [
+    "life-tag-exchange-prototype/vite-dev.err.log",
+    "life-tag-exchange-prototype/vite-dev.out.log",
+    "life-tag-exchange-prototype/dist/index.html",
+    "life-tag-exchange-prototype/dist/assets/index-fC-f5roP.js",
+    "life-tag-exchange-prototype/dist/assets/index-BCmc3tzg.css",
+    "life-tag-exchange-prototype/dist/assets",
+    "life-tag-exchange-prototype/dist/icons.svg",
+    "life-tag-exchange-prototype/dist/favicon.svg",
+    "life-tag-exchange-prototype/dist",
+    "life-tag-exchange-prototype/README.md",
+    "life-tag-exchange-prototype/src/styles/main.css",
+    "life-tag-exchange-prototype/src/ui/bindEvents.ts",
+    "life-tag-exchange-prototype/src/ui/render.ts",
+    "life-tag-exchange-prototype/src/ui/renderModal.ts",
+    "life-tag-exchange-prototype/data/_conversion_notes.md",
+    "devdoc/05_售价爆雷事故计算规格.md",
+    "life-tag-exchange-prototype/devdocs/09_Codex开发执行说明.md",
+    "life-tag-exchange-prototype/devdocs/08_测试用例与验收清单.md",
+    "life-tag-exchange-prototype/devdocs/07_HTML技术实现规格.md",
+    "life-tag-exchange-prototype/devdocs/06_UI页面与交互规格.md",
+    "life-tag-exchange-prototype/devdocs/05_售价爆雷事故计算规格.md",
+    "life-tag-exchange-prototype/devdocs/04_首版配置表说明.md",
+    "life-tag-exchange-prototype/devdocs/03_数据结构规格.md",
+    "life-tag-exchange-prototype/devdocs/02_系统规则规格.md",
+    "life-tag-exchange-prototype/devdocs/01_核心玩法流程规格.md",
+    "life-tag-exchange-prototype/devdocs/00_HTML原型范围说明.md",
+    "life-tag-exchange-prototype/node_modules/postcss/README.md",
+    "life-tag-exchange-prototype/node_modules/@rolldown/binding-win32-x64-msvc/README.md",
+    "life-tag-exchange-prototype/node_modules/picomatch/README.md",
+    "life-tag-exchange-prototype/node_modules/@rolldown/pluginutils/README.md",
+    "devdoc/07_HTML技术实现规格.md",
+    "devdoc/08_测试用例与验收清单.md",
+    "devdoc/09_Codex开发执行说明.md",
+    "devdoc/06_UI页面与交互规格.md",
     "devdoc/04_首版配置表说明.md",
-    "life-tag-exchange-prototype/package-lock.json",
-    "life-tag-exchange-prototype/node_modules/typescript/ThirdPartyNoticeText.txt",
-    "life-tag-exchange-prototype/node_modules/typescript/LICENSE.txt",
-    "life-tag-exchange-prototype/node_modules/typescript/lib/typescript.d.ts",
-    "life-tag-exchange-prototype/node_modules/typescript/lib/tsserverlibrary.d.ts",
-    "life-tag-exchange-prototype/node_modules/typescript/lib/lib.webworker.iterable.d.ts",
-    "life-tag-exchange-prototype/node_modules/typescript/lib/lib.webworker.importscripts.d.ts",
-    "life-tag-exchange-prototype/node_modules/typescript/lib/lib.webworker.d.ts",
-    "life-tag-exchange-prototype/node_modules/typescript/lib/lib.webworker.asynciterable.d.ts",
-    "life-tag-exchange-prototype/node_modules/typescript/lib/lib.scripthost.d.ts",
     "life-tag-exchange-prototype/node_modules/typescript/SECURITY.md",
     "life-tag-exchange-prototype/node_modules/typescript/README.md",
     "life-tag-exchange-prototype/node_modules/source-map-js/README.md",
-    "life-tag-exchange-prototype/node_modules/vite/README.md",
-    "life-tag-exchange-prototype/node_modules/vite/LICENSE.md",
-    "life-tag-exchange-prototype/node_modules/lightningcss-win32-x64-msvc/README.md",
-    "life-tag-exchange-prototype/node_modules/nanoid/README.md",
-    "life-tag-exchange-prototype/node_modules/lightningcss/README.md",
-    "life-tag-exchange-prototype/node_modules/detect-libc/README.md",
-    "life-tag-exchange-prototype/node_modules/fdir/README.md",
-    "life-tag-exchange-prototype/node_modules/@oxc-project/types/README.md",
-    "life-tag-exchange-prototype/node_modules/tinyglobby/README.md",
-    "life-tag-exchange-prototype/node_modules/picocolors/README.md",
-    "life-tag-exchange-prototype/node_modules/rolldown/README.md",
     "life-tag-exchange-prototype/src/assets/hero.png",
     "life-tag-exchange-prototype/src/assets/typescript.svg",
     "life-tag-exchange-prototype/src/assets/vite.svg",
     "life-tag-exchange-prototype/public/icons.svg",
-    "life-tag-exchange-prototype/public/favicon.svg",
-    "devdoc/03_数据结构规格.md",
-    "devdoc/02_系统规则规格.md",
-    "devdoc/01_核心玩法流程规格.md",
-    "devdoc/00_HTML原型范围说明.md",
-    "03_数据结构规格.md",
-    "02_系统规则规格.md",
-    "01_核心玩法流程规格.md",
-    "00_HTML原型范围说明.md",
-    "Prototype Scope.md"
+    "life-tag-exchange-prototype/public/favicon.svg"
   ]
 }

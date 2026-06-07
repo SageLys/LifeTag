@@ -1,0 +1,30 @@
+[
+  {
+    "id": "action_identify",
+    "displayName": "鉴定",
+    "description": "查看一个隐藏标签或暗风险线索。",
+    "dailyLimit": 1,
+    "effects": []
+  },
+  {
+    "id": "action_wash_tag",
+    "displayName": "洗标",
+    "description": "尝试移除或替换一个可洗标签。",
+    "dailyLimit": 1,
+    "effects": []
+  },
+  {
+    "id": "action_package",
+    "displayName": "包装",
+    "description": "提高商品卖相或添加包装类标签。",
+    "dailyLimit": 1,
+    "effects": []
+  },
+  {
+    "id": "action_pr",
+    "displayName": "公关",
+    "description": "降低风险或事故影响。",
+    "dailyLimit": 1,
+    "effects": []
+  }
+]

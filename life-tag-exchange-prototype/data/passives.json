@@ -1,0 +1,74 @@
+[
+  {
+    "id": "passive_black_red_is_red",
+    "displayName": "黑红也是红",
+    "effectText": "争议与抽象流量更容易卖出，但事故成本更高。",
+    "effects": []
+  },
+  {
+    "id": "passive_wash_line",
+    "displayName": "洗标流水线",
+    "effectText": "洗标类操作消耗降低。",
+    "effects": []
+  },
+  {
+    "id": "passive_bigtech_endorsement",
+    "displayName": "大厂背书",
+    "effectText": "大厂 HR 对部分标签出价提高。",
+    "effects": []
+  },
+  {
+    "id": "passive_black_box_king",
+    "displayName": "盲盒之王",
+    "effectText": "盲盒定价更有收益。",
+    "effects": []
+  },
+  {
+    "id": "passive_background_outsource",
+    "displayName": "背调外包",
+    "effectText": "职业背景类暗风险更容易提前处理。",
+    "effects": []
+  },
+  {
+    "id": "passive_acquaintance_society",
+    "displayName": "熟人社会",
+    "effectText": "相亲与家长渠道风险下降。",
+    "effects": []
+  },
+  {
+    "id": "passive_parent_safe_pack",
+    "displayName": "家长安心包",
+    "effectText": "稳定体面组合更受欢迎。",
+    "effects": []
+  },
+  {
+    "id": "passive_platform_grey_operation",
+    "displayName": "平台灰产运营",
+    "effectText": "平台风险可被部分转移。",
+    "effects": []
+  },
+  {
+    "id": "passive_low_salary_scaling",
+    "displayName": "低薪规模化",
+    "effectText": "低薪接受组合的利润提高。",
+    "effects": []
+  },
+  {
+    "id": "passive_risk_tier_pricing",
+    "displayName": "风险分层定价",
+    "effectText": "高风险商品可通过定价转移部分风险。",
+    "effects": []
+  },
+  {
+    "id": "passive_public_opinion_stoploss",
+    "displayName": "舆情止损",
+    "effectText": "事故后损失降低。",
+    "effects": []
+  },
+  {
+    "id": "passive_cold_chain_inventory",
+    "displayName": "冷链库存",
+    "effectText": "库存与进货波动更稳定。",
+    "effects": []
+  }
+]

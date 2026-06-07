@@ -1,0 +1,62 @@
+[
+  {
+    "id": "ending_debt_but_famous",
+    "displayName": "负债但出名",
+    "summaryText": "店铺亏了，但人人都知道你。",
+    "conditions": []
+  },
+  {
+    "id": "ending_small_profit_stable",
+    "displayName": "小赚稳定",
+    "summaryText": "你维持住了一个平庸但能活的摊位。",
+    "conditions": []
+  },
+  {
+    "id": "ending_black_red_empire",
+    "displayName": "黑红帝国",
+    "summaryText": "争议成为你的核心资产。",
+    "conditions": []
+  },
+  {
+    "id": "ending_parent_trusted_shop",
+    "displayName": "家长放心店",
+    "summaryText": "你成了家长圈的隐形基础设施。",
+    "conditions": []
+  },
+  {
+    "id": "ending_bigtech_supplier",
+    "displayName": "大厂稳定供应商",
+    "summaryText": "你进入了稳定但压抑的大厂供应链。",
+    "conditions": []
+  },
+  {
+    "id": "ending_accident_king",
+    "displayName": "事故之王",
+    "summaryText": "事故是你的成本，也是你的招牌。",
+    "conditions": []
+  },
+  {
+    "id": "ending_clean_shop",
+    "displayName": "干净小店",
+    "summaryText": "你把风险压得很低，也少赚了一些。",
+    "conditions": []
+  },
+  {
+    "id": "ending_empty_brand",
+    "displayName": "空心品牌",
+    "summaryText": "包装很成功，里面逐渐没人关心。",
+    "conditions": []
+  },
+  {
+    "id": "ending_failed_but_loud",
+    "displayName": "倒闭但很响",
+    "summaryText": "你没通关，但留下了一地热搜。",
+    "conditions": []
+  },
+  {
+    "id": "ending_meat_market_legend",
+    "displayName": "肉铺传说",
+    "summaryText": "你完成了 8 天周期，成为标签交易所的都市传说。",
+    "conditions": []
+  }
+]
