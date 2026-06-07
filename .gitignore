@@ -1,0 +1,30 @@
+# Node / Vite
+life-tag-exchange-prototype/node_modules/
+life-tag-exchange-prototype/dist/
+life-tag-exchange-prototype/.vite/
+
+# Environment files
+**/.env
+**/.env.*
+!**/.env.example
+
+# Logs
+**/*.log
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+
+# OS files
+**/.DS_Store
+**/Thumbs.db
+
+# Editor temporary files
+**/.vscode/*
+!**/.vscode/extensions.json
+!**/.vscode/settings.json
+
+# Temporary / cache
+**/.cache/
+**/tmp/
+**/temp/
