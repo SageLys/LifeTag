@@ -1,5 +1,8 @@
 import { RunPhase } from './constants';
+import { generateCustomerOrders } from './customerGenerator';
 import { createNewGame } from './gameState';
+import { generateMarketEvents } from './marketGenerator';
+import { generateProductCandidates } from './productGenerator';
 import type { AppRuntime, RunState } from './types';
 
 const NEXT_PHASE: Partial<Record<RunPhase, RunPhase>> = {
@@ -30,12 +33,29 @@ function clearPhaseSelections(state: RunState): void {
   state.dayState.currentDealPreview = null;
 }
 
+function ensurePhaseContent(app: AppRuntime): void {
+  switch (app.state.phase) {
+    case RunPhase.DayOpening:
+      generateMarketEvents(app);
+      break;
+    case RunPhase.DayPurchase:
+      generateProductCandidates(app);
+      break;
+    case RunPhase.DayCustomer:
+      generateCustomerOrders(app);
+      break;
+    default:
+      break;
+  }
+}
+
 function createEmptyDayState(app: AppRuntime, dayNumber: number): RunState['dayState'] {
   return {
     dayNumber,
     phase: RunPhase.DayOpening,
     actionPoints: app.configs.gameConfig.dailyActionPoints,
     marketEvent: null,
+    marketEvents: [],
     productCandidates: [],
     customerOrders: [],
     rewardOptions: [],
@@ -59,6 +79,7 @@ function createEmptyDayState(app: AppRuntime, dayNumber: number): RunState['dayS
 export function startNewRun(app: AppRuntime): void {
   const shouldLogRestart = app.state.phase !== RunPhase.RunInit;
   app.state = createNewGame(app.configs.gameConfig);
+  ensurePhaseContent(app);
 
   if (shouldLogRestart) {
     addRunLog(app.state, '重新开始新局。');
@@ -87,6 +108,7 @@ export function startNextDay(app: AppRuntime): void {
   syncPhase(state, RunPhase.DayOpening);
   addRunLog(state, `进入第 ${state.currentDay} 天。`);
   addRunLog(state, `第 ${state.currentDay} 天开店。`);
+  ensurePhaseContent(app);
 }
 
 export function advancePhase(app: AppRuntime): void {
@@ -112,6 +134,7 @@ export function advancePhase(app: AppRuntime): void {
   syncPhase(state, nextPhase);
   clearPhaseSelections(state);
   addRunLog(state, `阶段切换：${previousPhase} → ${nextPhase}。`);
+  ensurePhaseContent(app);
 }
 
 export function returnToProcess(app: AppRuntime): void {

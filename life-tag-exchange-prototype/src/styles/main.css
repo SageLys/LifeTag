@@ -247,6 +247,68 @@ p {
   font-size: 13px;
 }
 
+.item-list {
+  display: grid;
+  gap: 10px;
+}
+
+.item-card {
+  border: 1px solid #ece6dd;
+  border-radius: 8px;
+  padding: 12px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.item-card.is-selected {
+  border-color: #7b4f21;
+  box-shadow: 0 0 0 2px rgba(123, 79, 33, 0.12);
+}
+
+.item-card h3,
+.market-news h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.item-card p {
+  margin-bottom: 8px;
+}
+
+.item-card button {
+  width: 100%;
+  margin-top: 4px;
+}
+
+button:disabled {
+  border-color: #d0c7ba;
+  background: #ece6dd;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.item-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 8px 0 10px;
+}
+
+.item-stats div {
+  border-bottom: 1px solid #ece6dd;
+  padding-bottom: 5px;
+}
+
+.item-stats dt {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.item-stats dd {
+  margin: 2px 0 0;
+  font-weight: 800;
+}
+
 .fatal-error {
   width: min(960px, calc(100% - 32px));
   margin: 24px auto;

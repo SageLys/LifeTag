@@ -1,3 +1,4 @@
+import { selectCustomerOrder, selectProductCandidate } from '../core/actions';
 import { advancePhase, returnToProcess } from '../core/dayFlow';
 import type { AppRuntime } from '../core/types';
 import { renderApp } from './render';
@@ -21,6 +22,19 @@ export function bindEvents(app: AppRuntime): void {
 
     if (target.id === 'return-to-process') {
       returnToProcess(app);
+      renderApp(app);
+    }
+
+    const productCard = target.closest<HTMLElement>('[data-product-id]');
+    if (productCard) {
+      selectProductCandidate(app, productCard.dataset.productId ?? '');
+      renderApp(app);
+      return;
+    }
+
+    const customerCard = target.closest<HTMLElement>('[data-customer-order-id]');
+    if (customerCard) {
+      selectCustomerOrder(app, customerCard.dataset.customerOrderId ?? '');
       renderApp(app);
     }
   });

@@ -13,7 +13,7 @@ import { renderProductDetail } from './renderProductDetail';
 import { renderProducts } from './renderProducts';
 import { renderTopBar } from './renderTopBar';
 
-const DEVELOPMENT_STAGE = 'P0-2：新局初始化与每日阶段状态机';
+const DEVELOPMENT_STAGE = 'P0-3：每日市场新闻、商品候选、顾客订单生成';
 
 export function renderApp(app: AppRuntime): void {
   const root = document.querySelector<HTMLDivElement>('#app');
@@ -49,7 +49,7 @@ export function renderApp(app: AppRuntime): void {
 
       <section class="panel guardrail-panel" aria-label="当前范围提示区">
         <h2>当前范围提示</h2>
-        <p>P0-2 阶段为状态机占位，暂不校验玩法完成条件；不生成市场新闻、商品、顾客、抽牌、进货、出售、事故、奖励或正式报告。</p>
+        <p>P0-3 阶段生成每日新闻、商品候选和顾客订单；仍不开放买入、抽牌、出售、事故、奖励或正式报告。</p>
       </section>
 
       <div class="workspace-grid">

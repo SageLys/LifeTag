@@ -31,6 +31,8 @@ export function createInitialDeckState(gameConfig: GameConfig): DeckState {
 }
 
 export function createInitialGameState(gameConfig: GameConfig): RunState {
+  const rngSeed = Date.now();
+
   return {
     runId: `run_${Date.now()}`,
     phase: RunPhase.RunInit,
@@ -43,6 +45,9 @@ export function createInitialGameState(gameConfig: GameConfig): RunState {
     targetTotalProfit: gameConfig.targetTotalProfit,
     reputation: gameConfig.initialReputation,
     maxReputation: gameConfig.maxReputation,
+    rngSeed,
+    rngState: rngSeed,
+    nextInstanceCounter: 1,
     inventory: [],
     activePassives: [],
     activeSupplySources: [],
@@ -52,6 +57,7 @@ export function createInitialGameState(gameConfig: GameConfig): RunState {
       phase: RunPhase.RunInit,
       actionPoints: gameConfig.dailyActionPoints,
       marketEvent: null,
+      marketEvents: [],
       productCandidates: [],
       customerOrders: [],
       rewardOptions: [],
@@ -85,7 +91,7 @@ export function createNewGame(gameConfig: GameConfig): RunState {
     '开始新局。',
     '进入第 1 天。',
     '第 1 天开店。',
-    'P0-2：阶段状态机已启用。',
+    'P0-3：每日生成已启用。',
   ];
   state.dayState.log = [...state.runLog];
   return state;

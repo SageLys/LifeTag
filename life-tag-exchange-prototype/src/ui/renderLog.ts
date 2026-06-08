@@ -5,7 +5,7 @@ import { getUiState } from './uiState';
 const guardrailLogs = [
   '程序启动成功。',
   '配置加载成功。',
-  '当前阶段：P0-2 新局初始化与每日阶段状态机。',
+  '当前阶段：P0-3 每日市场新闻、商品候选、顾客订单生成。',
 ];
 
 export function renderLog(app: AppRuntime): string {

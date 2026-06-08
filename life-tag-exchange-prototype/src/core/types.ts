@@ -229,6 +229,7 @@ export interface DayState {
   phase: RunPhase;
   actionPoints: number;
   marketEvent: MarketEventDef | null;
+  marketEvents: MarketEventDef[];
   productCandidates: ProductInstance[];
   customerOrders: CustomerOrder[];
   rewardOptions: RewardOption[];
@@ -260,6 +261,9 @@ export interface RunState {
   targetTotalProfit: number;
   reputation: number;
   maxReputation: number;
+  rngSeed: number;
+  rngState: number;
+  nextInstanceCounter: number;
   inventory: ProductInstance[];
   activePassives: PassiveState[];
   activeSupplySources: SupplySourceState[];
@@ -274,24 +278,38 @@ export interface RunState {
 export interface ProductInstance {
   id: string;
   templateId: string;
+  displayName: string;
+  description?: string;
   status: ProductStatus;
   cost: number;
+  basePrice: number;
+  baseRisk: number;
+  freshnessCurrent: number;
+  freshnessMax: number;
   visibleTagIds: string[];
   hiddenTagIds: string[];
   revealedHiddenTagIds: string[];
   darkRiskIds: string[];
   revealedDarkRiskIds: string[];
   darkRiskRevealLevels: Record<string, DarkRiskRevealLevel>;
+  appliedTagIds: string[];
+  suppressedTagIds: string[];
+  flags: Record<string, boolean>;
   tagSources: Record<string, TagSource>;
 }
 
 export interface CustomerOrder {
   id: string;
   customerId: string;
+  displayName: string;
+  budget: number;
+  riskTolerance: number;
   preferredTagIds: string[];
   tabooTagIds: string[];
+  darkRiskSensitivity: string[];
   maxRisk: number;
   pricingModeIds: string[];
+  specialRules?: string[];
 }
 
 export interface CardInstance {
