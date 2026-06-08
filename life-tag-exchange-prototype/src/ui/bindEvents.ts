@@ -15,7 +15,7 @@ export function bindEvents(app: AppRuntime): void {
     }
 
     if (target.id === 'start-new-run') {
-      appendUiLog('点击了“开始新局”占位按钮；完整每日流程尚未实现。');
+      appendUiLog('P0-1 阶段尚未实现完整新局流程。');
       renderApp(app);
     }
   });

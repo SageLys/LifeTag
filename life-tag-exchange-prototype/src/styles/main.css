@@ -50,6 +50,13 @@ button:hover {
   font-weight: 700;
 }
 
+.stage-label {
+  margin: 10px 0 0;
+  color: #4b5563;
+  font-size: 15px;
+  font-weight: 700;
+}
+
 h1,
 h2,
 p {
@@ -101,6 +108,22 @@ p {
   margin-bottom: 16px;
 }
 
+.phase-guide,
+.guardrail-panel {
+  margin-bottom: 16px;
+}
+
+.config-status {
+  display: inline-flex;
+  margin-bottom: 12px;
+  border: 1px solid #b7e3c4;
+  border-radius: 6px;
+  padding: 6px 10px;
+  background: #effaf1;
+  color: #216e39;
+  font-weight: 800;
+}
+
 .config-summary ul {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
@@ -120,6 +143,12 @@ p {
 
 .top-bar {
   margin-bottom: 16px;
+}
+
+.status-line {
+  margin-bottom: 14px;
+  color: #111827;
+  font-weight: 800;
 }
 
 .top-bar dl {
@@ -158,14 +187,40 @@ p {
   padding-left: 20px;
 }
 
+.hint-text {
+  margin: 10px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
 .fatal-error {
-  margin: 24px;
-  padding: 16px;
+  width: min(960px, calc(100% - 32px));
+  margin: 24px auto;
+  padding: 20px;
   overflow: auto;
   border: 1px solid #cf222e;
   border-radius: 8px;
   background: #fff1f1;
+  color: #1f2328;
+  box-shadow: 0 8px 24px rgba(140, 20, 20, 0.12);
+}
+
+.fatal-error h1 {
+  margin-bottom: 12px;
   color: #cf222e;
+  font-size: 24px;
+}
+
+.fatal-error p {
+  margin-bottom: 12px;
+  font-weight: 800;
+}
+
+.fatal-error pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #7d0f17;
 }
 
 .modal-root:empty {
