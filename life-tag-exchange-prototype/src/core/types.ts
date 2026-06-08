@@ -214,8 +214,12 @@ export interface Modifier {
 export interface BreakdownItem {
   id: string;
   label: string;
-  value: number;
+  value: number | string;
   sourceId?: string;
+  sourceType?: string;
+  stat?: string;
+  op?: string;
+  visibleToPlayer?: boolean;
 }
 
 export interface DeckState {
@@ -349,8 +353,19 @@ export interface DealPreview {
   pricingModeId: string;
   price: number;
   risk: number;
+  estimatedPrice: number;
+  estimatedProfit: number;
+  riskDisplayType: 'exact' | 'range' | 'placeholder';
+  riskMin: number;
+  riskMax: number;
+  accidentPreviewText: string;
   priceBreakdown: BreakdownItem[];
   riskBreakdown: BreakdownItem[];
+  unknownRiskBreakdown: BreakdownItem[];
+  warnings: string[];
+  missingSelections: string[];
+  canConfirmSell: boolean;
+  disabledReason: string | null;
 }
 
 export interface DealResult {

@@ -1,4 +1,12 @@
-import { buyProduct, selectCustomerOrder, selectProductCandidate } from '../core/actions';
+import {
+  buyProduct,
+  clearDealSelection,
+  confirmSell,
+  selectCustomerOrder,
+  selectPricingMode,
+  selectProduct,
+  selectProductCandidate,
+} from '../core/actions';
 import { advancePhase, returnToProcess } from '../core/dayFlow';
 import type { AppRuntime } from '../core/types';
 import { renderApp } from './render';
@@ -33,9 +41,51 @@ export function bindEvents(app: AppRuntime): void {
       return;
     }
 
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'select-product') {
+      if (!target.disabled) {
+        selectProduct(app, target.dataset.productId ?? '');
+        renderApp(app);
+      }
+      return;
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'select-customer-order') {
+      if (!target.disabled) {
+        selectCustomerOrder(app, target.dataset.customerOrderId ?? '');
+        renderApp(app);
+      }
+      return;
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'select-pricing-mode') {
+      if (!target.disabled) {
+        selectPricingMode(app, target.dataset.pricingModeId ?? '');
+        renderApp(app);
+      }
+      return;
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'clear-deal-selection') {
+      clearDealSelection(app);
+      renderApp(app);
+      return;
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'confirm-sell-placeholder') {
+      if (!target.disabled) {
+        confirmSell(app);
+        renderApp(app);
+      }
+      return;
+    }
+
     const productCard = target.closest<HTMLElement>('[data-product-id]');
     if (productCard) {
-      selectProductCandidate(app, productCard.dataset.productId ?? '');
+      if (productCard.dataset.productKind === 'inventory') {
+        selectProduct(app, productCard.dataset.productId ?? '');
+      } else {
+        selectProductCandidate(app, productCard.dataset.productId ?? '');
+      }
       renderApp(app);
       return;
     }

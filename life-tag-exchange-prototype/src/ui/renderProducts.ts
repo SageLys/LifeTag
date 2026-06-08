@@ -1,4 +1,4 @@
-import { ProductStatus } from '../core/constants';
+import { ProductStatus, RunPhase } from '../core/constants';
 import { getBuyProductDisabledReason, getInventoryCount } from '../core/selectors';
 import type { AppRuntime, ProductInstance } from '../core/types';
 import { escapeHtml } from './formatters';
@@ -44,7 +44,7 @@ function renderProductCard(app: AppRuntime, product: ProductInstance): string {
   const isSelected = app.state.dayState.selectedProductId === product.id;
 
   return `
-    <article class="item-card ${isSelected ? 'is-selected' : ''}" data-product-id="${escapeHtml(product.id)}">
+    <article class="item-card ${isSelected ? 'is-selected' : ''}" data-product-kind="candidate" data-product-id="${escapeHtml(product.id)}">
       <h3>${escapeHtml(product.displayName)}</h3>
       ${renderProductStats(product)}
       ${renderSafeProductInfo(app, product)}
@@ -55,13 +55,29 @@ function renderProductCard(app: AppRuntime, product: ProductInstance): string {
 
 function renderInventoryCard(app: AppRuntime, product: ProductInstance): string {
   const isSelected = app.state.dayState.selectedProductId === product.id;
+  const canSelectForDeal = app.state.phase === RunPhase.DayProcess || app.state.phase === RunPhase.DaySell;
+  const disabledReason = !canSelectForDeal
+    ? '当前阶段不能选择商品'
+    : product.status !== ProductStatus.Inventory
+      ? '商品不在库存中'
+      : product.flags.sold
+        ? '商品已售出'
+        : null;
 
   return `
-    <article class="item-card ${isSelected ? 'is-selected' : ''}" data-product-id="${escapeHtml(product.id)}">
+    <article class="item-card ${isSelected ? 'is-selected selected' : ''}" data-product-kind="inventory" data-product-id="${escapeHtml(product.id)}">
       <h3>${escapeHtml(product.displayName)}</h3>
+      ${isSelected ? '<p class="selection-badge">已选商品</p>' : ''}
       <p><strong>状态：</strong>${formatProductStatus(product)}</p>
       ${renderProductStats(product)}
       ${renderSafeProductInfo(app, product)}
+      <button
+        type="button"
+        data-action="select-product"
+        data-product-id="${escapeHtml(product.id)}"
+        ${disabledReason ? 'disabled' : ''}
+      >选择用于交易</button>
+      ${disabledReason ? `<p class="disabled-reason">${escapeHtml(disabledReason)}</p>` : ''}
     </article>
   `;
 }

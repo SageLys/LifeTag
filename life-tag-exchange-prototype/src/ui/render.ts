@@ -9,11 +9,12 @@ import { renderMarket } from './renderMarket';
 import { renderModal } from './renderModal';
 import { renderPhaseGuide } from './renderPhaseGuide';
 import { renderPhasePanel } from './renderPanels';
+import { renderPricing } from './renderPricing';
 import { renderProductDetail } from './renderProductDetail';
 import { renderInventoryPanel, renderProducts } from './renderProducts';
 import { renderTopBar } from './renderTopBar';
 
-const DEVELOPMENT_STAGE = 'P0-5：牌组、抽牌、弃牌系统';
+const DEVELOPMENT_STAGE = 'P0-6：商品 / 顾客 / 定价选择与交易预览壳';
 
 export function renderApp(app: AppRuntime): void {
   const root = document.querySelector<HTMLDivElement>('#app');
@@ -49,7 +50,7 @@ export function renderApp(app: AppRuntime): void {
 
       <section class="panel guardrail-panel" aria-label="当前范围提示区">
         <h2>当前范围提示</h2>
-        <p>P0-5 阶段开放每日抽牌与弃牌；仍不开放卡牌效果、加工、出售、事故、奖励或正式报告。</p>
+        <p>P0-6 阶段开放商品、顾客、定价选择与交易预览壳；仍不开放真实售价、爆雷、事故和出售结算。</p>
       </section>
 
       <div class="workspace-grid">
@@ -58,6 +59,7 @@ export function renderApp(app: AppRuntime): void {
         ${renderInventoryPanel(app)}
         ${renderProductDetail(app)}
         ${renderCustomers(app)}
+        ${renderPricing(app)}
         ${renderHand(app)}
         ${renderActions(app)}
         ${renderDealPreview(app)}
