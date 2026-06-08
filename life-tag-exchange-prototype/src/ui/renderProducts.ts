@@ -76,7 +76,7 @@ export function renderProducts(app: AppRuntime): string {
   return `
     <section class="panel products-panel" aria-label="商品区">
       <h2>商品候选</h2>
-      <p class="hint-text">P0-4 可在进货阶段买入商品；买入后进入库存，不影响累计利润。</p>
+      <p class="hint-text">P0-5 可在进货阶段买入商品；买入后进入库存，不影响累计利润。</p>
       <div class="item-list">${content}</div>
     </section>
   `;

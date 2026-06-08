@@ -11,7 +11,7 @@ export function renderProductDetail(app: AppRuntime): string {
     return `
       <section class="panel" aria-label="商品详情">
         <h2>商品详情</h2>
-        <p>当前没有选中商品。点击商品候选或库存商品可查看 P0-4 安全详情。</p>
+        <p>当前没有选中商品。点击商品候选或库存商品可查看 P0-5 安全详情。</p>
       </section>
     `;
   }
@@ -32,7 +32,7 @@ export function renderProductDetail(app: AppRuntime): string {
       <p><strong>隐藏标签：</strong>${formatHiddenTagPlaceholders(product)}</p>
       <p><strong>暗风险：</strong>${escapeHtml(formatDarkRiskHint(app, product))}</p>
       <p class="hint-text">商品实例 ID：${escapeHtml(product.id)}</p>
-      <p class="hint-text">未揭示隐藏标签与暗风险详情不会在 P0-4 泄露。</p>
+      <p class="hint-text">未揭示隐藏标签与暗风险详情不会在 P0-5 泄露。</p>
     </section>
   `;
 }

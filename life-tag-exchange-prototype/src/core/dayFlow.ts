@@ -1,8 +1,10 @@
 import { RunPhase } from './constants';
 import { generateCustomerOrders } from './customerGenerator';
+import { discardHand, drawCards } from './deckSystem';
 import { createNewGame } from './gameState';
 import { generateMarketEvents } from './marketGenerator';
 import { generateProductCandidates } from './productGenerator';
+import { createRng } from './rng';
 import type { AppRuntime, RunState } from './types';
 
 const NEXT_PHASE: Partial<Record<RunPhase, RunPhase>> = {
@@ -33,6 +35,38 @@ function clearPhaseSelections(state: RunState): void {
   state.dayState.currentDealPreview = null;
 }
 
+function drawDailyHand(app: AppRuntime): void {
+  const { state } = app;
+  if (state.dayState.phaseFlags.drawnToday) {
+    return;
+  }
+
+  const requestedDrawCount = app.configs.gameConfig.dailyDrawCount;
+  const drawPileBefore = state.deckState.drawPile.length;
+  const discardPileBefore = state.deckState.discardPile.length;
+  const rng = createRng(state.rngState);
+  const drawnCards = drawCards(state.deckState, requestedDrawCount, rng);
+  state.rngState = rng.value;
+  state.dayState.phaseFlags.drawnToday = true;
+
+  if (drawPileBefore < requestedDrawCount && discardPileBefore > 0) {
+    addRunLog(state, '抽牌堆不足，弃牌堆洗入抽牌堆。');
+  }
+
+  if (drawnCards.length < requestedDrawCount) {
+    addRunLog(state, `牌堆不足，本次只抽取 ${drawnCards.length} 张。`);
+  }
+
+  addRunLog(state, `第 ${state.currentDay} 天：抽取 ${drawnCards.length} 张经营手牌。`);
+}
+
+function discardHandForDayEnd(app: AppRuntime): void {
+  const discardedCards = discardHand(app.state.deckState);
+  if (discardedCards.length > 0) {
+    addRunLog(app.state, `收店后弃置 ${discardedCards.length} 张手牌。`);
+  }
+}
+
 function ensurePhaseContent(app: AppRuntime): void {
   switch (app.state.phase) {
     case RunPhase.DayOpening:
@@ -43,6 +77,9 @@ function ensurePhaseContent(app: AppRuntime): void {
       break;
     case RunPhase.DayCustomer:
       generateCustomerOrders(app);
+      break;
+    case RunPhase.DayDraw:
+      drawDailyHand(app);
       break;
     default:
       break;
@@ -107,6 +144,7 @@ export function startNextDay(app: AppRuntime): void {
   }
 
   if (state.currentDay >= state.maxDays) {
+    discardHandForDayEnd(app);
     addRunLog(state, `第 ${state.currentDay} 天结束。`);
     syncPhase(state, RunPhase.RunEnd);
     clearPhaseSelections(state);
@@ -115,6 +153,7 @@ export function startNextDay(app: AppRuntime): void {
   }
 
   addRunLog(state, `第 ${state.currentDay} 天结束。`);
+  discardHandForDayEnd(app);
   ageInventoryForNextDay(app);
   state.currentDay += 1;
   state.dayState = createEmptyDayState(app, state.currentDay);

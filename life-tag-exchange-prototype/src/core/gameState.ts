@@ -1,37 +1,12 @@
 import { FailReason, RunPhase, RunResult } from './constants';
-import type { DeckState, GameConfig, RunState } from './types';
-
-/**
- * 职责：创建和维护局内运行状态。
- * 本阶段只提供初始状态创建，不实现每日流程。
- * TODO：Step 1 接入阶段状态机；Step 4 接入抽牌、洗牌、弃牌和卡牌实例迁移细节。
- */
-export function createInitialDeckState(gameConfig: GameConfig): DeckState {
-  let sequence = 0;
-  const drawPile = gameConfig.initialDeck.flatMap((entry) =>
-    Array.from({ length: entry.count }, () => {
-      sequence += 1;
-      const instanceId = `card_inst_${sequence}_${entry.cardId}`;
-      return {
-        id: instanceId,
-        instanceId,
-        cardId: entry.cardId,
-        cardDefId: entry.cardId,
-        upgraded: false,
-      };
-    }),
-  );
-
-  return {
-    drawPile,
-    hand: [],
-    discardPile: [],
-    exhaustPile: [],
-  };
-}
+import { createInitialDeckState } from './deckSystem';
+import { createRng } from './rng';
+import type { GameConfig, RunState } from './types';
 
 export function createInitialGameState(gameConfig: GameConfig): RunState {
   const rngSeed = Date.now();
+  const rng = createRng(rngSeed);
+  const deckState = createInitialDeckState(gameConfig, rng);
 
   return {
     runId: `run_${Date.now()}`,
@@ -46,12 +21,12 @@ export function createInitialGameState(gameConfig: GameConfig): RunState {
     reputation: gameConfig.initialReputation,
     maxReputation: gameConfig.maxReputation,
     rngSeed,
-    rngState: rngSeed,
+    rngState: rng.value,
     nextInstanceCounter: 1,
     inventory: [],
     activePassives: [],
     activeSupplySources: [],
-    deckState: createInitialDeckState(gameConfig),
+    deckState,
     dayState: {
       dayNumber: 1,
       phase: RunPhase.RunInit,
@@ -91,7 +66,7 @@ export function createNewGame(gameConfig: GameConfig): RunState {
     '开始新局。',
     '进入第 1 天。',
     '第 1 天开店。',
-    'P0-4：进货与库存系统已启用。',
+    'P0-5：牌组、抽牌、弃牌系统已启用。',
   ];
   state.dayState.log = [...state.runLog];
   return state;

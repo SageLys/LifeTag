@@ -39,6 +39,7 @@ export interface GameConfig {
   spoiledPriceAdd: number;
   spoiledRiskAdd: number;
   riskThresholds: Record<AccidentLevel, RiskThreshold>;
+  initialDeckCardIds?: string[];
   initialDeck: InitialDeckEntry[];
   notes?: string;
 }
@@ -318,6 +319,8 @@ export interface CardInstance {
   cardId: string;
   cardDefId: string;
   upgraded: boolean;
+  temporary?: boolean;
+  createdDay?: number;
 }
 
 export interface PassiveState {
