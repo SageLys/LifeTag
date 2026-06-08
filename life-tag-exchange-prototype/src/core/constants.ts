@@ -29,8 +29,10 @@ export const FailReason = {
 export type FailReason = (typeof FailReason)[keyof typeof FailReason];
 
 export const ProductStatus = {
-  Available: 'available',
+  Candidate: 'candidate',
+  Inventory: 'inventory',
   Sold: 'sold',
+  Spoiled: 'spoiled',
   Discarded: 'discarded',
 } as const;
 export type ProductStatus = (typeof ProductStatus)[keyof typeof ProductStatus];

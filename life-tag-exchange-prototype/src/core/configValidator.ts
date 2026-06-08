@@ -1,5 +1,5 @@
 import { AccidentLevel } from './constants';
-import type { AllConfigs, Condition, Effect, GameConfig, Modifier, RewardPoolDef } from './types';
+import type { AllConfigs, Condition, Effect, GameConfig, Modifier, RewardDef } from './types';
 
 type ConfigItem = { id: string };
 
@@ -7,7 +7,7 @@ function validateUniqueIds(fileName: string, items: ConfigItem[], errors: string
   const seen = new Set<string>();
   for (const item of items) {
     if (!item.id) {
-      errors.push(`[${fileName}] 存在缺失 id 的配置对象`);
+      errors.push(`[${fileName}] 存在缺少 id 的配置对象`);
       continue;
     }
     if (seen.has(item.id)) {
@@ -75,7 +75,7 @@ function validateModifierRefs(
 }
 
 function validateRewardPayload(
-  reward: RewardPoolDef,
+  reward: RewardDef,
   cardIds: Set<string>,
   passiveIds: Set<string>,
   supplySourceIds: Set<string>,
@@ -86,13 +86,13 @@ function validateRewardPayload(
   const supplySourceId = reward.payload.supplySourceId;
 
   if (typeof cardId === 'string') {
-    requireRef('rewardPools.json', reward.id, 'payload.cardId', cardId, cardIds, 'cardId', errors);
+    requireRef('rewards.json', reward.id, 'payload.cardId', cardId, cardIds, 'cardId', errors);
   }
   if (typeof passiveId === 'string') {
-    requireRef('rewardPools.json', reward.id, 'payload.passiveId', passiveId, passiveIds, 'passiveId', errors);
+    requireRef('rewards.json', reward.id, 'payload.passiveId', passiveId, passiveIds, 'passiveId', errors);
   }
   if (typeof supplySourceId === 'string') {
-    requireRef('rewardPools.json', reward.id, 'payload.supplySourceId', supplySourceId, supplySourceIds, 'supplySourceId', errors);
+    requireRef('rewards.json', reward.id, 'payload.supplySourceId', supplySourceId, supplySourceIds, 'supplySourceId', errors);
   }
 }
 
@@ -162,6 +162,43 @@ function validateGameConfig(gameConfig: GameConfig, cardIds: Set<string>, errors
   }
 }
 
+function validatePricingModes(configs: AllConfigs, pricingModeIds: Set<string>, errors: string[]): void {
+  const expectedPricingMultipliers = new Map([
+    ['pricing_cheap', 0.8],
+    ['pricing_normal', 1],
+    ['pricing_high', 1.3],
+    ['pricing_blind_box', 1.45],
+  ]);
+
+  for (const [pricingModeId, expectedMultiplier] of expectedPricingMultipliers) {
+    if (!pricingModeIds.has(pricingModeId)) {
+      errors.push(`[pricingModes.json] 缺少必需的 pricingModeId: ${pricingModeId}`);
+      continue;
+    }
+
+    const pricingMode = configs.pricingModes.find((item) => item.id === pricingModeId);
+    if (pricingMode?.priceMultiplier !== expectedMultiplier) {
+      errors.push(`[pricingModes.json][${pricingModeId}] priceMultiplier 应为 ${expectedMultiplier}，当前为 ${String(pricingMode?.priceMultiplier)}`);
+    }
+  }
+}
+
+function validateAccidents(configs: AllConfigs, errors: string[]): void {
+  const accidentLevels = new Set<string>(configs.accidents.map((accident) => accident.level));
+  for (const level of ['none', 'minor', 'medium', 'major', 'severe']) {
+    if (!accidentLevels.has(level)) {
+      errors.push(`[accidents.json] 缺少必需的 accident level: ${level}`);
+    }
+  }
+
+  for (const accident of configs.accidents) {
+    const rawAccident = accident as unknown as Record<string, unknown>;
+    if ('minRisk' in rawAccident || 'maxRisk' in rawAccident) {
+      errors.push(`[accidents.json][${accident.id}] 不应保存 minRisk/maxRisk，事故等级判定以 gameConfig.riskThresholds 为唯一来源`);
+    }
+  }
+}
+
 export function validateConfigs(configs: AllConfigs): void {
   const errors: string[] = [];
   const tagIds = new Set(configs.tags.map((item) => item.id));
@@ -194,10 +231,12 @@ export function validateConfigs(configs: AllConfigs): void {
   validateUniqueIds('baseActions.json', configs.baseActions, errors);
   validateUniqueIds('pricingModes.json', configs.pricingModes, errors);
   validateUniqueIds('accidents.json', configs.accidents, errors);
-  validateUniqueIds('rewardPools.json', configs.rewardPools, errors);
+  validateUniqueIds('rewards.json', configs.rewards, errors);
   validateUniqueIds('endingEvaluations.json', configs.endingEvaluations, errors);
 
   validateGameConfig(configs.gameConfig, cardIds, errors);
+  validatePricingModes(configs, pricingModeIds, errors);
+  validateAccidents(configs, errors);
 
   for (const template of configs.productTemplates) {
     for (const tagId of template.visibleTagIds) {
@@ -248,21 +287,8 @@ export function validateConfigs(configs: AllConfigs): void {
   for (const passive of configs.passives) {
     validateEffectRefs('passives.json', passive.id, passive.effects, knownIds, errors);
   }
-  for (const reward of configs.rewardPools) {
+  for (const reward of configs.rewards) {
     validateRewardPayload(reward, cardIds, passiveIds, supplySourceIds, errors);
-  }
-
-  for (const pricingModeId of ['pricing_cheap', 'pricing_normal', 'pricing_high', 'pricing_blind_box']) {
-    if (!pricingModeIds.has(pricingModeId)) {
-      errors.push(`[pricingModes.json] 缺少必需的 pricingModeId: ${pricingModeId}`);
-    }
-  }
-
-  const accidentLevels = new Set<string>(configs.accidents.map((accident) => accident.level));
-  for (const level of ['none', 'minor', 'medium', 'major', 'severe']) {
-    if (!accidentLevels.has(level)) {
-      errors.push(`[accidents.json] 缺少必需的 accident level: ${level}`);
-    }
   }
 
   if (errors.length > 0) {

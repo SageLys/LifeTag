@@ -63,7 +63,7 @@ export function buildConfigIndex(configs: AllConfigs): ConfigIndex {
     baseActionsById: mapById(configs.baseActions),
     pricingModesById: mapById(configs.pricingModes),
     accidentsByLevel,
-    rewardPoolsById: mapById(configs.rewardPools),
+    rewardsById: mapById(configs.rewards),
     endingEvaluationsById: mapById(configs.endingEvaluations),
     tagConflictsByPair,
     cardsByType,

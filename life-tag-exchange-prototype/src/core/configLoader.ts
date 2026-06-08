@@ -14,7 +14,7 @@ const configFiles = {
   baseActions: 'baseActions.json',
   pricingModes: 'pricingModes.json',
   accidents: 'accidents.json',
-  rewardPools: 'rewardPools.json',
+  rewards: 'rewards.json',
   endingEvaluations: 'endingEvaluations.json',
 } as const;
 
@@ -46,7 +46,7 @@ export async function loadAllConfigs(): Promise<AllConfigs> {
     baseActions: await loadJson<AllConfigs['baseActions']>(configFiles.baseActions),
     pricingModes: await loadJson<AllConfigs['pricingModes']>(configFiles.pricingModes),
     accidents: await loadJson<AllConfigs['accidents']>(configFiles.accidents),
-    rewardPools: await loadJson<AllConfigs['rewardPools']>(configFiles.rewardPools),
+    rewards: await loadJson<AllConfigs['rewards']>(configFiles.rewards),
     endingEvaluations: await loadJson<AllConfigs['endingEvaluations']>(configFiles.endingEvaluations),
   };
 
@@ -55,7 +55,7 @@ export async function loadAllConfigs(): Promise<AllConfigs> {
     darkRisks: configs.darkRisks.length,
     products: configs.productTemplates.length,
     cards: configs.cards.length,
-    rewards: configs.rewardPools.length,
+    rewards: configs.rewards.length,
   });
 
   return configs;

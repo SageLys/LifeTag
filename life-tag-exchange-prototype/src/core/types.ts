@@ -165,8 +165,6 @@ export interface AccidentDef {
   id: string;
   level: AccidentLevel;
   displayName: string;
-  minRisk: number;
-  maxRisk: number;
   loss: number;
   accidentText: string;
 }
@@ -179,7 +177,7 @@ export interface RewardOption {
   payload: Record<string, JsonValue>;
 }
 
-export type RewardPoolDef = RewardOption;
+export type RewardDef = RewardOption;
 
 export interface EndingEvaluationDef {
   id: string;
@@ -367,7 +365,7 @@ export interface AllConfigs {
   baseActions: BaseActionDef[];
   pricingModes: PricingModeDef[];
   accidents: AccidentDef[];
-  rewardPools: RewardPoolDef[];
+  rewards: RewardDef[];
   endingEvaluations: EndingEvaluationDef[];
 }
 
@@ -384,7 +382,7 @@ export interface ConfigIndex {
   baseActionsById: Map<string, BaseActionDef>;
   pricingModesById: Map<string, PricingModeDef>;
   accidentsByLevel: Map<AccidentLevel, AccidentDef>;
-  rewardPoolsById: Map<string, RewardPoolDef>;
+  rewardsById: Map<string, RewardDef>;
   endingEvaluationsById: Map<string, EndingEvaluationDef>;
   tagConflictsByPair: Map<string, TagConflictDef>;
   cardsByType: Map<CardType, CardDef[]>;

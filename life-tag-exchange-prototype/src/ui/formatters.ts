@@ -27,7 +27,7 @@ export function getConfigCounts(configs: AllConfigs): Array<[string, number]> {
     ['baseActions.json', configs.baseActions.length],
     ['pricingModes.json', configs.pricingModes.length],
     ['accidents.json', configs.accidents.length],
-    ['rewardPools.json', configs.rewardPools.length],
+    ['rewards.json', configs.rewards.length],
     ['endingEvaluations.json', configs.endingEvaluations.length],
   ];
 }

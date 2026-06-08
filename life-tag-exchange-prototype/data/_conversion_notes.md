@@ -15,6 +15,9 @@
   - `card_pr_package` x1
   - `card_hot_search_warmup` x1
   - `card_risk_underwriting` x1
+- 奖励配置文件名已统一为文档口径 `rewards.json`，代码中的配置字段也统一为 `rewards`。
+- 事故等级阈值只以 `gameConfig.riskThresholds` 为准，`accidents.json` 不再保存 `minRisk/maxRisk`。
+- 定价倍率已对齐 05 文档：便宜卖 0.8、正常卖 1.0、高价卖 1.3、盲盒价 1.45。
 - Markdown 表格中的中文标签、顾客和暗风险引用均转换为英文 ID。
 - `product_black_box_discount_meat` 的暗风险池在文档中写作“任意类别”，已展开为 9 个暗风险 ID。
 - 卡牌、被动、市场事件在当前阶段只保留配置中的 `effectText`，复杂效果留给后续 core 系统实现。
