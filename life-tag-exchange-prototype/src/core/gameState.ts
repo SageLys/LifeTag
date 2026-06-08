@@ -6,13 +6,20 @@ import type { DeckState, GameConfig, RunState } from './types';
  * 本阶段只提供初始状态创建，不实现每日流程。
  * TODO：Step 1 接入阶段状态机；Step 4 接入抽牌、洗牌、弃牌和卡牌实例迁移细节。
  */
-function createInitialDeckState(gameConfig: GameConfig): DeckState {
+export function createInitialDeckState(gameConfig: GameConfig): DeckState {
+  let sequence = 0;
   const drawPile = gameConfig.initialDeck.flatMap((entry) =>
-    Array.from({ length: entry.count }, (_, index) => ({
-      id: `${entry.cardId}_${index + 1}`,
-      cardId: entry.cardId,
-      upgraded: false,
-    })),
+    Array.from({ length: entry.count }, () => {
+      sequence += 1;
+      const instanceId = `card_inst_${sequence}_${entry.cardId}`;
+      return {
+        id: instanceId,
+        instanceId,
+        cardId: entry.cardId,
+        cardDefId: entry.cardId,
+        upgraded: false,
+      };
+    }),
   );
 
   return {
@@ -44,6 +51,10 @@ export function createInitialGameState(gameConfig: GameConfig): RunState {
       dayNumber: 1,
       phase: RunPhase.RunInit,
       actionPoints: gameConfig.dailyActionPoints,
+      marketEvent: null,
+      productCandidates: [],
+      customerOrders: [],
+      rewardOptions: [],
       marketEventIds: [],
       productCandidateIds: [],
       customerOrderIds: [],
@@ -51,6 +62,7 @@ export function createInitialGameState(gameConfig: GameConfig): RunState {
       boughtProductCount: 0,
       soldProductCount: 0,
       selectedProductId: null,
+      selectedCustomerId: null,
       selectedCustomerOrderId: null,
       selectedPricingModeId: null,
       currentDealPreview: null,
@@ -63,4 +75,18 @@ export function createInitialGameState(gameConfig: GameConfig): RunState {
     accidentLog: [],
     rewardLog: [],
   };
+}
+
+export function createNewGame(gameConfig: GameConfig): RunState {
+  const state = createInitialGameState(gameConfig);
+  state.phase = RunPhase.DayOpening;
+  state.dayState.phase = RunPhase.DayOpening;
+  state.runLog = [
+    '开始新局。',
+    '进入第 1 天。',
+    '第 1 天开店。',
+    'P0-2：阶段状态机已启用。',
+  ];
+  state.dayState.log = [...state.runLog];
+  return state;
 }

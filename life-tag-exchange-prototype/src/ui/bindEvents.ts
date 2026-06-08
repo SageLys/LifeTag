@@ -1,6 +1,6 @@
+import { advancePhase, returnToProcess } from '../core/dayFlow';
 import type { AppRuntime } from '../core/types';
 import { renderApp } from './render';
-import { appendUiLog } from './uiState';
 
 export function bindEvents(app: AppRuntime): void {
   const root = document.querySelector<HTMLDivElement>('#app');
@@ -14,8 +14,13 @@ export function bindEvents(app: AppRuntime): void {
       return;
     }
 
-    if (target.id === 'start-new-run') {
-      appendUiLog('P0-1 阶段尚未实现完整新局流程。');
+    if (target.id === 'advance-phase' || target.id === 'start-new-run') {
+      advancePhase(app);
+      renderApp(app);
+    }
+
+    if (target.id === 'return-to-process') {
+      returnToProcess(app);
       renderApp(app);
     }
   });

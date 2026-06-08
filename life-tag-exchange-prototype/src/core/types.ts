@@ -228,6 +228,10 @@ export interface DayState {
   dayNumber: number;
   phase: RunPhase;
   actionPoints: number;
+  marketEvent: MarketEventDef | null;
+  productCandidates: ProductInstance[];
+  customerOrders: CustomerOrder[];
+  rewardOptions: RewardOption[];
   marketEventIds: string[];
   productCandidateIds: string[];
   customerOrderIds: string[];
@@ -235,6 +239,7 @@ export interface DayState {
   boughtProductCount: number;
   soldProductCount: number;
   selectedProductId: string | null;
+  selectedCustomerId: string | null;
   selectedCustomerOrderId: string | null;
   selectedPricingModeId: string | null;
   currentDealPreview: DealPreview | null;
@@ -291,7 +296,9 @@ export interface CustomerOrder {
 
 export interface CardInstance {
   id: string;
+  instanceId: string;
   cardId: string;
+  cardDefId: string;
   upgraded: boolean;
 }
 

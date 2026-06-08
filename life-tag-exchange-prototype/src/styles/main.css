@@ -29,6 +29,15 @@ button:hover {
   background: #3b434d;
 }
 
+.secondary-button {
+  background: #fffdfa;
+  color: #24292f;
+}
+
+.secondary-button:hover {
+  background: #f2ede5;
+}
+
 .app-shell {
   width: min(1280px, calc(100% - 32px));
   margin: 0 auto;
@@ -113,6 +122,12 @@ p {
   margin-bottom: 16px;
 }
 
+.phase-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .config-status {
   display: inline-flex;
   margin-bottom: 12px;
@@ -143,6 +158,45 @@ p {
 
 .top-bar {
   margin-bottom: 16px;
+}
+
+.phase-panel {
+  margin-bottom: 16px;
+}
+
+.placeholder-text {
+  border-left: 4px solid #7b4f21;
+  padding-left: 10px;
+  color: #4b5563;
+  font-weight: 700;
+}
+
+.compact-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin: 12px 0 0;
+}
+
+.compact-stats div {
+  border: 1px solid #ece6dd;
+  border-radius: 6px;
+  padding: 10px;
+  background: #fff;
+}
+
+.compact-stats dt {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.compact-stats dd {
+  margin: 4px 0 0;
+  font-weight: 800;
+}
+
+.report-stats {
+  margin-top: 14px;
 }
 
 .status-line {

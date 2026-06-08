@@ -7,11 +7,13 @@ import { renderHand } from './renderHand';
 import { renderLog } from './renderLog';
 import { renderMarket } from './renderMarket';
 import { renderModal } from './renderModal';
+import { renderPhaseGuide } from './renderPhaseGuide';
+import { renderPhasePanel } from './renderPanels';
 import { renderProductDetail } from './renderProductDetail';
 import { renderProducts } from './renderProducts';
 import { renderTopBar } from './renderTopBar';
 
-const DEVELOPMENT_STAGE = 'P0-1：可测试开发护栏';
+const DEVELOPMENT_STAGE = 'P0-2：新局初始化与每日阶段状态机';
 
 export function renderApp(app: AppRuntime): void {
   const root = document.querySelector<HTMLDivElement>('#app');
@@ -34,10 +36,7 @@ export function renderApp(app: AppRuntime): void {
         <span class="status-pill">配置加载成功</span>
       </header>
 
-      <section class="panel phase-guide" aria-label="PhaseGuideBar">
-        <h2>阶段提示</h2>
-        <p>当前处于 P0-1 护栏阶段：只验证项目可运行、配置可加载、状态可显示、错误可兜底。</p>
-      </section>
+      ${renderPhaseGuide(app)}
 
       <section class="config-summary" aria-label="配置加载摘要区">
         <h2>配置加载摘要</h2>
@@ -46,10 +45,11 @@ export function renderApp(app: AppRuntime): void {
       </section>
 
       ${renderTopBar(app)}
+      ${renderPhasePanel(app)}
 
-      <section class="panel guardrail-panel" aria-label="当前未实现功能提示区">
-        <h2>当前未实现功能提示</h2>
-        <p>P0-1 不实现每日流程、商品生成、顾客生成、抽牌、进货、售价、爆雷、事故和奖励系统。</p>
+      <section class="panel guardrail-panel" aria-label="当前范围提示区">
+        <h2>当前范围提示</h2>
+        <p>P0-2 阶段为状态机占位，暂不校验玩法完成条件；不生成市场新闻、商品、顾客、抽牌、进货、出售、事故、奖励或正式报告。</p>
       </section>
 
       <div class="workspace-grid">
@@ -60,7 +60,7 @@ export function renderApp(app: AppRuntime): void {
         ${renderHand(app)}
         ${renderActions(app)}
         ${renderDealPreview(app)}
-        ${renderLog()}
+        ${renderLog(app)}
       </div>
 
       ${renderModal()}
