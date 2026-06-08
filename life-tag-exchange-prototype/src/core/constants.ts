@@ -1,13 +1,15 @@
 export const RunPhase = {
-  Setup: 'setup',
-  DayStart: 'day_start',
-  Market: 'market',
-  Supply: 'supply',
-  Action: 'action',
-  Deal: 'deal',
-  Reward: 'reward',
-  Report: 'report',
-  Finished: 'finished',
+  RunInit: 'RUN_INIT',
+  DayOpening: 'DAY_OPENING',
+  DayPurchase: 'DAY_PURCHASE',
+  DayCustomer: 'DAY_CUSTOMER',
+  DayDraw: 'DAY_DRAW',
+  DayProcess: 'DAY_PROCESS',
+  DaySell: 'DAY_SELL',
+  DayResolve: 'DAY_RESOLVE',
+  DayReward: 'DAY_REWARD',
+  RunEnd: 'RUN_END',
+  RunFailed: 'RUN_FAILED',
 } as const;
 export type RunPhase = (typeof RunPhase)[keyof typeof RunPhase];
 

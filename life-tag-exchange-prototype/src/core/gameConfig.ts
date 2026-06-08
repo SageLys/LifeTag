@@ -7,5 +7,5 @@ import type { GameConfig } from './types';
  * TODO：补充不含 DOM 的配置派生值与默认值规范。
  */
 export function getRunDayLimit(config: GameConfig): number {
-  return config.dayLimit;
+  return config.runLengthDays;
 }

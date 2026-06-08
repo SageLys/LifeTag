@@ -1,4 +1,5 @@
-import type { AllConfigs, Condition, Effect, Modifier, RewardPoolDef } from './types';
+import { AccidentLevel } from './constants';
+import type { AllConfigs, Condition, Effect, GameConfig, Modifier, RewardPoolDef } from './types';
 
 type ConfigItem = { id: string };
 
@@ -95,6 +96,72 @@ function validateRewardPayload(
   }
 }
 
+function validateGameConfig(gameConfig: GameConfig, cardIds: Set<string>, errors: string[]): void {
+  const fileName = 'gameConfig.json';
+  const rawConfig = gameConfig as unknown as Record<string, unknown>;
+  const legacyReputationTargetField = `passTarget${'Reputation'}`;
+
+  if (legacyReputationTargetField in rawConfig) {
+    errors.push(`[${fileName}][${gameConfig.id}] 不应使用 ${legacyReputationTargetField}，累计利润目标字段应为 targetTotalProfit`);
+  }
+
+  const expectedNumbers: Array<[keyof GameConfig, number]> = [
+    ['runLengthDays', 8],
+    ['initialCash', 100],
+    ['targetTotalProfit', 500],
+    ['initialReputation', 100],
+    ['maxReputation', 100],
+    ['dailyActionPoints', 3],
+    ['dailyDrawCount', 5],
+    ['dailyProductCandidateCount', 4],
+    ['dailyProductBuyLimit', 2],
+    ['dailyCustomerOrderCount', 3],
+    ['inventoryLimit', 6],
+    ['rewardOptionsPerDay', 3],
+    ['marketEventsPerDay', 1],
+  ];
+
+  for (const [fieldName, expected] of expectedNumbers) {
+    const actual = gameConfig[fieldName];
+    if (actual !== expected) {
+      errors.push(`[${fileName}][${gameConfig.id}] ${String(fieldName)} 应为 ${expected}，当前为 ${String(actual)}`);
+    }
+  }
+
+  const initialDeckTotal = gameConfig.initialDeck.reduce((sum, entry) => sum + entry.count, 0);
+  if (initialDeckTotal !== 10) {
+    errors.push(`[${fileName}][${gameConfig.id}] initialDeck 总数量应为 10，当前为 ${initialDeckTotal}`);
+  }
+
+  for (const entry of gameConfig.initialDeck) {
+    if (entry.count <= 0) {
+      errors.push(`[${fileName}][${gameConfig.id}] initialDeck.${entry.cardId}.count 必须大于 0，当前为 ${entry.count}`);
+    }
+    requireRef(fileName, gameConfig.id, 'initialDeck.cardId', entry.cardId, cardIds, 'cardId', errors);
+  }
+
+  const expectedThresholds = {
+    [AccidentLevel.None]: { min: 0, max: 39 },
+    [AccidentLevel.Minor]: { min: 40, max: 59 },
+    [AccidentLevel.Medium]: { min: 60, max: 79 },
+    [AccidentLevel.Major]: { min: 80, max: 99 },
+    [AccidentLevel.Severe]: { min: 100, max: null },
+  } as const;
+
+  for (const [level, expected] of Object.entries(expectedThresholds)) {
+    const actual = gameConfig.riskThresholds[level as AccidentLevel];
+    if (!actual) {
+      errors.push(`[${fileName}][${gameConfig.id}] riskThresholds 缺少 ${level}`);
+      continue;
+    }
+    if (actual.min !== expected.min || actual.max !== expected.max) {
+      const expectedRange = expected.max === null ? `${expected.min}+` : `${expected.min}-${expected.max}`;
+      const actualRange = actual.max === null ? `${actual.min}+` : `${actual.min}-${actual.max}`;
+      errors.push(`[${fileName}][${gameConfig.id}] riskThresholds.${level} 应为 ${expectedRange}，当前为 ${actualRange}`);
+    }
+  }
+}
+
 export function validateConfigs(configs: AllConfigs): void {
   const errors: string[] = [];
   const tagIds = new Set(configs.tags.map((item) => item.id));
@@ -130,9 +197,7 @@ export function validateConfigs(configs: AllConfigs): void {
   validateUniqueIds('rewardPools.json', configs.rewardPools, errors);
   validateUniqueIds('endingEvaluations.json', configs.endingEvaluations, errors);
 
-  for (const cardId of configs.gameConfig.initialDeckCardIds) {
-    requireRef('gameConfig.json', configs.gameConfig.id, 'initialDeckCardIds', cardId, cardIds, 'cardId', errors);
-  }
+  validateGameConfig(configs.gameConfig, cardIds, errors);
 
   for (const template of configs.productTemplates) {
     for (const tagId of template.visibleTagIds) {

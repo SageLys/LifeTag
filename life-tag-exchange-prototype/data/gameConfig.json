@@ -1,31 +1,79 @@
 {
   "id": "game_config_default",
-  "dayLimit": 8,
-  "initialCash": 120,
-  "initialReputation": 0,
-  "passTargetReputation": 100,
+  "displayName": "默认 8 天原型配置",
+  "runLengthDays": 8,
+  "initialCash": 100,
+  "targetTotalProfit": 500,
+  "initialReputation": 100,
+  "maxReputation": 100,
   "dailyActionPoints": 3,
-  "initialHandSize": 5,
-  "maxHandSize": 8,
-  "dailyProductCount": 3,
-  "dailyCustomerCount": 3,
-  "rewardChoicesPerShopClose": 3,
-  "accidentRiskThresholds": {
-    "none": 0,
-    "minor": 30,
-    "medium": 50,
-    "major": 70,
-    "severe": 90
+  "dailyDrawCount": 5,
+  "dailyProductCandidateCount": 4,
+  "dailyProductBuyLimit": 2,
+  "dailyCustomerOrderCount": 3,
+  "inventoryLimit": 6,
+  "marketEventsPerDay": 1,
+  "rewardOptionsPerDay": 3,
+  "dailyMinimumSaleCount": 1,
+  "freshnessLossPerDay": 1,
+  "spoiledAt": 0,
+  "spoiledPriceAdd": -20,
+  "spoiledRiskAdd": 20,
+  "riskThresholds": {
+    "none": {
+      "min": 0,
+      "max": 39
+    },
+    "minor": {
+      "min": 40,
+      "max": 59
+    },
+    "medium": {
+      "min": 60,
+      "max": 79
+    },
+    "major": {
+      "min": 80,
+      "max": 99
+    },
+    "severe": {
+      "min": 100,
+      "max": null
+    }
   },
-  "initialDeckCardIds": [
-    "card_low_salary_pitch",
-    "card_decent_package",
-    "card_overtime_glory",
-    "card_background_check",
-    "card_pr_package",
-    "card_hidden_label_probe",
-    "card_draw_two_filter_one",
-    "card_cheap_source_hunt"
+  "initialDeck": [
+    {
+      "cardId": "card_low_salary_pitch",
+      "count": 2
+    },
+    {
+      "cardId": "card_decent_package",
+      "count": 2
+    },
+    {
+      "cardId": "card_crazy_persona",
+      "count": 1
+    },
+    {
+      "cardId": "card_background_check",
+      "count": 1
+    },
+    {
+      "cardId": "card_trial_transfer",
+      "count": 1
+    },
+    {
+      "cardId": "card_pr_package",
+      "count": 1
+    },
+    {
+      "cardId": "card_hot_search_warmup",
+      "count": 1
+    },
+    {
+      "cardId": "card_risk_underwriting",
+      "count": 1
+    }
   ],
-  "notes": "首版 8 天 HTML 快速验证配置。通关目标使用 reputation，不使用 cash。"
+  "notes": "首版 8 天 HTML 快速验证配置。累计利润是通关目标，现金是构筑资源，信誉是血量。"
 }

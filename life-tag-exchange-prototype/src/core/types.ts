@@ -19,19 +19,38 @@ export type JsonValue = JsonPrimitive | JsonValue[] | { [key: string]: JsonValue
 
 export interface GameConfig {
   id: string;
-  dayLimit: number;
+  displayName: string;
+  runLengthDays: number;
   initialCash: number;
+  targetTotalProfit: number;
   initialReputation: number;
-  passTargetReputation: number;
+  maxReputation: number;
   dailyActionPoints: number;
-  initialHandSize: number;
-  maxHandSize: number;
-  dailyProductCount: number;
-  dailyCustomerCount: number;
-  rewardChoicesPerShopClose: number;
-  accidentRiskThresholds: Record<AccidentLevel, number>;
-  initialDeckCardIds: string[];
+  dailyDrawCount: number;
+  dailyProductCandidateCount: number;
+  dailyProductBuyLimit: number;
+  dailyCustomerOrderCount: number;
+  inventoryLimit: number;
+  marketEventsPerDay: number;
+  rewardOptionsPerDay: number;
+  dailyMinimumSaleCount: number;
+  freshnessLossPerDay: number;
+  spoiledAt: number;
+  spoiledPriceAdd: number;
+  spoiledRiskAdd: number;
+  riskThresholds: Record<AccidentLevel, RiskThreshold>;
+  initialDeck: InitialDeckEntry[];
   notes?: string;
+}
+
+export interface RiskThreshold {
+  min: number;
+  max: number | null;
+}
+
+export interface InitialDeckEntry {
+  cardId: string;
+  count: number;
 }
 
 export interface TagDef {
@@ -201,19 +220,28 @@ export interface BreakdownItem {
 }
 
 export interface DeckState {
-  drawPile: string[];
-  hand: string[];
-  discardPile: string[];
-  exhaustedPile: string[];
+  drawPile: CardInstance[];
+  hand: CardInstance[];
+  discardPile: CardInstance[];
+  exhaustPile: CardInstance[];
 }
 
 export interface DayState {
-  day: number;
+  dayNumber: number;
   phase: RunPhase;
   actionPoints: number;
   marketEventIds: string[];
-  productIds: string[];
+  productCandidateIds: string[];
   customerOrderIds: string[];
+  rewardOptionIds: string[];
+  boughtProductCount: number;
+  soldProductCount: number;
+  selectedProductId: string | null;
+  selectedCustomerOrderId: string | null;
+  selectedPricingModeId: string | null;
+  currentDealPreview: DealPreview | null;
+  temporaryDayModifiers: Modifier[];
+  phaseFlags: Record<string, boolean>;
   log: string[];
 }
 
@@ -222,17 +250,22 @@ export interface RunState {
   phase: RunPhase;
   result: RunResult;
   failReason: FailReason;
-  day: number;
+  currentDay: number;
+  maxDays: number;
   cash: number;
+  totalProfit: number;
+  targetTotalProfit: number;
   reputation: number;
-  accidentInsurance: number;
-  deck: DeckState;
-  activePassiveIds: string[];
-  supplySourceIds: string[];
-  products: ProductInstance[];
-  customerOrders: CustomerOrder[];
-  currentDay: DayState;
+  maxReputation: number;
+  inventory: ProductInstance[];
+  activePassives: PassiveState[];
+  activeSupplySources: SupplySourceState[];
+  deckState: DeckState;
+  dayState: DayState;
   runLog: string[];
+  dealLog: DealResult[];
+  accidentLog: AccidentInstance[];
+  rewardLog: RewardLogEntry[];
 }
 
 export interface ProductInstance {
@@ -262,6 +295,26 @@ export interface CardInstance {
   id: string;
   cardId: string;
   upgraded: boolean;
+}
+
+export interface PassiveState {
+  passiveId: string;
+  gainedDay: number;
+  source?: string;
+}
+
+export interface SupplySourceState {
+  supplySourceId: string;
+  gainedDay: number;
+  remainingDays?: number | null;
+  source?: string;
+}
+
+export interface RewardLogEntry {
+  day: number;
+  rewardId: string;
+  rewardType: RewardType;
+  cashCost?: number;
 }
 
 export interface DealPreview {

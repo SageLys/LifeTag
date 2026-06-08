@@ -1,41 +1,66 @@
 import { FailReason, RunPhase, RunResult } from './constants';
-import type { ConfigIndex, GameConfig, RunState } from './types';
+import type { DeckState, GameConfig, RunState } from './types';
 
 /**
  * 职责：创建和维护局内运行状态。
- * 参考文档：03_数据结构规格.md、07_HTML技术实现规格.md。
- * 本阶段状态：只提供初始状态创建，不实现每日流程。
- * TODO：接入每日生成、抽牌、交易、奖励和结局状态迁移。
+ * 本阶段只提供初始状态创建，不实现每日流程。
+ * TODO：Step 1 接入阶段状态机；Step 4 接入抽牌、洗牌、弃牌和卡牌实例迁移细节。
  */
-export function createInitialGameState(gameConfig: GameConfig, index: ConfigIndex): RunState {
+function createInitialDeckState(gameConfig: GameConfig): DeckState {
+  const drawPile = gameConfig.initialDeck.flatMap((entry) =>
+    Array.from({ length: entry.count }, (_, index) => ({
+      id: `${entry.cardId}_${index + 1}`,
+      cardId: entry.cardId,
+      upgraded: false,
+    })),
+  );
+
+  return {
+    drawPile,
+    hand: [],
+    discardPile: [],
+    exhaustPile: [],
+  };
+}
+
+export function createInitialGameState(gameConfig: GameConfig): RunState {
   return {
     runId: `run_${Date.now()}`,
-    phase: RunPhase.Setup,
+    phase: RunPhase.RunInit,
     result: RunResult.InProgress,
     failReason: FailReason.None,
-    day: 1,
+    currentDay: 1,
+    maxDays: gameConfig.runLengthDays,
     cash: gameConfig.initialCash,
+    totalProfit: 0,
+    targetTotalProfit: gameConfig.targetTotalProfit,
     reputation: gameConfig.initialReputation,
-    accidentInsurance: 0,
-    deck: {
-      drawPile: [...gameConfig.initialDeckCardIds],
-      hand: [],
-      discardPile: [],
-      exhaustedPile: [],
-    },
-    activePassiveIds: [],
-    supplySourceIds: [...index.supplySourcesById.keys()].slice(0, 1),
-    products: [],
-    customerOrders: [],
-    currentDay: {
-      day: 1,
-      phase: RunPhase.Setup,
+    maxReputation: gameConfig.maxReputation,
+    inventory: [],
+    activePassives: [],
+    activeSupplySources: [],
+    deckState: createInitialDeckState(gameConfig),
+    dayState: {
+      dayNumber: 1,
+      phase: RunPhase.RunInit,
       actionPoints: gameConfig.dailyActionPoints,
       marketEventIds: [],
-      productIds: [],
+      productCandidateIds: [],
       customerOrderIds: [],
+      rewardOptionIds: [],
+      boughtProductCount: 0,
+      soldProductCount: 0,
+      selectedProductId: null,
+      selectedCustomerOrderId: null,
+      selectedPricingModeId: null,
+      currentDealPreview: null,
+      temporaryDayModifiers: [],
+      phaseFlags: {},
       log: ['配置加载完成，等待开始新局。'],
     },
     runLog: ['配置加载完成，等待开始新局。'],
+    dealLog: [],
+    accidentLog: [],
+    rewardLog: [],
   };
 }

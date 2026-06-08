@@ -10,7 +10,7 @@ async function bootstrap() {
   const configs = await loadAllConfigs();
   validateConfigs(configs);
   const index = buildConfigIndex(configs);
-  const state = createInitialGameState(configs.gameConfig, index);
+  const state = createInitialGameState(configs.gameConfig);
 
   const app = {
     configs,
