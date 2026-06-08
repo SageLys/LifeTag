@@ -12,7 +12,7 @@ const PHASE_COPY: Partial<Record<RunPhase, PhasePanelCopy>> = {
   [RunPhase.RunInit]: {
     title: '等待开始',
     description: '点击开始新局后进入第 1 天开店阶段。',
-    placeholder: 'P0-6 将初始化状态、初始牌组并生成第 1 天市场新闻。',
+    placeholder: 'P0-7 将初始化状态、初始牌组并生成第 1 天市场新闻。',
   },
   [RunPhase.DayOpening]: {
     title: '开店阶段',
@@ -22,46 +22,46 @@ const PHASE_COPY: Partial<Record<RunPhase, PhasePanelCopy>> = {
   [RunPhase.DayPurchase]: {
     title: '进货阶段',
     description: '查看今日商品候选，并可在限制内买入库存。',
-    placeholder: 'P0-6 可买入商品；加工和出售暂未开放。',
+    placeholder: 'P0-7 可买入商品；加工和出售暂未开放。',
   },
   [RunPhase.DayCustomer]: {
     title: '接单阶段',
     description: '查看今日顾客订单。交易选择将在后续阶段实现。',
-    placeholder: 'P0-6 可选择顾客参与交易预览壳。',
+    placeholder: 'P0-7 可选择顾客参与售价预览。',
   },
   [RunPhase.DayDraw]: {
     title: '抽牌阶段',
     description: '进入本阶段时自动抽取每日经营手牌。',
-    placeholder: 'P0-6 自动抽牌；卡牌效果将在 P0-10 实现。',
+    placeholder: 'P0-7 自动抽牌；卡牌效果将在 P0-10 实现。',
   },
   [RunPhase.DayProcess]: {
     title: '处理阶段',
     description: '选择库存商品、顾客和定价方式，查看交易预览壳。',
-    placeholder: 'P0-6 只生成预览壳，不执行真实出售结算。',
+    placeholder: 'P0-7 计算真实售价预览，不执行真实出售结算。',
   },
   [RunPhase.DaySell]: {
     title: '出售阶段',
     description: '出售与结算将在后续阶段实现。',
-    placeholder: 'P0-6 可查看预览壳，确认出售将在 P0-11 实现。',
+    placeholder: 'P0-7 可查看售价预览，确认出售将在 P0-11 实现。',
   },
   [RunPhase.DayResolve]: {
     title: '结算阶段',
     description: '日结摘要将在后续阶段实现。',
-    placeholder: 'P0-6 暂无真实结算。',
+    placeholder: 'P0-7 暂无真实结算。',
   },
   [RunPhase.DayReward]: {
     title: '收店阶段',
     description: '三选一奖励将在后续阶段实现。',
-    placeholder: 'P0-6 暂不选择奖励，点击进入下一天。',
+    placeholder: 'P0-7 暂不选择奖励，点击进入下一天。',
   },
   [RunPhase.RunEnd]: {
     title: '本局结束',
-    description: 'P0-6 占位最终报告。正式胜负判定和经营报告将在后续阶段实现。',
+    description: 'P0-7 占位最终报告。正式胜负判定和经营报告将在后续阶段实现。',
     placeholder: '正式胜负判定将在后续阶段实现。',
   },
   [RunPhase.RunFailed]: {
     title: '本局失败',
-    description: '失败状态占位。P0-6 不主动制造失败。',
+    description: '失败状态占位。P0-7 不主动制造失败。',
     placeholder: '点击重新开始可创建新局。',
   },
 };

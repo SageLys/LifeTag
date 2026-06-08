@@ -222,6 +222,31 @@ export interface BreakdownItem {
   visibleToPlayer?: boolean;
 }
 
+export interface PriceResult {
+  rawPrice: number;
+  priceBeforeBudgetCap: number;
+  effectiveBudget: number;
+  finalPrice: number;
+  estimatedProfit: number;
+  priceBreakdown: BreakdownItem[];
+  warnings: string[];
+}
+
+export interface CalculationContext {
+  mode: 'preview' | 'resolve';
+  runState: RunState;
+  dayState: DayState;
+  deckState?: DeckState;
+  product: ProductInstance;
+  customerOrder: CustomerOrder;
+  pricingMode: PricingModeDef;
+  marketEvent: MarketEventDef | null;
+  activePassives: PassiveState[];
+  activeSupplySources: SupplySourceState[];
+  configTables: AllConfigs;
+  indexes: ConfigIndex;
+}
+
 export interface DeckState {
   drawPile: CardInstance[];
   hand: CardInstance[];
@@ -355,6 +380,9 @@ export interface DealPreview {
   risk: number;
   estimatedPrice: number;
   estimatedProfit: number;
+  rawPrice: number;
+  priceBeforeBudgetCap: number;
+  effectiveBudget: number;
   riskDisplayType: 'exact' | 'range' | 'placeholder';
   riskMin: number;
   riskMax: number;

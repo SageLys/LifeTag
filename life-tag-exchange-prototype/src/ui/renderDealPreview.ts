@@ -66,8 +66,10 @@ export function renderDealPreview(app: AppRuntime): string {
       <dl class="compact-stats">
         <div><dt>预计售价</dt><dd>${preview.estimatedPrice}</dd></div>
         <div><dt>预计利润</dt><dd>${preview.estimatedProfit}</dd></div>
+        <div><dt>原始价格</dt><dd>${preview.rawPrice}</dd></div>
+        <div><dt>预算前价格</dt><dd>${preview.priceBeforeBudgetCap}</dd></div>
+        <div><dt>顾客预算</dt><dd>${preview.effectiveBudget}</dd></div>
         <div><dt>风险显示</dt><dd>P0-8 实现</dd></div>
-        <div><dt>事故预测</dt><dd>P0-8 实现</dd></div>
       </dl>
       <p class="hint-text">${escapeHtml(preview.accidentPreviewText)}</p>
       <h3>价格拆解</h3>

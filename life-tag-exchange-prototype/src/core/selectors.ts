@@ -1,5 +1,7 @@
 import { ProductStatus, RunPhase } from './constants';
-import type { AppRuntime, CustomerOrder, PricingModeDef, ProductInstance } from './types';
+import type { AppRuntime, CustomerOrder, MarketEventDef, PricingModeDef, ProductInstance, TagDef } from './types';
+
+type PreferenceEntry = string | { tagId: string; priceBonus?: number };
 
 export function getProductCandidateById(app: AppRuntime, productId: string): ProductInstance | undefined {
   return app.state.dayState.productCandidates.find((product) => product.id === productId);
@@ -97,4 +99,55 @@ export function hasUnknownProductInfo(product: ProductInstance): boolean {
   const hasHiddenTags = product.hiddenTagIds.some((tagId) => !product.revealedHiddenTagIds.includes(tagId));
   const hasUnknownDarkRisks = product.darkRiskIds.some((riskId) => !product.revealedDarkRiskIds.includes(riskId));
   return hasHiddenTags || hasUnknownDarkRisks;
+}
+
+export function getActiveMarketEvent(app: AppRuntime): MarketEventDef | null {
+  return app.state.dayState.marketEvent ?? app.state.dayState.marketEvents[0] ?? null;
+}
+
+export function getTagDef(app: AppRuntime, tagId: string): TagDef | null {
+  return app.index.tagsById.get(tagId) ?? null;
+}
+
+export function getCustomerPreferredTagIds(customerOrder: CustomerOrder): string[] {
+  const compatibleOrder = customerOrder as CustomerOrder & {
+    preferredTags?: PreferenceEntry[];
+    preferences?: PreferenceEntry[];
+    preferenceTags?: PreferenceEntry[];
+  };
+  const source: PreferenceEntry[] =
+    compatibleOrder.preferredTagIds ??
+    compatibleOrder.preferredTags ??
+    compatibleOrder.preferences ??
+    compatibleOrder.preferenceTags ??
+    [];
+
+  return source.map((item) => (typeof item === 'string' ? item : item.tagId)).filter(Boolean);
+}
+
+export function getCustomerPreferenceBonus(customerOrder: CustomerOrder, tagId: string): number {
+  const compatibleOrder = customerOrder as CustomerOrder & {
+    preferredTags?: PreferenceEntry[];
+    preferences?: PreferenceEntry[];
+    preferenceTags?: PreferenceEntry[];
+    defaultPreferencePriceBonus?: number;
+  };
+  const structuredSources = [compatibleOrder.preferredTags, compatibleOrder.preferences, compatibleOrder.preferenceTags];
+
+  for (const source of structuredSources) {
+    if (!Array.isArray(source)) {
+      continue;
+    }
+    const match = source.find((entry): entry is { tagId: string; priceBonus?: number } => typeof entry !== 'string' && entry.tagId === tagId);
+    if (match && typeof match.priceBonus === 'number') {
+      return match.priceBonus;
+    }
+  }
+
+  return compatibleOrder.defaultPreferencePriceBonus ?? 20;
+}
+
+export function getCustomerBudget(customerOrder: CustomerOrder): number {
+  const compatibleOrder = customerOrder as CustomerOrder & { maxBudget?: number; baseBudget?: number };
+  return compatibleOrder.budget ?? compatibleOrder.maxBudget ?? compatibleOrder.baseBudget ?? 9999;
 }
