@@ -76,6 +76,18 @@ function createEmptyDayState(app: AppRuntime, dayNumber: number): RunState['dayS
   };
 }
 
+function ageInventoryForNextDay(app: AppRuntime): void {
+  const loss = app.configs.gameConfig.freshnessLossPerDay;
+  const spoiledAt = app.configs.gameConfig.spoiledAt;
+
+  for (const product of app.state.inventory) {
+    product.freshnessCurrent = Math.max(0, product.freshnessCurrent - loss);
+    if (product.freshnessCurrent <= spoiledAt) {
+      product.flags.spoiled = true;
+    }
+  }
+}
+
 export function startNewRun(app: AppRuntime): void {
   const shouldLogRestart = app.state.phase !== RunPhase.RunInit;
   app.state = createNewGame(app.configs.gameConfig);
@@ -103,6 +115,7 @@ export function startNextDay(app: AppRuntime): void {
   }
 
   addRunLog(state, `第 ${state.currentDay} 天结束。`);
+  ageInventoryForNextDay(app);
   state.currentDay += 1;
   state.dayState = createEmptyDayState(app, state.currentDay);
   syncPhase(state, RunPhase.DayOpening);

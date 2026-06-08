@@ -9,6 +9,7 @@ export function renderTopBar(app: AppRuntime): string {
   const actionPoints = safeNumber(state.dayState?.actionPoints);
   const drawPileCount = state.deckState?.drawPile?.length ?? 0;
   const handCount = state.deckState?.hand?.length ?? 0;
+  const boughtProductCount = safeNumber(state.dayState?.boughtProductCount);
 
   return `
     <section class="panel top-bar" aria-label="HeaderStatusBar">
@@ -21,6 +22,7 @@ export function renderTopBar(app: AppRuntime): string {
         信誉 ${safeNumber(state.reputation)} / ${safeNumber(state.maxReputation, app.configs.gameConfig.maxReputation)}｜
         行动点 ${actionPoints}｜
         库存 ${state.inventory?.length ?? 0} / ${app.configs.gameConfig.inventoryLimit}｜
+        今日进货 ${boughtProductCount} / ${app.configs.gameConfig.dailyProductBuyLimit}｜
         手牌 ${handCount}｜
         抽牌堆 ${drawPileCount}
       </p>
@@ -32,6 +34,7 @@ export function renderTopBar(app: AppRuntime): string {
         <div><dt>信誉</dt><dd>${safeNumber(state.reputation)} / ${safeNumber(state.maxReputation, app.configs.gameConfig.maxReputation)}</dd></div>
         <div><dt>行动点</dt><dd>${actionPoints}</dd></div>
         <div><dt>库存</dt><dd>${state.inventory?.length ?? 0} / ${app.configs.gameConfig.inventoryLimit}</dd></div>
+        <div><dt>今日进货</dt><dd>${boughtProductCount} / ${app.configs.gameConfig.dailyProductBuyLimit}</dd></div>
         <div><dt>手牌</dt><dd>${handCount}</dd></div>
         <div><dt>抽牌堆</dt><dd>${drawPileCount}</dd></div>
       </dl>

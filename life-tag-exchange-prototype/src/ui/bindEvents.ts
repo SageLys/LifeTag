@@ -1,4 +1,4 @@
-import { selectCustomerOrder, selectProductCandidate } from '../core/actions';
+import { buyProduct, selectCustomerOrder, selectProductCandidate } from '../core/actions';
 import { advancePhase, returnToProcess } from '../core/dayFlow';
 import type { AppRuntime } from '../core/types';
 import { renderApp } from './render';
@@ -23,6 +23,14 @@ export function bindEvents(app: AppRuntime): void {
     if (target.id === 'return-to-process') {
       returnToProcess(app);
       renderApp(app);
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'buy-product') {
+      if (!target.disabled) {
+        buyProduct(app, target.dataset.productId ?? '');
+        renderApp(app);
+      }
+      return;
     }
 
     const productCard = target.closest<HTMLElement>('[data-product-id]');

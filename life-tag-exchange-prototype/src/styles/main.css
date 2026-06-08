@@ -247,6 +247,14 @@ p {
   font-size: 13px;
 }
 
+.disabled-reason,
+.warning-text {
+  margin: 8px 0 0;
+  color: #9a3412;
+  font-size: 13px;
+  font-weight: 800;
+}
+
 .item-list {
   display: grid;
   gap: 10px;

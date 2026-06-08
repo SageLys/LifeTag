@@ -91,7 +91,7 @@ export function createNewGame(gameConfig: GameConfig): RunState {
     '开始新局。',
     '进入第 1 天。',
     '第 1 天开店。',
-    'P0-3：每日生成已启用。',
+    'P0-4：进货与库存系统已启用。',
   ];
   state.dayState.log = [...state.runLog];
   return state;

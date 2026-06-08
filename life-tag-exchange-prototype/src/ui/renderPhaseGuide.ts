@@ -37,7 +37,7 @@ export function renderPhaseGuide(app: AppRuntime): string {
   return `
     <section class="panel phase-guide" aria-label="PhaseGuideBar">
       <h2>阶段提示</h2>
-      <p>P0-3 阶段生成每日新闻、商品候选和顾客订单，暂不校验玩法完成条件。</p>
+      <p>P0-4 阶段开放进货与库存，暂不校验出售和结算条件。</p>
       <div class="phase-actions">
         <button id="advance-phase" type="button">${getMainButtonLabel(app)}</button>
         ${showReturnButton ? '<button id="return-to-process" class="secondary-button" type="button">返回处理阶段</button>' : ''}

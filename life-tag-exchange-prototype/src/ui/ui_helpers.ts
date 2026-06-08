@@ -51,3 +51,19 @@ export function formatDarkRiskCategories(categories: string[]): string {
 
   return categories.map((category) => escapeHtml(DARK_RISK_CATEGORY_LABELS[category] ?? category)).join('、');
 }
+
+export function formatProductStatus(product: ProductInstance): string {
+  if (product.flags.spoiled) {
+    return '库存中（已变质）';
+  }
+
+  if (product.flags.inInventory || product.status === 'inventory') {
+    return '库存中';
+  }
+
+  if (product.status === 'candidate') {
+    return '候选';
+  }
+
+  return product.status;
+}

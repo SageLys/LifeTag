@@ -10,10 +10,10 @@ import { renderModal } from './renderModal';
 import { renderPhaseGuide } from './renderPhaseGuide';
 import { renderPhasePanel } from './renderPanels';
 import { renderProductDetail } from './renderProductDetail';
-import { renderProducts } from './renderProducts';
+import { renderInventoryPanel, renderProducts } from './renderProducts';
 import { renderTopBar } from './renderTopBar';
 
-const DEVELOPMENT_STAGE = 'P0-3：每日市场新闻、商品候选、顾客订单生成';
+const DEVELOPMENT_STAGE = 'P0-4：进货与库存系统';
 
 export function renderApp(app: AppRuntime): void {
   const root = document.querySelector<HTMLDivElement>('#app');
@@ -49,12 +49,13 @@ export function renderApp(app: AppRuntime): void {
 
       <section class="panel guardrail-panel" aria-label="当前范围提示区">
         <h2>当前范围提示</h2>
-        <p>P0-3 阶段生成每日新闻、商品候选和顾客订单；仍不开放买入、抽牌、出售、事故、奖励或正式报告。</p>
+        <p>P0-4 阶段开放进货与库存；仍不开放抽牌、加工、出售、事故、奖励或正式报告。</p>
       </section>
 
       <div class="workspace-grid">
         ${renderMarket(app)}
         ${renderProducts(app)}
+        ${renderInventoryPanel(app)}
         ${renderProductDetail(app)}
         ${renderCustomers(app)}
         ${renderHand(app)}
