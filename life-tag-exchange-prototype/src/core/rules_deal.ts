@@ -203,6 +203,22 @@ export function resolveDeal(app: AppRuntime): DealResult {
   app.state.cash += cashDelta;
   app.state.totalProfit += totalProfitGain;
   app.state.reputation += reputationDelta;
+  app.state.dayState.dailyProfit += totalProfitGain;
+  app.state.dayState.maxSingleDealProfit = Math.max(app.state.dayState.maxSingleDealProfit, singleProfit);
+  if (finalAccidentLevel !== AccidentLevel.None) {
+    app.state.dayState.accidentCount += 1;
+  }
+  if (pricingMode.id === 'pricing_blind_box') {
+    app.state.dayState.blindBoxDealAccidentLevels.push(finalAccidentLevel);
+  }
+  for (const modifier of app.state.temporaryRunModifiers) {
+    if (modifier.stat === 'risk' && modifier.target === 'sell_product' && modifier.consumed < modifier.uses) {
+      modifier.consumed += 1;
+      app.state.runLog.push(`第 ${app.state.currentDay} 天：临时效果触发：${modifier.displayName}。`);
+      app.state.dayState.log.push(`第 ${app.state.currentDay} 天：临时效果触发：${modifier.displayName}。`);
+    }
+  }
+  app.state.temporaryRunModifiers = app.state.temporaryRunModifiers.filter((modifier) => modifier.consumed < modifier.uses);
   product.status = ProductStatus.Sold;
   product.flags.sold = true;
   app.state.dayState.soldProductCount += 1;

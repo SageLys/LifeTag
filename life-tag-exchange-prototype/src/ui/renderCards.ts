@@ -4,40 +4,83 @@ import { getCardDef } from '../core/selectors';
 import type { AppRuntime, CardDef, CardInstance, Effect } from '../core/types';
 import { escapeHtml } from './formatters';
 
-function formatEffect(effect: Effect, app: AppRuntime): string {
+function getEffectParams(effect: Effect): Record<string, unknown> {
+  return (effect.params ?? {}) as Record<string, unknown>;
+}
+
+function getEffectNumber(effect: Effect, key: string, fallback = 0): number {
+  const params = getEffectParams(effect);
+  const value = params[key] ?? effect.value;
+  return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+}
+
+function getEffectString(effect: Effect, key: string): string {
+  const params = getEffectParams(effect);
+  const value = params[key] ?? effect.value;
+  return typeof value === 'string' ? value : '';
+}
+
+export function formatEffect(effect: Effect, app: AppRuntime): string {
+  if (effect.displayText) {
+    return effect.displayText;
+  }
+
   switch (effect.type) {
     case 'add_applied_tag_to_product': {
-      const tagId = effect.tagId ?? effect.targetTagId ?? (typeof effect.value === 'string' ? effect.value : '');
+      const tagId = effect.tagId ?? effect.targetTagId ?? getEffectString(effect, 'tagId');
       return `添加标签 ${app.index.tagsById.get(tagId)?.displayName ?? tagId}`;
     }
     case 'reveal_hidden_tags':
-      return `揭示 ${effect.count ?? effect.value ?? 1} 个隐藏标签`;
+    case 'reveal_hidden_tag':
+      return `揭示 ${effect.count ?? getEffectNumber(effect, 'count', 1)} 个隐藏标签`;
     case 'reveal_dark_risk_category':
-      return `揭示 ${effect.count ?? effect.value ?? 1} 个暗风险类别`;
+      return `揭示 ${effect.count ?? getEffectNumber(effect, 'count', 1)} 个暗风险类别`;
     case 'reveal_dark_risk_full':
       return '完全揭示 1 个暗风险';
+    case 'add_deal_modifier': {
+      const stat = getEffectString(effect, 'stat');
+      const value = getEffectNumber(effect, 'value', 0);
+      if (stat === 'price') return `售价 ${value >= 0 ? '+' : ''}${value}`;
+      if (stat === 'risk') return `爆雷 ${value >= 0 ? '+' : ''}${value}`;
+      return '添加本单修正';
+    }
+    case 'add_product_modifier': {
+      const stat = getEffectString(effect, 'stat');
+      const value = getEffectNumber(effect, 'value', 0);
+      if (stat === 'price') return `商品售价 ${value >= 0 ? '+' : ''}${value}`;
+      if (stat === 'risk') return `商品爆雷 ${value >= 0 ? '+' : ''}${value}`;
+      return '添加商品修正';
+    }
+    case 'modify_accident_result': {
+      const stat = getEffectString(effect, 'stat');
+      const value = getEffectNumber(effect, 'value', 0);
+      if (stat === 'fine') return `事故罚款 ${value >= 0 ? '+' : ''}${value}`;
+      if (stat === 'reputationLoss') return `事故信誉损失 ${value >= 0 ? '+' : ''}${value}`;
+      if (stat === 'cash') return `事故后现金 ${value >= 0 ? '+' : ''}${value}`;
+      return '修改事故结果';
+    }
     case 'add_price':
-      return `售价 ${Number(effect.value) >= 0 ? '+' : ''}${effect.value}`;
+      return `售价 ${getEffectNumber(effect, 'value', 0) >= 0 ? '+' : ''}${getEffectNumber(effect, 'value', 0)}`;
     case 'multiply_price':
-      return `售价 x${effect.value}`;
+      return `售价 x${getEffectNumber(effect, 'value', 1)}`;
     case 'add_risk':
-      return `爆雷 ${Number(effect.value) >= 0 ? '+' : ''}${effect.value}`;
+      return `爆雷 ${getEffectNumber(effect, 'value', 0) >= 0 ? '+' : ''}${getEffectNumber(effect, 'value', 0)}`;
     case 'reduce_risk':
-      return `爆雷 -${Math.abs(Number(effect.value ?? 0))}`;
+      return `爆雷 -${Math.abs(getEffectNumber(effect, 'value', 0))}`;
     case 'draw_cards':
-      return `抽 ${effect.count ?? effect.value ?? 0} 张牌`;
+      return `抽 ${effect.count ?? getEffectNumber(effect, 'count', 0)} 张牌`;
     case 'suppress_tag':
       return '压制指定标签';
     case 'gain_cash':
-      return `获得 ${effect.value} 现金`;
+      return `获得 ${getEffectNumber(effect, 'amount', getEffectNumber(effect, 'value', 0))} 现金`;
     case 'lose_cash':
-      return `失去 ${effect.value} 现金`;
+      return `失去 ${getEffectNumber(effect, 'amount', getEffectNumber(effect, 'value', 0))} 现金`;
     case 'gain_reputation':
-      return `恢复 ${effect.value} 信誉`;
+      return `恢复 ${getEffectNumber(effect, 'amount', getEffectNumber(effect, 'value', 0))} 信誉`;
     case 'lose_reputation':
-      return `失去 ${effect.value} 信誉`;
+      return `失去 ${getEffectNumber(effect, 'amount', getEffectNumber(effect, 'value', 0))} 信誉`;
     default:
-      return effect.type;
+      return '特殊效果';
   }
 }
 
@@ -64,10 +107,10 @@ export function getCardDisplayInfo(app: AppRuntime, card: CardInstance): {
   return {
     cardDef,
     name: cardDef?.displayName ?? card.cardId,
-    type: cardDef?.cardType ?? cardDef?.type ?? 'unknown',
+    type: formatCardType(cardDef?.cardType ?? cardDef?.type ?? 'unknown'),
     actionPointCost: cardDef ? getCardActionPointCost(cardDef, card) : 0,
     cashCost: cardDef ? getCardCashCost(cardDef, card) : 0,
-    targetType: cardDef ? getCardTargetType(cardDef) : 'unknown',
+    targetType: cardDef ? formatTargetType(getCardTargetType(cardDef)) : '未知',
     effectText:
       effects.length > 0
         ? effects.map((effect) => formatEffect(effect, app)).join('；')
@@ -75,6 +118,35 @@ export function getCardDisplayInfo(app: AppRuntime, card: CardInstance): {
     moveHint: cardDef ? getMoveHint(cardDef, card) : '卡牌配置缺失',
     upgradeText: card.upgraded ? '已升级' : '未升级',
   };
+}
+
+function formatCardType(type: string): string {
+  switch (type) {
+    case 'tag_tool':
+      return '包装牌';
+    case 'operation':
+      return '经营牌';
+    default:
+      return '未知类型';
+  }
+}
+
+function formatTargetType(targetType: string): string {
+  switch (targetType) {
+    case 'selected_product':
+    case 'product':
+      return '当前商品';
+    case 'selected_deal':
+      return '当前交易';
+    case 'selected_customer':
+      return '当前顾客';
+    case 'player':
+      return '玩家';
+    case 'none':
+      return '无需目标';
+    default:
+      return '当前商品';
+  }
 }
 
 export function renderCardInfo(app: AppRuntime, card: CardInstance, options: { interactive?: boolean } = {}): string {

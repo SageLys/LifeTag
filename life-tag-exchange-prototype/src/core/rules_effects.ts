@@ -1,7 +1,7 @@
 import { DarkRiskRevealLevel } from './constants';
 import { drawCards } from './deckSystem';
 import { createRng } from './rng';
-import type { AppRuntime, CardDef, CardInstance, Effect, Modifier, ProductInstance } from './types';
+import type { AppRuntime, CardDef, CardInstance, Effect, JsonValue, Modifier, ProductInstance } from './types';
 import {
   getAllKnownTagIds,
   getSelectedCustomerOrder,
@@ -99,10 +99,12 @@ const CARD_DEFAULT_EFFECTS: Record<string, Effect[]> = {
 const SUPPORTED_EFFECT_TYPES = new Set([
   'add_applied_tag_to_product',
   'reveal_hidden_tags',
+  'reveal_hidden_tag',
   'reveal_dark_risk_category',
   'reveal_dark_risk_full',
   'add_product_modifier',
   'add_deal_modifier',
+  'modify_accident_result',
   'add_price',
   'multiply_price',
   'add_risk',
@@ -130,6 +132,9 @@ export function getCardCashCost(cardDef: CardDef, cardInstance?: CardInstance | 
 }
 
 export function getCardTargetType(cardDef: CardDef): NonNullable<CardDef['targetType']> {
+  if (cardDef.targetType === 'product') {
+    return 'selected_product';
+  }
   if (cardDef.targetType) {
     return cardDef.targetType;
   }
@@ -177,7 +182,18 @@ function getProduct(context: EffectContext): ProductInstance | null {
 }
 
 function getNumberValue(effect: Effect, fallback = 0): number {
+  const params = (effect.params ?? {}) as Record<string, unknown>;
+  if (typeof params.value === 'number' && Number.isFinite(params.value)) {
+    return params.value;
+  }
+  if (typeof params.amount === 'number' && Number.isFinite(params.amount)) {
+    return params.amount;
+  }
   return typeof effect.value === 'number' && Number.isFinite(effect.value) ? effect.value : fallback;
+}
+
+function getParams(effect: Effect): Record<string, unknown> {
+  return (effect.params ?? {}) as Record<string, unknown>;
 }
 
 function getModifierLabel(context: EffectContext, label: string): string {
@@ -200,7 +216,8 @@ function pushProductModifier(context: EffectContext, modifier: Modifier): void {
 
 function applyAddAppliedTag(effect: Effect, context: EffectContext): EffectResult {
   const product = getProduct(context);
-  const tagId = effect.tagId ?? effect.targetTagId ?? (typeof effect.value === 'string' ? effect.value : null);
+  const params = getParams(effect);
+  const tagId = effect.tagId ?? effect.targetTagId ?? (typeof params.tagId === 'string' ? params.tagId : null) ?? (typeof effect.value === 'string' ? effect.value : null);
   if (!product || !tagId) {
     return { ok: false, effectType: effect.type, message: '缺少商品或标签目标。' };
   }
@@ -219,7 +236,8 @@ function applyRevealHiddenTags(effect: Effect, context: EffectContext): EffectRe
   if (!product) {
     return { ok: false, effectType: effect.type, message: '请选择一个库存商品。' };
   }
-  const count = Math.max(1, effect.count ?? getNumberValue(effect, 1));
+  const params = getParams(effect);
+  const count = Math.max(1, effect.count ?? (typeof params.count === 'number' ? params.count : getNumberValue(effect, 1)));
   const tagIds = getUnrevealedHiddenTagIds(product).slice(0, count);
   if (tagIds.length === 0) {
     return { ok: false, effectType: effect.type, message: '没有可揭示的隐藏标签。' };
@@ -236,7 +254,8 @@ function applyRevealDarkRiskCategory(effect: Effect, context: EffectContext): Ef
   if (!product) {
     return { ok: false, effectType: effect.type, message: '请选择一个库存商品。' };
   }
-  const count = Math.max(1, effect.count ?? getNumberValue(effect, 1));
+  const params = getParams(effect);
+  const count = Math.max(1, effect.count ?? (typeof params.count === 'number' ? params.count : getNumberValue(effect, 1)));
   const riskIds = getUnresolvedDarkRiskIds(product)
     .filter((riskId) => (product.darkRiskRevealLevels[riskId] as string | undefined) !== 'category')
     .slice(0, count);
@@ -266,30 +285,75 @@ function applyRevealDarkRiskFull(effect: Effect, context: EffectContext): Effect
 }
 
 function applyAddProductModifier(effect: Effect, context: EffectContext): EffectResult {
-  if (!effect.modifier) {
+  const params = getParams(effect);
+  const modifier: Modifier | null = effect.modifier ?? (typeof params.stat === 'string' && typeof params.op === 'string' && typeof params.value === 'number'
+    ? {
+        stat: params.stat,
+        op: params.op,
+        value: params.value,
+        displayText: effect.displayText,
+        condition: params.condition as JsonValue | undefined,
+      }
+    : null);
+  if (!modifier) {
     return { ok: false, effectType: effect.type, message: '缺少 modifier。' };
   }
   pushProductModifier(context, {
-    ...effect.modifier,
-    displayText: effect.modifier.displayText ?? getModifierLabel(context, '商品修正'),
+    ...modifier,
+    displayText: modifier.displayText ?? effect.displayText ?? getModifierLabel(context, '商品修正'),
   });
   return { ok: true, effectType: effect.type, message: '添加了商品修正。' };
 }
 
 function applyAddDealModifier(effect: Effect, context: EffectContext): EffectResult {
-  if (!effect.modifier) {
+  const params = getParams(effect);
+  const modifier: Modifier | null = effect.modifier ?? (typeof params.stat === 'string' && typeof params.op === 'string' && typeof params.value === 'number'
+    ? {
+        stat: params.stat,
+        op: params.op,
+        value: params.value,
+        displayText: effect.displayText,
+        condition: params.condition as JsonValue | undefined,
+        durationType: params.duration === 'until_product_sold' ? 'this_deal' : undefined,
+      }
+    : null);
+  if (!modifier) {
     return { ok: false, effectType: effect.type, message: '缺少 modifier。' };
   }
   context.dayState.temporaryDealModifiers ??= [];
   context.dayState.temporaryDealModifiers.push({
-    ...effect.modifier,
-    sourceType: effect.modifier.sourceType ?? 'card',
-    sourceId: effect.modifier.sourceId ?? context.cardDef.id,
-    displayText: effect.modifier.displayText ?? getModifierLabel(context, '本单修正'),
-    durationType: effect.modifier.durationType ?? 'this_deal',
-    targetId: effect.modifier.targetId ?? getProduct(context)?.id,
+    ...modifier,
+    sourceType: modifier.sourceType ?? 'card',
+    sourceId: modifier.sourceId ?? context.cardDef.id,
+    displayText: modifier.displayText ?? effect.displayText ?? getModifierLabel(context, '本单修正'),
+    durationType: modifier.durationType ?? 'this_deal',
+    targetId: modifier.targetId ?? getProduct(context)?.id,
   });
   return { ok: true, effectType: effect.type, message: '添加了本单修正。' };
+}
+
+function applyModifyAccidentResult(effect: Effect, context: EffectContext): EffectResult {
+  const params = getParams(effect);
+  const stat = typeof params.stat === 'string' ? params.stat : null;
+  const op = typeof params.op === 'string' ? params.op : null;
+  const value = typeof params.value === 'number' ? params.value : null;
+  const accidentLevel = typeof params.accidentLevel === 'string' ? params.accidentLevel : null;
+  if (!stat || !op || value === null) {
+    return { ok: false, effectType: effect.type, message: '缺少事故修正参数。' };
+  }
+  context.dayState.temporaryDealModifiers ??= [];
+  context.dayState.temporaryDealModifiers.push({
+    stat,
+    op,
+    value,
+    sourceType: 'card',
+    sourceId: context.cardDef.id,
+    displayText: effect.displayText ?? getModifierLabel(context, '事故修正'),
+    condition: accidentLevel ? { type: 'accident_level_is', params: { accidentLevel } } : undefined,
+    durationType: 'this_deal',
+    targetId: getProduct(context)?.id,
+  });
+  return { ok: true, effectType: effect.type, message: effect.displayText ?? '添加了事故修正。' };
 }
 
 function applySimpleModifier(effect: Effect, context: EffectContext): EffectResult {
@@ -306,7 +370,8 @@ function applySimpleModifier(effect: Effect, context: EffectContext): EffectResu
 
 function applySuppressTag(effect: Effect, context: EffectContext): EffectResult {
   const product = getProduct(context);
-  const tagId = effect.tagId ?? effect.targetTagId ?? context.targetTagId ?? (typeof effect.value === 'string' ? effect.value : null);
+  const params = getParams(effect);
+  const tagId = effect.tagId ?? effect.targetTagId ?? context.targetTagId ?? (typeof params.tagId === 'string' ? params.tagId : null) ?? (typeof effect.value === 'string' ? effect.value : null);
   if (!product || !tagId) {
     return { ok: false, effectType: effect.type, message: '缺少商品或标签目标。' };
   }
@@ -363,6 +428,7 @@ export function applyEffect(effect: Effect, context: EffectContext): EffectResul
     case 'add_applied_tag_to_product':
       return applyAddAppliedTag(effect, context);
     case 'reveal_hidden_tags':
+    case 'reveal_hidden_tag':
       return applyRevealHiddenTags(effect, context);
     case 'reveal_dark_risk_category':
       return applyRevealDarkRiskCategory(effect, context);
@@ -372,6 +438,8 @@ export function applyEffect(effect: Effect, context: EffectContext): EffectResul
       return applyAddProductModifier(effect, context);
     case 'add_deal_modifier':
       return applyAddDealModifier(effect, context);
+    case 'modify_accident_result':
+      return applyModifyAccidentResult(effect, context);
     case 'add_price':
     case 'multiply_price':
     case 'add_risk':

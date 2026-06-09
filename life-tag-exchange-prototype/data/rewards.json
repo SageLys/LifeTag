@@ -6,7 +6,10 @@
     "weight": 100,
     "payload": {
       "cardId": "card_low_salary_pitch"
-    }
+    },
+    "type": "add_card",
+    "rewardSlot": "legacy",
+    "displayName": "低薪叙事包装"
   },
   {
     "id": "reward_add_card_decent_package",
@@ -15,7 +18,10 @@
     "weight": 100,
     "payload": {
       "cardId": "card_decent_package"
-    }
+    },
+    "type": "add_card",
+    "rewardSlot": "legacy",
+    "displayName": "体面包装"
   },
   {
     "id": "reward_add_card_crazy_persona",
@@ -24,7 +30,10 @@
     "weight": 100,
     "payload": {
       "cardId": "card_crazy_persona"
-    }
+    },
+    "type": "add_card",
+    "rewardSlot": "legacy",
+    "displayName": "发疯人设"
   },
   {
     "id": "reward_add_card_elite_endorsement",
@@ -33,7 +42,10 @@
     "weight": 100,
     "payload": {
       "cardId": "card_elite_endorsement"
-    }
+    },
+    "type": "add_card",
+    "rewardSlot": "legacy",
+    "displayName": "名校背书"
   },
   {
     "id": "reward_add_card_background_check",
@@ -42,7 +54,10 @@
     "weight": 100,
     "payload": {
       "cardId": "card_background_check"
-    }
+    },
+    "type": "add_card",
+    "rewardSlot": "legacy",
+    "displayName": "背调预检"
   },
   {
     "id": "reward_add_card_pr_package",
@@ -51,7 +66,10 @@
     "weight": 100,
     "payload": {
       "cardId": "card_pr_package"
-    }
+    },
+    "type": "add_card",
+    "rewardSlot": "legacy",
+    "displayName": "公关包装"
   },
   {
     "id": "reward_add_card_black_red_plan",
@@ -60,7 +78,10 @@
     "weight": 100,
     "payload": {
       "cardId": "card_black_red_plan"
-    }
+    },
+    "type": "add_card",
+    "rewardSlot": "legacy",
+    "displayName": "黑红方案"
   },
   {
     "id": "reward_add_card_platform_hedge",
@@ -69,7 +90,10 @@
     "weight": 100,
     "payload": {
       "cardId": "card_platform_hedge"
-    }
+    },
+    "type": "add_card",
+    "rewardSlot": "legacy",
+    "displayName": "平台对冲"
   },
   {
     "id": "reward_add_card_draw_two_filter_one",
@@ -78,7 +102,10 @@
     "weight": 100,
     "payload": {
       "cardId": "card_draw_two_filter_one"
-    }
+    },
+    "type": "add_card",
+    "rewardSlot": "legacy",
+    "displayName": "抽二滤一"
   },
   {
     "id": "reward_add_card_hidden_label_probe",
@@ -87,7 +114,10 @@
     "weight": 100,
     "payload": {
       "cardId": "card_hidden_label_probe"
-    }
+    },
+    "type": "add_card",
+    "rewardSlot": "legacy",
+    "displayName": "隐藏标签探针"
   },
   {
     "id": "reward_add_card_cheap_source_hunt",
@@ -96,7 +126,10 @@
     "weight": 100,
     "payload": {
       "cardId": "card_cheap_source_hunt"
-    }
+    },
+    "type": "add_card",
+    "rewardSlot": "legacy",
+    "displayName": "低价货源搜罗"
   },
   {
     "id": "reward_add_card_duplicate_next_tag_tool",
@@ -105,7 +138,10 @@
     "weight": 100,
     "payload": {
       "cardId": "card_duplicate_next_tag_tool"
-    }
+    },
+    "type": "add_card",
+    "rewardSlot": "legacy",
+    "displayName": "复读包装机"
   },
   {
     "id": "reward_upgrade_low_salary_pitch",
@@ -114,7 +150,10 @@
     "weight": 100,
     "payload": {
       "cardId": "card_low_salary_pitch"
-    }
+    },
+    "type": "upgrade_card",
+    "rewardSlot": "legacy",
+    "displayName": "低薪叙事包装"
   },
   {
     "id": "reward_upgrade_decent_package",
@@ -123,7 +162,10 @@
     "weight": 100,
     "payload": {
       "cardId": "card_decent_package"
-    }
+    },
+    "type": "upgrade_card",
+    "rewardSlot": "legacy",
+    "displayName": "体面包装"
   },
   {
     "id": "reward_upgrade_background_check",
@@ -132,7 +174,10 @@
     "weight": 100,
     "payload": {
       "cardId": "card_background_check"
-    }
+    },
+    "type": "upgrade_card",
+    "rewardSlot": "legacy",
+    "displayName": "背调预检"
   },
   {
     "id": "reward_upgrade_pr_package",
@@ -141,7 +186,10 @@
     "weight": 100,
     "payload": {
       "cardId": "card_pr_package"
-    }
+    },
+    "type": "upgrade_card",
+    "rewardSlot": "legacy",
+    "displayName": "公关包装"
   },
   {
     "id": "reward_upgrade_platform_hedge",
@@ -150,7 +198,10 @@
     "weight": 100,
     "payload": {
       "cardId": "card_platform_hedge"
-    }
+    },
+    "type": "upgrade_card",
+    "rewardSlot": "legacy",
+    "displayName": "平台对冲"
   },
   {
     "id": "reward_upgrade_hidden_label_probe",
@@ -159,28 +210,40 @@
     "weight": 100,
     "payload": {
       "cardId": "card_hidden_label_probe"
-    }
+    },
+    "type": "upgrade_card",
+    "rewardSlot": "legacy",
+    "displayName": "隐藏标签探针"
   },
   {
     "id": "reward_remove_basic_noise",
     "rewardType": "remove_card",
     "description": "移除一张基础噪音卡",
     "weight": 100,
-    "payload": {}
+    "payload": {},
+    "type": "remove_card",
+    "rewardSlot": "legacy",
+    "displayName": "一张基础噪音卡"
   },
   {
     "id": "reward_remove_low_value_tool",
     "rewardType": "remove_card",
     "description": "移除一张低价值工具卡",
     "weight": 100,
-    "payload": {}
+    "payload": {},
+    "type": "remove_card",
+    "rewardSlot": "legacy",
+    "displayName": "一张低价值工具卡"
   },
   {
     "id": "reward_remove_risky_tool",
     "rewardType": "remove_card",
     "description": "移除一张高风险工具卡",
     "weight": 100,
-    "payload": {}
+    "payload": {},
+    "type": "remove_card",
+    "rewardSlot": "legacy",
+    "displayName": "一张高风险工具卡"
   },
   {
     "id": "reward_passive_black_red_is_red",
@@ -189,7 +252,10 @@
     "weight": 100,
     "payload": {
       "passiveId": "passive_black_red_is_red"
-    }
+    },
+    "type": "add_passive",
+    "rewardSlot": "legacy",
+    "displayName": "黑红也是红"
   },
   {
     "id": "reward_passive_wash_line",
@@ -198,7 +264,10 @@
     "weight": 100,
     "payload": {
       "passiveId": "passive_wash_line"
-    }
+    },
+    "type": "add_passive",
+    "rewardSlot": "legacy",
+    "displayName": "洗标流水线"
   },
   {
     "id": "reward_passive_bigtech_endorsement",
@@ -207,7 +276,10 @@
     "weight": 100,
     "payload": {
       "passiveId": "passive_bigtech_endorsement"
-    }
+    },
+    "type": "add_passive",
+    "rewardSlot": "legacy",
+    "displayName": "大厂背书"
   },
   {
     "id": "reward_passive_black_box_king",
@@ -216,7 +288,10 @@
     "weight": 100,
     "payload": {
       "passiveId": "passive_black_box_king"
-    }
+    },
+    "type": "add_passive",
+    "rewardSlot": "legacy",
+    "displayName": "盲盒之王"
   },
   {
     "id": "reward_passive_background_outsource",
@@ -225,7 +300,10 @@
     "weight": 100,
     "payload": {
       "passiveId": "passive_background_outsource"
-    }
+    },
+    "type": "add_passive",
+    "rewardSlot": "legacy",
+    "displayName": "背调外包"
   },
   {
     "id": "reward_passive_acquaintance_society",
@@ -234,7 +312,10 @@
     "weight": 100,
     "payload": {
       "passiveId": "passive_acquaintance_society"
-    }
+    },
+    "type": "add_passive",
+    "rewardSlot": "legacy",
+    "displayName": "熟人社会"
   },
   {
     "id": "reward_passive_parent_safe_pack",
@@ -243,7 +324,10 @@
     "weight": 100,
     "payload": {
       "passiveId": "passive_parent_safe_pack"
-    }
+    },
+    "type": "add_passive",
+    "rewardSlot": "legacy",
+    "displayName": "家长安心包"
   },
   {
     "id": "reward_passive_platform_grey_operation",
@@ -252,7 +336,10 @@
     "weight": 100,
     "payload": {
       "passiveId": "passive_platform_grey_operation"
-    }
+    },
+    "type": "add_passive",
+    "rewardSlot": "legacy",
+    "displayName": "平台灰产运营"
   },
   {
     "id": "reward_passive_low_salary_scaling",
@@ -261,7 +348,10 @@
     "weight": 100,
     "payload": {
       "passiveId": "passive_low_salary_scaling"
-    }
+    },
+    "type": "add_passive",
+    "rewardSlot": "legacy",
+    "displayName": "低薪规模化"
   },
   {
     "id": "reward_passive_public_opinion_stoploss",
@@ -270,7 +360,10 @@
     "weight": 100,
     "payload": {
       "passiveId": "passive_public_opinion_stoploss"
-    }
+    },
+    "type": "add_passive",
+    "rewardSlot": "legacy",
+    "displayName": "舆情止损"
   },
   {
     "id": "reward_supply_bigtech_leftover",
@@ -279,7 +372,10 @@
     "weight": 100,
     "payload": {
       "supplySourceId": "supply_bigtech_leftover"
-    }
+    },
+    "type": "add_supply_source",
+    "rewardSlot": "legacy",
+    "displayName": "新增货源：大厂边角料"
   },
   {
     "id": "reward_supply_startup_clearance",
@@ -288,7 +384,10 @@
     "weight": 100,
     "payload": {
       "supplySourceId": "supply_startup_clearance"
-    }
+    },
+    "type": "add_supply_source",
+    "rewardSlot": "legacy",
+    "displayName": "新增货源：创业公司清仓"
   },
   {
     "id": "reward_supply_matchmaking_channel",
@@ -297,7 +396,10 @@
     "weight": 100,
     "payload": {
       "supplySourceId": "supply_matchmaking_channel"
-    }
+    },
+    "type": "add_supply_source",
+    "rewardSlot": "legacy",
+    "displayName": "新增货源：相亲渠道货"
   },
   {
     "id": "reward_supply_short_video_farm",
@@ -306,7 +408,10 @@
     "weight": 100,
     "payload": {
       "supplySourceId": "supply_short_video_farm"
-    }
+    },
+    "type": "add_supply_source",
+    "rewardSlot": "legacy",
+    "displayName": "新增货源：短视频养殖场"
   },
   {
     "id": "reward_supply_returnee_packager",
@@ -315,7 +420,10 @@
     "weight": 100,
     "payload": {
       "supplySourceId": "supply_returnee_packager"
-    }
+    },
+    "type": "add_supply_source",
+    "rewardSlot": "legacy",
+    "displayName": "新增货源：海归包装商"
   },
   {
     "id": "reward_supply_black_box_wholesale",
@@ -324,7 +432,10 @@
     "weight": 100,
     "payload": {
       "supplySourceId": "supply_black_box_wholesale"
-    }
+    },
+    "type": "add_supply_source",
+    "rewardSlot": "legacy",
+    "displayName": "新增货源：黑箱批发"
   },
   {
     "id": "reward_gain_cash_30",
@@ -333,7 +444,10 @@
     "weight": 100,
     "payload": {
       "amount": 30
-    }
+    },
+    "type": "gain_cash",
+    "rewardSlot": "legacy",
+    "displayName": "立即获得 30 资金"
   },
   {
     "id": "reward_gain_cash_50",
@@ -342,7 +456,10 @@
     "weight": 100,
     "payload": {
       "amount": 50
-    }
+    },
+    "type": "gain_cash",
+    "rewardSlot": "legacy",
+    "displayName": "立即获得 50 资金"
   },
   {
     "id": "reward_gain_reputation_10",
@@ -351,7 +468,10 @@
     "weight": 100,
     "payload": {
       "amount": 10
-    }
+    },
+    "type": "gain_reputation",
+    "rewardSlot": "legacy",
+    "displayName": "立即获得 10 声誉"
   },
   {
     "id": "reward_gain_insurance_1",
@@ -360,13 +480,1345 @@
     "weight": 100,
     "payload": {
       "amount": 1
-    }
+    },
+    "type": "gain_insurance",
+    "rewardSlot": "legacy",
+    "displayName": " 1 次事故保险"
   },
   {
     "id": "reward_reduce_next_risk",
     "rewardType": "temporary_modifier",
     "description": "下一次交易风险降低",
     "weight": 100,
-    "payload": {}
+    "payload": {},
+    "type": "temporary_modifier",
+    "rewardSlot": "legacy",
+    "displayName": "下一次交易风险降低"
+  },
+  {
+    "weight": 100,
+    "id": "reward_maintain_cash_flow",
+    "displayName": "现金周转",
+    "rewardSlot": "maintenance",
+    "type": "gain_cash",
+    "maintenanceCost": 1,
+    "description": "获得 45 现金。",
+    "amount": 45,
+    "effects": [
+      {
+        "type": "gain_cash",
+        "params": {
+          "amount": 45
+        },
+        "displayText": "现金 +45"
+      }
+    ],
+    "rewardType": "gain_cash",
+    "payload": {
+      "amount": 45,
+      "effects": [
+        {
+          "type": "gain_cash",
+          "params": {
+            "amount": 45
+          },
+          "displayText": "现金 +45"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_maintain_reputation_repair",
+    "displayName": "舆论修补",
+    "rewardSlot": "maintenance",
+    "type": "gain_reputation",
+    "maintenanceCost": 1,
+    "description": "信誉 +18，上限不超过 maxReputation。",
+    "amount": 18,
+    "effects": [
+      {
+        "type": "gain_reputation",
+        "params": {
+          "amount": 18,
+          "cap": "maxReputation"
+        },
+        "displayText": "信誉 +18"
+      }
+    ],
+    "rewardType": "gain_reputation",
+    "payload": {
+      "amount": 18,
+      "effects": [
+        {
+          "type": "gain_reputation",
+          "params": {
+            "amount": 18,
+            "cap": "maxReputation"
+          },
+          "displayText": "信誉 +18"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_maintain_free_identify",
+    "displayName": "免费鉴定券",
+    "rewardSlot": "maintenance",
+    "type": "add_temporary_modifier",
+    "maintenanceCost": 1,
+    "description": "下日第一次鉴定不消耗 AP。",
+    "effects": [
+      {
+        "type": "add_temporary_modifier",
+        "params": {
+          "duration": "next_day",
+          "actionId": "action_identify",
+          "scope": "first_use",
+          "stat": "actionPointCost",
+          "op": "set",
+          "value": 0
+        },
+        "displayText": "下日第一次鉴定 AP 变为 0"
+      }
+    ],
+    "rewardType": "add_temporary_modifier",
+    "payload": {
+      "effects": [
+        {
+          "type": "add_temporary_modifier",
+          "params": {
+            "duration": "next_day",
+            "actionId": "action_identify",
+            "scope": "first_use",
+            "stat": "actionPointCost",
+            "op": "set",
+            "value": 0
+          },
+          "displayText": "下日第一次鉴定 AP 变为 0"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_maintain_free_package",
+    "displayName": "免费包装券",
+    "rewardSlot": "maintenance",
+    "type": "add_temporary_modifier",
+    "maintenanceCost": 1,
+    "description": "下日第一次包装不消耗现金，仍消耗 AP。",
+    "effects": [
+      {
+        "type": "add_temporary_modifier",
+        "params": {
+          "duration": "next_day",
+          "cardType": "tag_tool",
+          "scope": "first_use",
+          "stat": "cashCost",
+          "op": "set",
+          "value": 0
+        },
+        "displayText": "下日第一次包装现金成本 0"
+      }
+    ],
+    "rewardType": "add_temporary_modifier",
+    "payload": {
+      "effects": [
+        {
+          "type": "add_temporary_modifier",
+          "params": {
+            "duration": "next_day",
+            "cardType": "tag_tool",
+            "scope": "first_use",
+            "stat": "cashCost",
+            "op": "set",
+            "value": 0
+          },
+          "displayText": "下日第一次包装现金成本 0"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_maintain_inventory_cleanup",
+    "displayName": "清仓处理",
+    "rewardSlot": "maintenance",
+    "type": "product_repair",
+    "maintenanceCost": 1,
+    "description": "选择 1 个库存商品，新鲜度 +1 或腐败风险 -10。没有库存时不可用。",
+    "requires": {
+      "inventory_size_above": 0
+    },
+    "effects": [
+      {
+        "type": "product_repair",
+        "params": {
+          "target": "inventory_product",
+          "choices": [
+            {
+              "stat": "freshness",
+              "op": "add",
+              "value": 1
+            },
+            {
+              "stat": "spoilRisk",
+              "op": "add",
+              "value": -10
+            }
+          ]
+        },
+        "displayText": "库存商品新鲜度 +1 或腐败风险 -10"
+      }
+    ],
+    "rewardType": "product_repair",
+    "payload": {
+      "requires": {
+        "inventory_size_above": 0
+      },
+      "effects": [
+        {
+          "type": "product_repair",
+          "params": {
+            "target": "inventory_product",
+            "choices": [
+              {
+                "stat": "freshness",
+                "op": "add",
+                "value": 1
+              },
+              {
+                "stat": "spoilRisk",
+                "op": "add",
+                "value": -10
+              }
+            ]
+          },
+          "displayText": "库存商品新鲜度 +1 或腐败风险 -10"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_maintain_extra_ap_next_day",
+    "displayName": "临时加班",
+    "rewardSlot": "maintenance",
+    "type": "add_temporary_modifier",
+    "maintenanceCost": 2,
+    "oncePerDayGroup": "strong_maintenance",
+    "description": "下日行动点 +1。",
+    "effects": [
+      {
+        "type": "add_temporary_modifier",
+        "params": {
+          "duration": "next_day",
+          "stat": "dailyActionPoints",
+          "op": "add",
+          "value": 1
+        },
+        "displayText": "下日行动点 +1"
+      }
+    ],
+    "rewardType": "add_temporary_modifier",
+    "payload": {
+      "effects": [
+        {
+          "type": "add_temporary_modifier",
+          "params": {
+            "duration": "next_day",
+            "stat": "dailyActionPoints",
+            "op": "add",
+            "value": 1
+          },
+          "displayText": "下日行动点 +1"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_maintain_extra_draw_next_day",
+    "displayName": "多抽一张",
+    "rewardSlot": "maintenance",
+    "type": "add_temporary_modifier",
+    "maintenanceCost": 2,
+    "oncePerDayGroup": "strong_maintenance",
+    "description": "下日抽牌 +1。",
+    "effects": [
+      {
+        "type": "add_temporary_modifier",
+        "params": {
+          "duration": "next_day",
+          "stat": "dailyDrawCount",
+          "op": "add",
+          "value": 1
+        },
+        "displayText": "下日抽牌 +1"
+      }
+    ],
+    "rewardType": "add_temporary_modifier",
+    "payload": {
+      "effects": [
+        {
+          "type": "add_temporary_modifier",
+          "params": {
+            "duration": "next_day",
+            "stat": "dailyDrawCount",
+            "op": "add",
+            "value": 1
+          },
+          "displayText": "下日抽牌 +1"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_free_add_bigtech_card",
+    "displayName": "拿一张大厂牌",
+    "rewardSlot": "free_build",
+    "type": "add_card",
+    "archetype": "bigtech",
+    "cardPool": [
+      "card_elite_endorsement",
+      "card_overtime_narrative",
+      "card_trial_transfer"
+    ],
+    "description": "从大厂牌池中随机 1 张加入弃牌堆。",
+    "effects": [
+      {
+        "type": "add_card_from_pool",
+        "params": {
+          "destination": "discard_pile",
+          "pickCount": 1,
+          "cardPool": [
+            "card_elite_endorsement",
+            "card_overtime_narrative",
+            "card_trial_transfer"
+          ]
+        },
+        "displayText": "随机获得 1 张大厂牌"
+      }
+    ],
+    "rewardType": "add_card",
+    "payload": {
+      "cardPool": [
+        "card_elite_endorsement",
+        "card_overtime_narrative",
+        "card_trial_transfer"
+      ],
+      "effects": [
+        {
+          "type": "add_card_from_pool",
+          "params": {
+            "destination": "discard_pile",
+            "pickCount": 1,
+            "cardPool": [
+              "card_elite_endorsement",
+              "card_overtime_narrative",
+              "card_trial_transfer"
+            ]
+          },
+          "displayText": "随机获得 1 张大厂牌"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_free_add_family_card",
+    "displayName": "拿一张相亲牌",
+    "rewardSlot": "free_build",
+    "type": "add_card",
+    "archetype": "family",
+    "cardPool": [
+      "card_emotional_stability_certificate",
+      "card_parent_background_check",
+      "card_decent_endorsement"
+    ],
+    "description": "从相亲牌池中随机 1 张加入弃牌堆。",
+    "effects": [
+      {
+        "type": "add_card_from_pool",
+        "params": {
+          "destination": "discard_pile",
+          "pickCount": 1,
+          "cardPool": [
+            "card_emotional_stability_certificate",
+            "card_parent_background_check",
+            "card_decent_endorsement"
+          ]
+        },
+        "displayText": "随机获得 1 张相亲牌"
+      }
+    ],
+    "rewardType": "add_card",
+    "payload": {
+      "cardPool": [
+        "card_emotional_stability_certificate",
+        "card_parent_background_check",
+        "card_decent_endorsement"
+      ],
+      "effects": [
+        {
+          "type": "add_card_from_pool",
+          "params": {
+            "destination": "discard_pile",
+            "pickCount": 1,
+            "cardPool": [
+              "card_emotional_stability_certificate",
+              "card_parent_background_check",
+              "card_decent_endorsement"
+            ]
+          },
+          "displayText": "随机获得 1 张相亲牌"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_free_add_mcn_card",
+    "displayName": "拿一张 MCN 牌",
+    "rewardSlot": "free_build",
+    "type": "add_card",
+    "archetype": "mcn",
+    "cardPool": [
+      "card_hot_search_warmup",
+      "card_black_red_package",
+      "card_platform_hedge"
+    ],
+    "description": "从 MCN 牌池中随机 1 张加入弃牌堆。",
+    "effects": [
+      {
+        "type": "add_card_from_pool",
+        "params": {
+          "destination": "discard_pile",
+          "pickCount": 1,
+          "cardPool": [
+            "card_hot_search_warmup",
+            "card_black_red_package",
+            "card_platform_hedge"
+          ]
+        },
+        "displayText": "随机获得 1 张 MCN 牌"
+      }
+    ],
+    "rewardType": "add_card",
+    "payload": {
+      "cardPool": [
+        "card_hot_search_warmup",
+        "card_black_red_package",
+        "card_platform_hedge"
+      ],
+      "effects": [
+        {
+          "type": "add_card_from_pool",
+          "params": {
+            "destination": "discard_pile",
+            "pickCount": 1,
+            "cardPool": [
+              "card_hot_search_warmup",
+              "card_black_red_package",
+              "card_platform_hedge"
+            ]
+          },
+          "displayText": "随机获得 1 张 MCN 牌"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_free_random_upgrade_basic",
+    "displayName": "基础牌随机升级",
+    "rewardSlot": "free_build",
+    "type": "upgrade_card",
+    "description": "从当前牌组中随机升级 1 张可升级基础牌。",
+    "effects": [
+      {
+        "type": "upgrade_random_card",
+        "params": {
+          "source": "deck",
+          "requiresUpgradedCardId": true,
+          "pickCount": 1
+        },
+        "displayText": "随机升级 1 张可升级基础牌"
+      }
+    ],
+    "rewardType": "upgrade_card",
+    "payload": {
+      "effects": [
+        {
+          "type": "upgrade_random_card",
+          "params": {
+            "source": "deck",
+            "requiresUpgradedCardId": true,
+            "pickCount": 1
+          },
+          "displayText": "随机升级 1 张可升级基础牌"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_free_temporary_insurance_small",
+    "displayName": "小额事故保险",
+    "rewardSlot": "free_build",
+    "type": "temporary_insurance",
+    "description": "下一次中事故及以上，信誉损失 -10。",
+    "temporaryInsurance": {
+      "accidentLevelAtLeast": "medium",
+      "modifiers": [
+        {
+          "stat": "reputationLoss",
+          "op": "add",
+          "value": -10
+        }
+      ],
+      "uses": 1
+    },
+    "effects": [
+      {
+        "type": "temporary_insurance",
+        "params": {
+          "accidentLevelAtLeast": "medium",
+          "modifiers": [
+            {
+              "stat": "reputationLoss",
+              "op": "add",
+              "value": -10
+            }
+          ],
+          "uses": 1
+        },
+        "displayText": "下一次中事故及以上：信誉损失 -10"
+      }
+    ],
+    "rewardType": "temporary_insurance",
+    "payload": {
+      "temporaryInsurance": {
+        "accidentLevelAtLeast": "medium",
+        "modifiers": [
+          {
+            "stat": "reputationLoss",
+            "op": "add",
+            "value": -10
+          }
+        ],
+        "uses": 1
+      },
+      "effects": [
+        {
+          "type": "temporary_insurance",
+          "params": {
+            "accidentLevelAtLeast": "medium",
+            "modifiers": [
+              {
+                "stat": "reputationLoss",
+                "op": "add",
+                "value": -10
+              }
+            ],
+            "uses": 1
+          },
+          "displayText": "下一次中事故及以上：信誉损失 -10"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_free_supply_trial",
+    "displayName": "临时货源试用",
+    "rewardSlot": "free_build",
+    "type": "add_supply_source",
+    "description": "随机获得 1 个持续 1 天的货源倾向。",
+    "supplyPool": [
+      "supply_campus_leftover",
+      "supply_flow_frozen_meat",
+      "supply_marriage_boutique",
+      "supply_black_box_wholesale"
+    ],
+    "durationOverrideDays": 1,
+    "effects": [
+      {
+        "type": "add_supply_source_from_pool",
+        "params": {
+          "supplyPool": [
+            "supply_campus_leftover",
+            "supply_flow_frozen_meat",
+            "supply_marriage_boutique",
+            "supply_black_box_wholesale"
+          ],
+          "durationOverrideDays": 1,
+          "pickCount": 1
+        },
+        "displayText": "随机获得 1 个 1 天货源"
+      }
+    ],
+    "rewardType": "add_supply_source",
+    "payload": {
+      "supplyPool": [
+        "supply_campus_leftover",
+        "supply_flow_frozen_meat",
+        "supply_marriage_boutique",
+        "supply_black_box_wholesale"
+      ],
+      "durationOverrideDays": 1,
+      "effects": [
+        {
+          "type": "add_supply_source_from_pool",
+          "params": {
+            "supplyPool": [
+              "supply_campus_leftover",
+              "supply_flow_frozen_meat",
+              "supply_marriage_boutique",
+              "supply_black_box_wholesale"
+            ],
+            "durationOverrideDays": 1,
+            "pickCount": 1
+          },
+          "displayText": "随机获得 1 个 1 天货源"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_shop_upgrade_selected_card",
+    "displayName": "指定升级卡牌",
+    "rewardSlot": "paid_shop",
+    "type": "upgrade_card",
+    "price": 55,
+    "dayOneDiscount": 10,
+    "description": "选择当前牌组中 1 张可升级卡牌，将其替换为升级版。",
+    "requires": "has_upgradable_card",
+    "effects": [
+      {
+        "type": "upgrade_selected_card",
+        "params": {
+          "source": "deck",
+          "requiresUpgradedCardId": true
+        },
+        "displayText": "指定升级 1 张卡牌"
+      }
+    ],
+    "rewardType": "upgrade_card",
+    "payload": {
+      "requires": "has_upgradable_card",
+      "effects": [
+        {
+          "type": "upgrade_selected_card",
+          "params": {
+            "source": "deck",
+            "requiresUpgradedCardId": true
+          },
+          "displayText": "指定升级 1 张卡牌"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_shop_remove_card",
+    "displayName": "删除一张卡牌",
+    "rewardSlot": "paid_shop",
+    "type": "remove_card",
+    "price": 65,
+    "description": "从牌组中选择 1 张非临时卡牌删除。牌组总数低于 6 时不可购买。",
+    "requires": {
+      "deck_size_above": 6
+    },
+    "effects": [
+      {
+        "type": "remove_card",
+        "params": {
+          "source": "deck",
+          "excludeTemporary": true,
+          "pickCount": 1
+        },
+        "displayText": "删除 1 张非临时卡牌"
+      }
+    ],
+    "rewardType": "remove_card",
+    "payload": {
+      "requires": {
+        "deck_size_above": 6
+      },
+      "effects": [
+        {
+          "type": "remove_card",
+          "params": {
+            "source": "deck",
+            "excludeTemporary": true,
+            "pickCount": 1
+          },
+          "displayText": "删除 1 张非临时卡牌"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_shop_add_strong_card",
+    "displayName": "购买强力经营牌",
+    "rewardSlot": "paid_shop",
+    "type": "add_card",
+    "price": 50,
+    "cardPool": [
+      "card_elite_endorsement",
+      "card_emotional_stability_certificate",
+      "card_hot_search_warmup",
+      "card_platform_hedge"
+    ],
+    "description": "从强力经营牌池中选择 1 张加入弃牌堆。",
+    "effects": [
+      {
+        "type": "add_selected_card_from_pool",
+        "params": {
+          "destination": "discard_pile",
+          "cardPool": [
+            "card_elite_endorsement",
+            "card_emotional_stability_certificate",
+            "card_hot_search_warmup",
+            "card_platform_hedge"
+          ]
+        },
+        "displayText": "购买 1 张强力经营牌"
+      }
+    ],
+    "rewardType": "add_card",
+    "payload": {
+      "cardPool": [
+        "card_elite_endorsement",
+        "card_emotional_stability_certificate",
+        "card_hot_search_warmup",
+        "card_platform_hedge"
+      ],
+      "effects": [
+        {
+          "type": "add_selected_card_from_pool",
+          "params": {
+            "destination": "discard_pile",
+            "cardPool": [
+              "card_elite_endorsement",
+              "card_emotional_stability_certificate",
+              "card_hot_search_warmup",
+              "card_platform_hedge"
+            ]
+          },
+          "displayText": "购买 1 张强力经营牌"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_shop_buy_passive_bigtech",
+    "displayName": "购买被动：大厂背书合作",
+    "rewardSlot": "paid_shop",
+    "type": "add_passive",
+    "price": 95,
+    "passiveId": "passive_bigtech_endorsement",
+    "description": "获得被动：大厂背书合作。",
+    "effects": [
+      {
+        "type": "add_passive",
+        "params": {
+          "passiveId": "passive_bigtech_endorsement"
+        },
+        "displayText": "获得被动：大厂背书合作"
+      }
+    ],
+    "rewardType": "add_passive",
+    "payload": {
+      "passiveId": "passive_bigtech_endorsement",
+      "effects": [
+        {
+          "type": "add_passive",
+          "params": {
+            "passiveId": "passive_bigtech_endorsement"
+          },
+          "displayText": "获得被动：大厂背书合作"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_shop_buy_passive_wash_pipeline",
+    "displayName": "购买被动：洗标流水线",
+    "rewardSlot": "paid_shop",
+    "type": "add_passive",
+    "price": 110,
+    "passiveId": "passive_wash_label_pipeline",
+    "description": "获得被动：洗标流水线。",
+    "effects": [
+      {
+        "type": "add_passive",
+        "params": {
+          "passiveId": "passive_wash_label_pipeline"
+        },
+        "displayText": "获得被动：洗标流水线"
+      }
+    ],
+    "rewardType": "add_passive",
+    "payload": {
+      "passiveId": "passive_wash_label_pipeline",
+      "effects": [
+        {
+          "type": "add_passive",
+          "params": {
+            "passiveId": "passive_wash_label_pipeline"
+          },
+          "displayText": "获得被动：洗标流水线"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_shop_buy_passive_black_red",
+    "displayName": "购买被动：黑红也是红",
+    "rewardSlot": "paid_shop",
+    "type": "add_passive",
+    "price": 100,
+    "passiveId": "passive_black_red_is_red",
+    "description": "获得被动：黑红也是红。",
+    "effects": [
+      {
+        "type": "add_passive",
+        "params": {
+          "passiveId": "passive_black_red_is_red"
+        },
+        "displayText": "获得被动：黑红也是红"
+      }
+    ],
+    "rewardType": "add_passive",
+    "payload": {
+      "passiveId": "passive_black_red_is_red",
+      "effects": [
+        {
+          "type": "add_passive",
+          "params": {
+            "passiveId": "passive_black_red_is_red"
+          },
+          "displayText": "获得被动：黑红也是红"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_shop_buy_supply_campus",
+    "displayName": "购买货源：校招剩料",
+    "rewardSlot": "paid_shop",
+    "type": "add_supply_source",
+    "price": 70,
+    "supplySourceId": "supply_campus_leftover",
+    "description": "获得货源：校招剩料。",
+    "effects": [
+      {
+        "type": "add_supply_source",
+        "params": {
+          "supplySourceId": "supply_campus_leftover"
+        },
+        "displayText": "获得货源：校招剩料"
+      }
+    ],
+    "rewardType": "add_supply_source",
+    "payload": {
+      "supplySourceId": "supply_campus_leftover",
+      "effects": [
+        {
+          "type": "add_supply_source",
+          "params": {
+            "supplySourceId": "supply_campus_leftover"
+          },
+          "displayText": "获得货源：校招剩料"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_shop_buy_supply_flow",
+    "displayName": "购买货源：流量冻肉",
+    "rewardSlot": "paid_shop",
+    "type": "add_supply_source",
+    "price": 70,
+    "supplySourceId": "supply_flow_frozen_meat",
+    "description": "获得货源：流量冻肉。",
+    "effects": [
+      {
+        "type": "add_supply_source",
+        "params": {
+          "supplySourceId": "supply_flow_frozen_meat"
+        },
+        "displayText": "获得货源：流量冻肉"
+      }
+    ],
+    "rewardType": "add_supply_source",
+    "payload": {
+      "supplySourceId": "supply_flow_frozen_meat",
+      "effects": [
+        {
+          "type": "add_supply_source",
+          "params": {
+            "supplySourceId": "supply_flow_frozen_meat"
+          },
+          "displayText": "获得货源：流量冻肉"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_shop_buy_supply_marriage",
+    "displayName": "购买货源：婚恋精品库",
+    "rewardSlot": "paid_shop",
+    "type": "add_supply_source",
+    "price": 75,
+    "supplySourceId": "supply_marriage_boutique",
+    "description": "获得货源：婚恋精品库。",
+    "effects": [
+      {
+        "type": "add_supply_source",
+        "params": {
+          "supplySourceId": "supply_marriage_boutique"
+        },
+        "displayText": "获得货源：婚恋精品库"
+      }
+    ],
+    "rewardType": "add_supply_source",
+    "payload": {
+      "supplySourceId": "supply_marriage_boutique",
+      "effects": [
+        {
+          "type": "add_supply_source",
+          "params": {
+            "supplySourceId": "supply_marriage_boutique"
+          },
+          "displayText": "获得货源：婚恋精品库"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_shop_buy_supply_black_box",
+    "displayName": "购买货源：黑箱批发",
+    "rewardSlot": "paid_shop",
+    "type": "add_supply_source",
+    "price": 60,
+    "supplySourceId": "supply_black_box_wholesale",
+    "description": "获得货源：黑箱批发。",
+    "effects": [
+      {
+        "type": "add_supply_source",
+        "params": {
+          "supplySourceId": "supply_black_box_wholesale"
+        },
+        "displayText": "获得货源：黑箱批发"
+      }
+    ],
+    "rewardType": "add_supply_source",
+    "payload": {
+      "supplySourceId": "supply_black_box_wholesale",
+      "effects": [
+        {
+          "type": "add_supply_source",
+          "params": {
+            "supplySourceId": "supply_black_box_wholesale"
+          },
+          "displayText": "获得货源：黑箱批发"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_shop_major_insurance",
+    "displayName": "重大事故保险",
+    "rewardSlot": "paid_shop",
+    "type": "temporary_insurance",
+    "price": 55,
+    "description": "下一次大事故或严重事故：罚款 -50%，信誉损失 -10，然后消耗。",
+    "temporaryInsurance": {
+      "accidentLevels": [
+        "major",
+        "severe"
+      ],
+      "modifiers": [
+        {
+          "stat": "fine",
+          "op": "multiply",
+          "value": 0.5
+        },
+        {
+          "stat": "reputationLoss",
+          "op": "add",
+          "value": -10
+        }
+      ],
+      "uses": 1
+    },
+    "effects": [
+      {
+        "type": "temporary_insurance",
+        "params": {
+          "accidentLevels": [
+            "major",
+            "severe"
+          ],
+          "modifiers": [
+            {
+              "stat": "fine",
+              "op": "multiply",
+              "value": 0.5
+            },
+            {
+              "stat": "reputationLoss",
+              "op": "add",
+              "value": -10
+            }
+          ],
+          "uses": 1
+        },
+        "displayText": "重大/严重事故：罚款 ×0.5，信誉损失 -10"
+      }
+    ],
+    "rewardType": "temporary_insurance",
+    "payload": {
+      "temporaryInsurance": {
+        "accidentLevels": [
+          "major",
+          "severe"
+        ],
+        "modifiers": [
+          {
+            "stat": "fine",
+            "op": "multiply",
+            "value": 0.5
+          },
+          {
+            "stat": "reputationLoss",
+            "op": "add",
+            "value": -10
+          }
+        ],
+        "uses": 1
+      },
+      "effects": [
+        {
+          "type": "temporary_insurance",
+          "params": {
+            "accidentLevels": [
+              "major",
+              "severe"
+            ],
+            "modifiers": [
+              {
+                "stat": "fine",
+                "op": "multiply",
+                "value": 0.5
+              },
+              {
+                "stat": "reputationLoss",
+                "op": "add",
+                "value": -10
+              }
+            ],
+            "uses": 1
+          },
+          "displayText": "重大/严重事故：罚款 ×0.5，信誉损失 -10"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_shop_opinion_stoploss_insurance",
+    "displayName": "舆论止损保险",
+    "rewardSlot": "paid_shop",
+    "type": "temporary_insurance",
+    "price": 65,
+    "description": "下一次事故等级 -1，但最低降到小事故，然后消耗。",
+    "temporaryInsurance": {
+      "modifiers": [
+        {
+          "stat": "accidentLevel",
+          "op": "add",
+          "value": -1,
+          "min": "minor"
+        }
+      ],
+      "uses": 1
+    },
+    "effects": [
+      {
+        "type": "temporary_insurance",
+        "params": {
+          "modifiers": [
+            {
+              "stat": "accidentLevel",
+              "op": "add",
+              "value": -1,
+              "min": "minor"
+            }
+          ],
+          "uses": 1
+        },
+        "displayText": "下一次事故等级 -1，最低小事故"
+      }
+    ],
+    "rewardType": "temporary_insurance",
+    "payload": {
+      "temporaryInsurance": {
+        "modifiers": [
+          {
+            "stat": "accidentLevel",
+            "op": "add",
+            "value": -1,
+            "min": "minor"
+          }
+        ],
+        "uses": 1
+      },
+      "effects": [
+        {
+          "type": "temporary_insurance",
+          "params": {
+            "modifiers": [
+              {
+                "stat": "accidentLevel",
+                "op": "add",
+                "value": -1,
+                "min": "minor"
+              }
+            ],
+            "uses": 1
+          },
+          "displayText": "下一次事故等级 -1，最低小事故"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_bonus_cash",
+    "displayName": "爆单现金",
+    "rewardSlot": "bonus",
+    "type": "gain_cash",
+    "description": "现金 +50。",
+    "amount": 50,
+    "effects": [
+      {
+        "type": "gain_cash",
+        "params": {
+          "amount": 50
+        },
+        "displayText": "现金 +50"
+      }
+    ],
+    "rewardType": "gain_cash",
+    "payload": {
+      "amount": 50,
+      "effects": [
+        {
+          "type": "gain_cash",
+          "params": {
+            "amount": 50
+          },
+          "displayText": "现金 +50"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_bonus_reputation",
+    "displayName": "顾客好评",
+    "rewardSlot": "bonus",
+    "type": "gain_reputation",
+    "description": "信誉 +15。",
+    "amount": 15,
+    "effects": [
+      {
+        "type": "gain_reputation",
+        "params": {
+          "amount": 15,
+          "cap": "maxReputation"
+        },
+        "displayText": "信誉 +15"
+      }
+    ],
+    "rewardType": "gain_reputation",
+    "payload": {
+      "amount": 15,
+      "effects": [
+        {
+          "type": "gain_reputation",
+          "params": {
+            "amount": 15,
+            "cap": "maxReputation"
+          },
+          "displayText": "信誉 +15"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_bonus_shop_discount",
+    "displayName": "付费商店折扣券",
+    "rewardSlot": "bonus",
+    "type": "add_temporary_modifier",
+    "description": "下日第一个付费商店商品价格 -30%。",
+    "effects": [
+      {
+        "type": "add_temporary_modifier",
+        "params": {
+          "duration": "next_day",
+          "rewardSlot": "paid_shop",
+          "scope": "first_purchase",
+          "stat": "price",
+          "op": "multiply",
+          "value": 0.7
+        },
+        "displayText": "下日首个付费商品价格 -30%"
+      }
+    ],
+    "rewardType": "add_temporary_modifier",
+    "payload": {
+      "effects": [
+        {
+          "type": "add_temporary_modifier",
+          "params": {
+            "duration": "next_day",
+            "rewardSlot": "paid_shop",
+            "scope": "first_purchase",
+            "stat": "price",
+            "op": "multiply",
+            "value": 0.7
+          },
+          "displayText": "下日首个付费商品价格 -30%"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_bonus_extra_draw",
+    "displayName": "额外曝光",
+    "rewardSlot": "bonus",
+    "type": "add_temporary_modifier",
+    "description": "下日抽牌 +1。",
+    "effects": [
+      {
+        "type": "add_temporary_modifier",
+        "params": {
+          "duration": "next_day",
+          "stat": "dailyDrawCount",
+          "op": "add",
+          "value": 1
+        },
+        "displayText": "下日抽牌 +1"
+      }
+    ],
+    "rewardType": "add_temporary_modifier",
+    "payload": {
+      "effects": [
+        {
+          "type": "add_temporary_modifier",
+          "params": {
+            "duration": "next_day",
+            "stat": "dailyDrawCount",
+            "op": "add",
+            "value": 1
+          },
+          "displayText": "下日抽牌 +1"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_bonus_extra_product_candidate",
+    "displayName": "内部消息",
+    "rewardSlot": "bonus",
+    "type": "add_temporary_modifier",
+    "description": "下日商品候选 +1。",
+    "effects": [
+      {
+        "type": "add_temporary_modifier",
+        "params": {
+          "duration": "next_day",
+          "stat": "dailyProductCandidateCount",
+          "op": "add",
+          "value": 1
+        },
+        "displayText": "下日商品候选 +1"
+      }
+    ],
+    "rewardType": "add_temporary_modifier",
+    "payload": {
+      "effects": [
+        {
+          "type": "add_temporary_modifier",
+          "params": {
+            "duration": "next_day",
+            "stat": "dailyProductCandidateCount",
+            "op": "add",
+            "value": 1
+          },
+          "displayText": "下日商品候选 +1"
+        }
+      ]
+    }
+  },
+  {
+    "weight": 100,
+    "id": "reward_bonus_risk_window",
+    "displayName": "风险窗口",
+    "rewardSlot": "bonus",
+    "type": "add_temporary_modifier",
+    "description": "下日第一次出售爆雷 -15。",
+    "effects": [
+      {
+        "type": "add_temporary_modifier",
+        "params": {
+          "duration": "next_day",
+          "actionId": "sell_product",
+          "scope": "first_use",
+          "stat": "risk",
+          "op": "add",
+          "value": -15
+        },
+        "displayText": "下日第一次出售爆雷 -15"
+      }
+    ],
+    "rewardType": "add_temporary_modifier",
+    "payload": {
+      "effects": [
+        {
+          "type": "add_temporary_modifier",
+          "params": {
+            "duration": "next_day",
+            "actionId": "sell_product",
+            "scope": "first_use",
+            "stat": "risk",
+            "op": "add",
+            "value": -15
+          },
+          "displayText": "下日第一次出售爆雷 -15"
+        }
+      ]
+    }
   }
 ]

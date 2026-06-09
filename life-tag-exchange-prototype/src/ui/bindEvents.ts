@@ -1,13 +1,18 @@
 import {
   buyProduct,
+  buyPaidReward,
   chooseReward,
+  chooseBonus,
   clearDealSelection,
   confirmSell,
+  claimMaintenance,
+  finishRewardPhase,
   playCard,
   selectCustomerOrder,
   selectPricingMode,
   selectProduct,
   selectProductCandidate,
+  skipBonus,
   useBaseAction,
 } from '../core/actions';
 import {
@@ -135,7 +140,63 @@ export function bindEvents(app: AppRuntime): void {
 
     if (target instanceof HTMLButtonElement && target.dataset.action === 'choose-reward') {
       if (!target.disabled) {
-        chooseReward(app, target.dataset.rewardInstanceId ?? '');
+        chooseReward(app, target.dataset.rewardInstanceId ?? '', {
+          cardInstanceId: target.dataset.cardInstanceId || undefined,
+          productId: target.dataset.productId || undefined,
+          poolCardId: target.dataset.poolCardId || undefined,
+        });
+        renderApp(app);
+      }
+      return;
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'claim-maintenance-reward') {
+      if (!target.disabled) {
+        claimMaintenance(app, target.dataset.rewardInstanceId ?? '', {
+          cardInstanceId: target.dataset.cardInstanceId || undefined,
+          productId: target.dataset.productId || undefined,
+          poolCardId: target.dataset.poolCardId || undefined,
+        });
+        renderApp(app);
+      }
+      return;
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'buy-paid-reward') {
+      if (!target.disabled) {
+        buyPaidReward(app, target.dataset.rewardInstanceId ?? '', {
+          cardInstanceId: target.dataset.cardInstanceId || undefined,
+          productId: target.dataset.productId || undefined,
+          poolCardId: target.dataset.poolCardId || undefined,
+        });
+        renderApp(app);
+      }
+      return;
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'choose-bonus-reward') {
+      if (!target.disabled) {
+        chooseBonus(app, target.dataset.rewardInstanceId ?? '', {
+          cardInstanceId: target.dataset.cardInstanceId || undefined,
+          productId: target.dataset.productId || undefined,
+          poolCardId: target.dataset.poolCardId || undefined,
+        });
+        renderApp(app);
+      }
+      return;
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'skip-bonus-reward') {
+      if (!target.disabled) {
+        skipBonus(app);
+        renderApp(app);
+      }
+      return;
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'finish-reward-phase') {
+      if (!target.disabled) {
+        finishRewardPhase(app);
         renderApp(app);
       }
       return;

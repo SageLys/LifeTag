@@ -18,7 +18,7 @@ function createOrderFromCustomer(app: AppRuntime, customer: CustomerDef): Custom
     .filter((risk) => risk.sensitiveCustomerIds.includes(customer.id))
     .map((risk) => risk.category);
   const uniqueDarkRiskSensitivity = [...new Set(darkRiskSensitivity)];
-  const budget = Math.max(1, 100 - customer.priceSensitivity + customer.riskTolerance);
+  const budget = Math.max(1, customer.budget ?? 100 - customer.priceSensitivity + customer.riskTolerance);
 
   return {
     id: nextOrderId(app),
@@ -31,6 +31,7 @@ function createOrderFromCustomer(app: AppRuntime, customer: CustomerDef): Custom
     darkRiskSensitivity: uniqueDarkRiskSensitivity,
     maxRisk: customer.riskTolerance,
     pricingModeIds: [...customer.preferredPricingModeIds],
+    customerType: customer.customerType,
     specialRules: customer.description ? [customer.description] : [],
   };
 }

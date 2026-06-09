@@ -147,7 +147,7 @@ function conditionMatches(modifier: Modifier, context: CalculationContext, known
   const compatibleModifier = modifier as Modifier & {
     tagId?: string;
     targetTagId?: string;
-    condition?: string | { type?: string; tagId?: string; tagIds?: string[]; customerId?: string; pricingModeId?: string };
+    condition?: string | { type?: string; tagId?: string; tagIds?: string[]; customerId?: string; customerType?: string; pricingModeId?: string; params?: Record<string, unknown> };
   };
   const targetTagId = compatibleModifier.tagId ?? compatibleModifier.targetTagId ?? modifier.targetId;
   if (targetTagId && !knownTagIds.includes(targetTagId)) {
@@ -162,15 +162,29 @@ function conditionMatches(modifier: Modifier, context: CalculationContext, known
     return condition === 'always';
   }
 
+  const params = condition.params ?? {};
+  const tagId = condition.tagId ?? (typeof params.tagId === 'string' ? params.tagId : undefined);
+  const tagIds = condition.tagIds ?? (Array.isArray(params.tagIds) ? params.tagIds.filter((id): id is string => typeof id === 'string') : undefined);
+  const customerId = condition.customerId ?? (typeof params.customerId === 'string' ? params.customerId : undefined);
+  const customerType = condition.customerType ?? (typeof params.customerType === 'string' ? params.customerType : undefined);
+  const pricingModeId = condition.pricingModeId ?? (typeof params.pricingModeId === 'string' ? params.pricingModeId : undefined);
+  const customerDef = context.indexes.customersById.get(context.customerOrder.customerId);
+
   switch (condition.type) {
     case 'product_has_tag':
-      return Boolean(condition.tagId && knownTagIds.includes(condition.tagId));
+      return Boolean(tagId && knownTagIds.includes(tagId));
+    case 'product_lacks_tag':
+      return Boolean(tagId && !knownTagIds.includes(tagId));
     case 'product_has_any_tag':
-      return Boolean(condition.tagIds?.some((conditionTagId) => knownTagIds.includes(conditionTagId)));
+      return Boolean(tagIds?.some((conditionTagId) => knownTagIds.includes(conditionTagId)));
+    case 'product_lacks_all_tags':
+      return Boolean(tagIds && tagIds.every((conditionTagId) => !knownTagIds.includes(conditionTagId)));
     case 'customer_is':
-      return condition.customerId === context.customerOrder.customerId;
+      return customerId === context.customerOrder.customerId;
+    case 'customer_type_is':
+      return customerType === (context.customerOrder.customerType ?? customerDef?.customerType);
     case 'pricing_mode_is':
-      return condition.pricingModeId === context.pricingMode.id;
+      return pricingModeId === context.pricingMode.id;
     default:
       return false;
   }
@@ -264,10 +278,11 @@ function applySimplePriceModifiers(context: CalculationContext, breakdown: Break
     ...context.dayState.temporaryDayModifiers,
     ...(compatibleDayState.temporaryDealModifiers ?? []),
   ].filter((modifier) => !modifier.targetId || modifier.targetId === context.product.id);
+  const priceModifiers = modifiers.filter((modifier) => modifier.stat === 'price' || modifier.stat === 'priceMultiplier');
   let add = 0;
   const multipliers: number[] = [];
 
-  for (const modifier of modifiers) {
+  for (const modifier of priceModifiers) {
     if (modifier.stat === 'price' && modifier.op === 'add') {
       add += modifier.value;
       breakdown.push(item(modifier.id ?? `modifier_${breakdown.length}`, modifier.displayText ?? '价格修正', 'price', 'add', modifier.value, 'modifier', modifier.sourceId ?? modifier.id ?? 'unknown'));
@@ -283,6 +298,19 @@ function applySimplePriceModifiers(context: CalculationContext, breakdown: Break
   }
 
   return { add, multipliers };
+}
+
+function applyPassivePriceModifiers(context: CalculationContext, knownTagIds: string[], breakdown: BreakdownItem[]): number {
+  let add = 0;
+  if (
+    context.activePassives.some((passive) => passive.passiveId === 'passive_bigtech_endorsement') &&
+    context.customerOrder.customerId === 'customer_bigtech_hr' &&
+    (knownTagIds.includes('tag_elite_school') || knownTagIds.includes('tag_young'))
+  ) {
+    add += 20;
+    breakdown.push(item('passive_bigtech_endorsement_price', '店铺被动：大厂背书合作', 'price', 'add', 20, 'passive', 'passive_bigtech_endorsement'));
+  }
+  return add;
 }
 
 export function calculatePrice(context: CalculationContext): PriceResult {
@@ -341,6 +369,7 @@ export function calculatePrice(context: CalculationContext): PriceResult {
 
   const simpleModifiers = applySimplePriceModifiers(context, priceBreakdown, warnings);
   rawPrice += simpleModifiers.add;
+  rawPrice += applyPassivePriceModifiers(context, knownTagIds, priceBreakdown);
 
   if (rawPrice < 1) {
     rawPrice = 1;

@@ -65,6 +65,27 @@ function shiftLevel(level: AccidentLevel, delta: number): AccidentLevel {
   return LEVEL_ORDER[clampLevelIndex(LEVEL_ORDER.indexOf(level) + delta)];
 }
 
+function minLevel(level: AccidentLevel, min: AccidentLevel): AccidentLevel {
+  return LEVEL_ORDER[Math.max(LEVEL_ORDER.indexOf(level), LEVEL_ORDER.indexOf(min))];
+}
+
+function dealModifiers(context: CalculationContext) {
+  return [
+    ...(context.product.productModifiers ?? []),
+    ...(context.product.dealModifiers ?? []),
+    ...context.dayState.temporaryDayModifiers,
+    ...(context.dayState.temporaryDealModifiers ?? []),
+  ].filter((modifier) => !modifier.targetId || modifier.targetId === context.product.id);
+}
+
+function modifierAccidentLevelMatches(modifier: ReturnType<typeof dealModifiers>[number], level: AccidentLevel): boolean {
+  const condition = modifier.condition as { type?: string; accidentLevel?: AccidentLevel; params?: { accidentLevel?: AccidentLevel; accidentLevels?: AccidentLevel[] } } | undefined;
+  if (!condition) return true;
+  if (condition.type === 'accident_level_is') return (condition.accidentLevel ?? condition.params?.accidentLevel) === level;
+  if (condition.params?.accidentLevels) return condition.params.accidentLevels.includes(level);
+  return true;
+}
+
 function getThresholds(gameConfig: GameConfig) {
   const thresholds = (gameConfig.riskThresholds ?? {}) as CompatibleThresholds;
 
@@ -146,6 +167,48 @@ export function applyAccidentLevelModifiers(
     );
   }
 
+  if (
+    context.activePassives.some((passive) => passive.passiveId === 'passive_public_opinion_stoploss') &&
+    !context.dayState.phaseFlags.passivePublicOpinionStoplossUsed &&
+    (finalAccidentLevel === AccidentLevel.Major || finalAccidentLevel === AccidentLevel.Severe)
+  ) {
+    const before = finalAccidentLevel;
+    finalAccidentLevel = shiftLevel(finalAccidentLevel, -1);
+    context.dayState.phaseFlags.passivePublicOpinionStoplossUsed = true;
+    breakdown.push(breakdownItem('passive_public_opinion_stoploss', `舆论止损预案：${getAccidentLevelLabel(before)} → ${getAccidentLevelLabel(finalAccidentLevel)}`, -1, 'passive', 'passive_public_opinion_stoploss'));
+  }
+
+  for (const modifier of dealModifiers(context).filter((item) => item.stat === 'accidentLevel' && modifierAccidentLevelMatches(item, finalAccidentLevel))) {
+    const before = finalAccidentLevel;
+    if (modifier.op === 'add') finalAccidentLevel = shiftLevel(finalAccidentLevel, modifier.value);
+    if ((modifier as typeof modifier & { min?: AccidentLevel }).min) finalAccidentLevel = minLevel(finalAccidentLevel, (modifier as typeof modifier & { min: AccidentLevel }).min);
+    breakdown.push(breakdownItem(`modifier_accident_level_${modifier.sourceId ?? breakdown.length}`, `${modifier.displayText ?? '事故等级修正'}：${getAccidentLevelLabel(before)} → ${getAccidentLevelLabel(finalAccidentLevel)}`, modifier.value, modifier.sourceType ?? 'modifier', modifier.sourceId ?? 'unknown'));
+  }
+
+  for (const insurance of [...context.runState.temporaryInsurances]) {
+    if (insurance.remainingUses <= 0 || finalAccidentLevel === AccidentLevel.None) continue;
+    const raw = insurance.config;
+    const modifiers = Array.isArray(raw.modifiers) ? raw.modifiers : [];
+    const levelModifier = modifiers.find((item) => item && typeof item === 'object' && (item as { stat?: string }).stat === 'accidentLevel') as
+      | { op?: string; value?: number; min?: AccidentLevel }
+      | undefined;
+    if (!levelModifier || typeof levelModifier.value !== 'number') continue;
+    const before = finalAccidentLevel;
+    if (levelModifier.op === 'add') finalAccidentLevel = shiftLevel(finalAccidentLevel, levelModifier.value);
+    if (levelModifier.min) finalAccidentLevel = minLevel(finalAccidentLevel, levelModifier.min);
+    insurance.remainingUses -= 1;
+    breakdown.push(
+      breakdownItem(
+        `insurance_level_${insurance.id}`,
+        `事故保险触发：事故等级 ${getAccidentLevelLabel(before)} → ${getAccidentLevelLabel(finalAccidentLevel)}，保险已消耗`,
+        levelModifier.value,
+        'temporary_insurance',
+        insurance.sourceRewardId,
+      ),
+    );
+  }
+  context.runState.temporaryInsurances = context.runState.temporaryInsurances.filter((insurance) => insurance.remainingUses > 0);
+
   breakdown.push(breakdownItem('final_accident_level', `最终事故等级：${getAccidentLevelLabel(finalAccidentLevel)}`, finalAccidentLevel));
 
   return {
@@ -171,8 +234,8 @@ export function calculateAccidentOutcome(
   }).defaultAccidentEffects?.[accidentLevel];
   const fallback = DEFAULT_ACCIDENT_EFFECTS[accidentLevel];
   const refundRate = Math.max(0, Math.min(1, readNumber(configured?.refundRate ?? configuredDefaults?.refundRate, fallback.refundRate)));
-  const fine = Math.max(0, Math.round(readNumber(configured?.fine ?? configuredDefaults?.fine, fallback.fine)));
-  const reputationLoss = Math.max(0, Math.round(readNumber(configured?.reputationLoss ?? configuredDefaults?.reputationLoss, fallback.reputationLoss)));
+  let fine = Math.max(0, Math.round(readNumber(configured?.fine ?? configuredDefaults?.fine, fallback.fine)));
+  let reputationLoss = Math.max(0, Math.round(readNumber(configured?.reputationLoss ?? configuredDefaults?.reputationLoss, fallback.reputationLoss)));
   const refund = Math.max(0, Math.round(finalPrice * refundRate));
   const accidentOutcomeBreakdown = [
     breakdownItem('refund_rate', '退款比例', refundRate),
@@ -180,6 +243,66 @@ export function calculateAccidentOutcome(
     breakdownItem('fine', '罚款', fine),
     breakdownItem('reputation_loss', '信誉损失', reputationLoss),
   ];
+
+  if (
+    context.activePassives.some((passive) => passive.passiveId === 'passive_black_red_is_red') &&
+    (context.customerOrder.customerType ?? context.indexes.customersById.get(context.customerOrder.customerId)?.customerType) === 'mcn' &&
+    accidentLevel === AccidentLevel.Minor
+  ) {
+    const before = reputationLoss;
+    reputationLoss = 0;
+    accidentOutcomeBreakdown.push(breakdownItem('passive_black_red_is_red', `黑红也是红：信誉损失 ${before} → 0，额外现金 +20`, 20, 'passive', 'passive_black_red_is_red'));
+    context.runState.cash += 20;
+  }
+
+  for (const modifier of dealModifiers(context).filter((item) => (item.stat === 'fine' || item.stat === 'reputationLoss' || item.stat === 'cash') && modifierAccidentLevelMatches(item, accidentLevel))) {
+    if (modifier.stat === 'fine') {
+      const before = fine;
+      fine = modifier.op === 'multiply' ? Math.round(fine * modifier.value) : Math.max(0, fine + modifier.value);
+      accidentOutcomeBreakdown.push(breakdownItem(`modifier_fine_${modifier.sourceId ?? accidentOutcomeBreakdown.length}`, `${modifier.displayText ?? '罚款修正'}：罚款 ${before} → ${fine}`, fine - before, modifier.sourceType ?? 'modifier', modifier.sourceId ?? 'unknown'));
+    }
+    if (modifier.stat === 'reputationLoss') {
+      const before = reputationLoss;
+      reputationLoss = modifier.op === 'set' ? modifier.value : Math.max(0, reputationLoss + modifier.value);
+      accidentOutcomeBreakdown.push(breakdownItem(`modifier_reputation_${modifier.sourceId ?? accidentOutcomeBreakdown.length}`, `${modifier.displayText ?? '信誉损失修正'}：信誉损失 ${before} → ${reputationLoss}`, reputationLoss - before, modifier.sourceType ?? 'modifier', modifier.sourceId ?? 'unknown'));
+    }
+    if (modifier.stat === 'cash') {
+      context.runState.cash += modifier.value;
+      accidentOutcomeBreakdown.push(breakdownItem(`modifier_cash_${modifier.sourceId ?? accidentOutcomeBreakdown.length}`, `${modifier.displayText ?? '现金修正'}：现金 ${modifier.value >= 0 ? '+' : ''}${modifier.value}`, modifier.value, modifier.sourceType ?? 'modifier', modifier.sourceId ?? 'unknown'));
+    }
+  }
+
+  for (const insurance of [...context.runState.temporaryInsurances]) {
+    if (insurance.remainingUses <= 0 || accidentLevel === AccidentLevel.None) continue;
+    const raw = insurance.config;
+    const levels = Array.isArray(raw.accidentLevels) ? raw.accidentLevels.filter((level): level is AccidentLevel => typeof level === 'string') : null;
+    const atLeast = typeof raw.accidentLevelAtLeast === 'string' ? raw.accidentLevelAtLeast : null;
+    const matches =
+      (levels ? levels.includes(accidentLevel) : true) &&
+      (!atLeast || LEVEL_ORDER.indexOf(accidentLevel) >= LEVEL_ORDER.indexOf(atLeast as AccidentLevel));
+    if (!matches) continue;
+    const beforeFine = fine;
+    const beforeRep = reputationLoss;
+    const modifiers = Array.isArray(raw.modifiers) ? raw.modifiers : [];
+    for (const item of modifiers) {
+      if (!item || typeof item !== 'object') continue;
+      const modifier = item as { stat?: string; op?: string; value?: number; min?: AccidentLevel };
+      if (typeof modifier.value !== 'number') continue;
+      if (modifier.stat === 'fine') fine = modifier.op === 'multiply' ? Math.round(fine * modifier.value) : Math.max(0, fine + modifier.value);
+      if (modifier.stat === 'reputationLoss') reputationLoss = modifier.op === 'set' ? modifier.value : Math.max(0, reputationLoss + modifier.value);
+    }
+    insurance.remainingUses -= 1;
+    accidentOutcomeBreakdown.push(
+      breakdownItem(
+        `insurance_${insurance.id}`,
+        `事故保险触发：罚款 ${beforeFine} → ${fine}，信誉损失 ${beforeRep} → ${reputationLoss}，保险已消耗`,
+        -1,
+        'temporary_insurance',
+        insurance.sourceRewardId,
+      ),
+    );
+  }
+  context.runState.temporaryInsurances = context.runState.temporaryInsurances.filter((insurance) => insurance.remainingUses > 0);
 
   return {
     refundRate,

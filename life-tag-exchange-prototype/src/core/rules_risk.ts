@@ -175,7 +175,7 @@ function conditionMatches(modifier: Modifier, context: CalculationContext, known
   const compatibleModifier = modifier as Modifier & {
     tagId?: string;
     targetTagId?: string;
-    condition?: string | { type?: string; tagId?: string; tagIds?: string[]; customerId?: string; pricingModeId?: string };
+    condition?: string | { type?: string; tagId?: string; tagIds?: string[]; customerId?: string; customerType?: string; pricingModeId?: string; category?: string; params?: Record<string, unknown> };
   };
   const targetTagId = compatibleModifier.tagId ?? compatibleModifier.targetTagId ?? modifier.targetId;
   if (targetTagId && !knownTagIds.includes(targetTagId)) {
@@ -190,15 +190,43 @@ function conditionMatches(modifier: Modifier, context: CalculationContext, known
     return condition === 'always';
   }
 
+  const params = condition.params ?? {};
+  const tagId = condition.tagId ?? (typeof params.tagId === 'string' ? params.tagId : undefined);
+  const tagIds = condition.tagIds ?? (Array.isArray(params.tagIds) ? params.tagIds.filter((id): id is string => typeof id === 'string') : undefined);
+  const customerId = condition.customerId ?? (typeof params.customerId === 'string' ? params.customerId : undefined);
+  const customerType = condition.customerType ?? (typeof params.customerType === 'string' ? params.customerType : undefined);
+  const pricingModeId = condition.pricingModeId ?? (typeof params.pricingModeId === 'string' ? params.pricingModeId : undefined);
+  const category = condition.category ?? (typeof params.category === 'string' ? params.category : undefined);
+  const customerDef = context.indexes.customersById.get(context.customerOrder.customerId);
+
   switch (condition.type) {
     case 'product_has_tag':
-      return Boolean(condition.tagId && knownTagIds.includes(condition.tagId));
+      return Boolean(tagId && knownTagIds.includes(tagId));
+    case 'product_lacks_tag':
+      return Boolean(tagId && !knownTagIds.includes(tagId));
     case 'product_has_any_tag':
-      return Boolean(condition.tagIds?.some((tagId) => knownTagIds.includes(tagId)));
+      return Boolean(tagIds?.some((conditionTagId) => knownTagIds.includes(conditionTagId)));
+    case 'product_lacks_all_tags':
+      return Boolean(tagIds && tagIds.every((conditionTagId) => !knownTagIds.includes(conditionTagId)));
     case 'customer_is':
-      return condition.customerId === context.customerOrder.customerId;
+      return customerId === context.customerOrder.customerId;
+    case 'customer_type_is':
+      return customerType === (context.customerOrder.customerType ?? customerDef?.customerType);
     case 'pricing_mode_is':
-      return condition.pricingModeId === context.pricingMode.id;
+      return pricingModeId === context.pricingMode.id;
+    case 'dark_risk_category_is':
+      return Boolean(category && context.product.darkRiskIds.some((riskId) => context.indexes.darkRisksById.get(riskId)?.category === category));
+    case 'dark_risk_category_is_or_unrevealed':
+      return Boolean(
+        category &&
+          context.product.darkRiskIds.some((riskId) => {
+            const darkRisk = context.indexes.darkRisksById.get(riskId);
+            const revealLevel = context.product.darkRiskRevealLevels[riskId];
+            return darkRisk?.category === category || revealLevel === DarkRiskRevealLevel.Hidden;
+          }),
+      );
+    case 'dark_risk_category_is_not':
+      return Boolean(category && context.product.darkRiskIds.every((riskId) => context.indexes.darkRisksById.get(riskId)?.category !== category));
     default:
       return false;
   }
@@ -253,9 +281,32 @@ function collectSimpleRiskModifiers(context: CalculationContext): Modifier[] {
     ...(compatibleProduct.modifiers ?? []),
     ...context.dayState.temporaryDayModifiers,
     ...(compatibleDayState.temporaryDealModifiers ?? []),
+    ...context.runState.temporaryRunModifiers
+      .filter((modifier) => modifier.stat === 'risk' && modifier.target === 'sell_product' && modifier.consumed < modifier.uses)
+      .map((modifier) => ({
+        stat: 'risk',
+        op: 'add',
+        value: modifier.value,
+        sourceType: 'temporary_modifier',
+        sourceId: modifier.sourceRewardId,
+        displayText: modifier.displayName,
+        targetId: context.product.id,
+      })),
   ]
     .filter((modifier) => !modifier.targetId || modifier.targetId === context.product.id)
     .filter((modifier) => modifier.stat === 'risk' && modifier.op === 'add');
+}
+
+function collectPassiveRiskModifiers(context: CalculationContext): RiskBreakdownItem[] {
+  const items: RiskBreakdownItem[] = [];
+  if (context.activePassives.some((passive) => passive.passiveId === 'passive_family_network_pr' || passive.passiveId === 'passive_acquaintance_society')) {
+    const isParentCommittee = context.customerOrder.customerId === 'customer_parent_committee';
+    const hasPersonaRisk = context.product.darkRiskIds.some((riskId) => context.indexes.darkRisksById.get(riskId)?.category === 'persona');
+    if (isParentCommittee && hasPersonaRisk) {
+      items.push(riskItem('passive', 'passive_family_network_pr', '店铺被动：熟人社会公关', -15));
+    }
+  }
+  return items;
 }
 
 function getDarkRiskCategoryLabel(category: string): string {
@@ -381,6 +432,11 @@ export function calculateRisk(context: CalculationContext): RiskResult {
     }
     knownRisk += modifier.value;
     riskBreakdown.push(riskItem('modifier', modifier.sourceId ?? modifier.id ?? 'unknown_modifier', modifier.displayText ?? '风险修正', modifier.value));
+  }
+
+  for (const passiveModifier of collectPassiveRiskModifiers(context)) {
+    knownRisk += passiveModifier.value;
+    riskBreakdown.push(passiveModifier);
   }
 
   let unknownMin = 0;

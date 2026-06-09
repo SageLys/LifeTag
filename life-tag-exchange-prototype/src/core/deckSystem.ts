@@ -1,7 +1,20 @@
 import type { DeckState, GameConfig, CardInstance } from './types';
-import { shuffle, type RngState } from './rng';
+import { pickWeighted, shuffle, type RngState } from './rng';
 
 function getInitialDeckCardIds(gameConfig: GameConfig): string[] {
+  if (
+    gameConfig.initialDeckMode === 'fixed_plus_random_packs' &&
+    gameConfig.initialDeckFixedCardIds &&
+    gameConfig.initialDeckRandomPacks
+  ) {
+    return [
+      ...gameConfig.initialDeckFixedCardIds,
+      ...gameConfig.initialDeckRandomPacks.flatMap((pack) =>
+        Array.from({ length: Math.max(0, pack.pickCount) }, (_, index) => pack.cardIds[index] ?? pack.cardIds[0]).filter(Boolean),
+      ),
+    ];
+  }
+
   if (gameConfig.initialDeckCardIds && gameConfig.initialDeckCardIds.length > 0) {
     return [...gameConfig.initialDeckCardIds];
   }
@@ -10,7 +23,27 @@ function getInitialDeckCardIds(gameConfig: GameConfig): string[] {
 }
 
 export function createInitialDeckState(gameConfig: GameConfig, rng?: RngState): DeckState {
-  const drawPile = getInitialDeckCardIds(gameConfig).map((cardId, index) => {
+  const fixedPlusRandom =
+    gameConfig.initialDeckMode === 'fixed_plus_random_packs' &&
+    gameConfig.initialDeckFixedCardIds &&
+    gameConfig.initialDeckRandomPacks &&
+    rng
+      ? [
+          ...gameConfig.initialDeckFixedCardIds,
+          ...gameConfig.initialDeckRandomPacks.flatMap((pack) => {
+            const remaining = [...pack.cardIds];
+            const picked: string[] = [];
+            while (picked.length < Math.max(0, pack.pickCount) && remaining.length > 0) {
+              const cardId = pickWeighted(rng, remaining, () => 1);
+              picked.push(cardId);
+              remaining.splice(remaining.indexOf(cardId), 1);
+            }
+            return picked;
+          }),
+        ]
+      : getInitialDeckCardIds(gameConfig);
+
+  const drawPile = fixedPlusRandom.map((cardId, index) => {
     const instanceId = `card_inst_${index + 1}`;
     return {
       id: instanceId,

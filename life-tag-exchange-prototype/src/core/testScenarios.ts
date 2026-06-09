@@ -1,7 +1,7 @@
 import { DarkRiskRevealLevel, ProductStatus, RunPhase, RunResult, TagSource } from './constants';
 import { createNewGame } from './gameState';
 import { generateRunReport } from './runReport';
-import { generateRewardOptions } from './rules_rewards';
+import { ensureRewardState, generateRewardOptions } from './rules_rewards';
 import { refreshDealPreviewIfPossible } from './rules_deal';
 import type { AppRuntime, CardInstance, CustomerDef, CustomerOrder, ProductInstance, ProductTemplate } from './types';
 
@@ -153,7 +153,13 @@ function addHandCard(app: AppRuntime, cardId: string): CardInstance {
 }
 
 function ensureRewards(app: AppRuntime): void {
-  app.state.dayState.rewardOptions = generateRewardOptions(app);
+  ensureRewardState(app);
+  app.state.dayState.rewardOptions = [
+    ...(app.state.dayState.rewardState?.maintenanceOptions ?? []),
+    ...(app.state.dayState.rewardState?.freeBuildOptions ?? generateRewardOptions(app)),
+    ...(app.state.dayState.rewardState?.paidShopOptions ?? []),
+    ...(app.state.dayState.rewardState?.bonusOptions ?? []),
+  ];
   app.state.dayState.rewardOptionIds = app.state.dayState.rewardOptions.map((reward) => reward.instanceId);
 }
 
@@ -312,6 +318,80 @@ function scenarioSpoilage(app: AppRuntime, scenario: TestScenario): TestScenario
   return makeResult(app, scenario, [product]);
 }
 
+function scenarioRewardAllTypes(app: AppRuntime, scenario: TestScenario): TestScenarioResult {
+  resetRun(app, 13101);
+  syncPhase(app, RunPhase.DayReward);
+  app.state.cash = 300;
+  app.state.dayState.dailyProfit = 140;
+  app.state.dayState.maxSingleDealProfit = 120;
+  const product = createProduct(app);
+  app.state.inventory = [product];
+  app.state.deckState.drawPile = [];
+  app.state.deckState.hand = [];
+  app.state.deckState.discardPile = [
+    'card_low_salary_pitch',
+    'card_decent_package',
+    'card_crazy_persona',
+    'card_background_check',
+    'card_pr_package',
+    'card_risk_underwriting',
+    'card_hot_search_warmup',
+  ].map((cardId) => ({ id: `debug_${cardId}_${app.state.nextInstanceCounter++}`, instanceId: `debug_${cardId}_${app.state.nextInstanceCounter++}`, cardId, cardDefId: cardId, upgraded: false, createdDay: 1 }));
+  ensureRewards(app);
+  return makeResult(app, scenario, [product]);
+}
+
+function scenarioCardUpgradeEffect(app: AppRuntime, scenario: TestScenario): TestScenarioResult {
+  resetRun(app, 13102);
+  syncPhase(app, RunPhase.DayProcess);
+  const product = createProduct(app, { basePrice: 50, baseRisk: 0, hiddenTagIds: [], darkRiskIds: [] });
+  const order = createOrder(app, { budget: 500, tabooTagIds: [], riskTolerance: 100 });
+  app.state.inventory = [product];
+  app.state.dayState.actionPoints = 4;
+  app.state.cash = 200;
+  addHandCard(app, 'card_low_salary_pitch');
+  app.state.deckState.discardPile.push({ id: `debug_upgrade_${app.state.nextInstanceCounter++}`, instanceId: `debug_upgrade_${app.state.nextInstanceCounter++}`, cardId: 'card_low_salary_pitch', cardDefId: 'card_low_salary_pitch', upgraded: false, createdDay: 1 });
+  selectDeal(app, product, order, 'pricing_normal');
+  return makeResult(app, scenario, [product], [order]);
+}
+
+function scenarioPassiveInsuranceTrigger(app: AppRuntime, scenario: TestScenario): TestScenarioResult {
+  resetRun(app, 13103);
+  syncPhase(app, RunPhase.DaySell);
+  app.state.cash = 200;
+  app.state.reputation = 80;
+  app.state.temporaryInsurances.push({
+    id: 'debug_major_insurance',
+    sourceRewardId: 'debug',
+    displayName: 'Debug 重大事故保险',
+    gainedDay: 1,
+    remainingUses: 1,
+    config: { accidentLevels: ['major', 'severe'], modifiers: [{ stat: 'fine', op: 'multiply', value: 0.5 }, { stat: 'reputationLoss', op: 'add', value: -10 }], uses: 1 },
+  });
+  const { product, order } = highRiskDeal(app);
+  product.baseRisk = 90;
+  selectDeal(app, product, order, 'pricing_high');
+  return makeResult(app, scenario, [product], [order]);
+}
+
+function scenarioSupplySourceGeneration(app: AppRuntime, scenario: TestScenario): TestScenarioResult {
+  resetRun(app, 13104);
+  syncPhase(app, RunPhase.DayPurchase);
+  app.state.activeSupplySources.push({ supplySourceId: 'supply_flow_frozen_meat', gainedDay: 1, remainingDays: 2, source: 'debug' });
+  app.state.dayState.productCandidates = [];
+  app.state.dayState.productCandidateIds = [];
+  return makeResult(app, scenario);
+}
+
+function scenarioRewardBonusTrigger(app: AppRuntime, scenario: TestScenario): TestScenarioResult {
+  resetRun(app, 13105);
+  syncPhase(app, RunPhase.DayReward);
+  app.state.cash = 180;
+  app.state.dayState.dailyProfit = 130;
+  ensureRewards(app);
+  return makeResult(app, scenario);
+}
+
 const SCENARIO_DATA: Array<Omit<TestScenario, 'setup'> & { setupName: string }> = [
   {
     id: 'SCENARIO_A_BOOT_SMOKE',
@@ -421,6 +501,51 @@ const SCENARIO_DATA: Array<Omit<TestScenario, 'setup'> & { setupName: string }> 
     expected: ['选择奖励后 currentDay = 2', 'freshnessCurrent = 0', 'spoiled = true', '商品仍在库存。'],
     manualSteps: ['选择任一可用奖励后查看库存。'],
   },
+  {
+    id: 'TEST_REWARD_ALL_TYPES',
+    displayName: '新版收店奖励全类型局',
+    description: '直接进入 DAY_REWARD，现金充足、牌组可升级且可删牌，检查 8 类 RewardType。',
+    targetPhase: RunPhase.DayReward,
+    setupName: 'rewardAllTypes',
+    expected: ['现金 = 300', '显示维护/免费构筑/付费商店/爆单四区', 'add/upgrade/remove/passive/supply/insurance/cash/reputation 可见或可触发。'],
+    manualSteps: ['领取维护奖励、选择免费构筑、购买多个付费奖励、选择爆单奖励，再结束收店。'],
+  },
+  {
+    id: 'TEST_CARD_UPGRADE_EFFECT',
+    displayName: '升级卡牌数值差异局',
+    description: '验证低薪接受话术升级前后售价修正从 +25 变为 +40。',
+    targetPhase: RunPhase.DayProcess,
+    setupName: 'cardUpgradeEffect',
+    expected: ['手牌有 card_low_salary_pitch', '升级为 plus 后卡牌 UI 显示 plus', '打出后交易预览售价修正为 +40。'],
+    manualSteps: ['可先进入收店用升级奖励，或在 Debug JSON 中确认 upgradedCardId；打出卡牌后看交易预览。'],
+  },
+  {
+    id: 'TEST_PASSIVE_INSURANCE_TRIGGER',
+    displayName: '被动与重大保险事故局',
+    description: '构造大事故并给玩家重大事故保险，验证保险链条。',
+    targetPhase: RunPhase.DaySell,
+    setupName: 'passiveInsuranceTrigger',
+    expected: ['temporaryInsurances 显示 1 个', '确认出售触发 major/severe 事故', '事故链条显示罚款和信誉损失前后变化，保险消耗。'],
+    manualSteps: ['点击确认出售，查看事故弹窗和店铺状态面板。'],
+  },
+  {
+    id: 'TEST_SUPPLY_SOURCE_GENERATION',
+    displayName: '货源影响商品生成局',
+    description: '给予流量冻肉货源，进入进货阶段观察 MCN/发疯/抽象/争议商品权重。',
+    targetPhase: RunPhase.DayPurchase,
+    setupName: 'supplySourceGeneration',
+    expected: ['activeSupplySources 包含 supply_flow_frozen_meat', '商品候选更偏流量/发疯/抽象/争议。'],
+    manualSteps: ['若未自动生成，点击阶段刷新或重新加载场景后查看商品候选。'],
+  },
+  {
+    id: 'TEST_REWARD_BONUS_TRIGGER',
+    displayName: '爆单奖励触发局',
+    description: '设置当日利润 >= 120 后进入 DAY_REWARD。',
+    targetPhase: RunPhase.DayReward,
+    setupName: 'rewardBonusTrigger',
+    expected: ['bonusUnlocked = true', '爆单奖励区域显示 3 个选项。'],
+    manualSteps: ['查看爆单奖励区域，选择一个或跳过。'],
+  },
 ];
 
 const SETUP_BY_NAME: Record<string, (app: AppRuntime, scenario: TestScenario) => TestScenarioResult> = {
@@ -436,6 +561,11 @@ const SETUP_BY_NAME: Record<string, (app: AppRuntime, scenario: TestScenario) =>
   cardEffect: scenarioCardEffect,
   paidRewardDisabled: scenarioPaidRewardDisabled,
   spoilage: scenarioSpoilage,
+  rewardAllTypes: scenarioRewardAllTypes,
+  cardUpgradeEffect: scenarioCardUpgradeEffect,
+  passiveInsuranceTrigger: scenarioPassiveInsuranceTrigger,
+  supplySourceGeneration: scenarioSupplySourceGeneration,
+  rewardBonusTrigger: scenarioRewardBonusTrigger,
 };
 
 export function getTestScenarios(): TestScenario[] {

@@ -3,7 +3,7 @@
     "id": "product_young_elite_meat",
     "displayName": "年轻名校肉",
     "baseCost": 40,
-    "basePrice": 50,
+    "basePrice": 60,
     "baseRisk": 5,
     "hiddenTagCount": 3,
     "visibleTagIds": [
@@ -27,7 +27,7 @@
     "id": "product_outsider_overtime_meat",
     "displayName": "外地加班肉",
     "baseCost": 25,
-    "basePrice": 35,
+    "basePrice": 40,
     "baseRisk": 10,
     "hiddenTagCount": 3,
     "visibleTagIds": [
@@ -50,7 +50,7 @@
     "id": "product_age35_experienced_meat",
     "displayName": "35+经验肉",
     "baseCost": 20,
-    "basePrice": 40,
+    "basePrice": 45,
     "baseRisk": 10,
     "hiddenTagCount": 2,
     "visibleTagIds": [
@@ -73,7 +73,7 @@
     "id": "product_oversea_decent_meat",
     "displayName": "海归体面肉",
     "baseCost": 45,
-    "basePrice": 55,
+    "basePrice": 65,
     "baseRisk": 10,
     "hiddenTagCount": 3,
     "visibleTagIds": [
@@ -97,7 +97,7 @@
     "id": "product_stable_marriage_meat",
     "displayName": "稳定相亲肉",
     "baseCost": 35,
-    "basePrice": 45,
+    "basePrice": 55,
     "baseRisk": 5,
     "hiddenTagCount": 3,
     "visibleTagIds": [
@@ -121,7 +121,7 @@
     "id": "product_abstract_crazy_meat",
     "displayName": "抽象发疯肉",
     "baseCost": 25,
-    "basePrice": 35,
+    "basePrice": 45,
     "baseRisk": 20,
     "hiddenTagCount": 2,
     "visibleTagIds": [
@@ -145,7 +145,7 @@
     "id": "product_fake_package_meat",
     "displayName": "水货包装肉",
     "baseCost": 18,
-    "basePrice": 30,
+    "basePrice": 35,
     "baseRisk": 25,
     "hiddenTagCount": 2,
     "visibleTagIds": [
@@ -169,7 +169,7 @@
     "id": "product_black_box_discount_meat",
     "displayName": "黑箱低价肉",
     "baseCost": 15,
-    "basePrice": 25,
+    "basePrice": 30,
     "baseRisk": 15,
     "hiddenTagCount": 2,
     "visibleTagIds": [
@@ -200,7 +200,7 @@
     "id": "product_small_town_grinder_meat",
     "displayName": "小镇做题家肉",
     "baseCost": 35,
-    "basePrice": 45,
+    "basePrice": 55,
     "baseRisk": 10,
     "hiddenTagCount": 3,
     "visibleTagIds": [
@@ -223,7 +223,7 @@
     "id": "product_rights_awareness_meat",
     "displayName": "维权意识肉",
     "baseCost": 15,
-    "basePrice": 30,
+    "basePrice": 35,
     "baseRisk": 20,
     "hiddenTagCount": 2,
     "visibleTagIds": [
@@ -247,7 +247,7 @@
     "id": "product_empty_decent_meat",
     "displayName": "空心体面肉",
     "baseCost": 30,
-    "basePrice": 45,
+    "basePrice": 50,
     "baseRisk": 20,
     "hiddenTagCount": 3,
     "visibleTagIds": [
@@ -271,7 +271,7 @@
     "id": "product_controversial_flow_meat",
     "displayName": "争议流量肉",
     "baseCost": 30,
-    "basePrice": 45,
+    "basePrice": 55,
     "baseRisk": 25,
     "hiddenTagCount": 2,
     "visibleTagIds": [
@@ -295,7 +295,7 @@
     "id": "product_social_savvy_family_meat",
     "displayName": "会来事家庭肉",
     "baseCost": 35,
-    "basePrice": 45,
+    "basePrice": 50,
     "baseRisk": 5,
     "hiddenTagCount": 3,
     "visibleTagIds": [
@@ -318,7 +318,7 @@
     "id": "product_boring_stable_meat",
     "displayName": "无聊稳定肉",
     "baseCost": 20,
-    "basePrice": 35,
+    "basePrice": 40,
     "baseRisk": 0,
     "hiddenTagCount": 4,
     "visibleTagIds": [
@@ -341,7 +341,7 @@
     "id": "product_rebel_fragile_meat",
     "displayName": "反骨玻璃心肉",
     "baseCost": 20,
-    "basePrice": 35,
+    "basePrice": 40,
     "baseRisk": 25,
     "hiddenTagCount": 2,
     "visibleTagIds": [
@@ -365,7 +365,7 @@
     "id": "product_overtime_resilient_meat",
     "displayName": "加班抗压肉",
     "baseCost": 35,
-    "basePrice": 45,
+    "basePrice": 50,
     "baseRisk": 5,
     "hiddenTagCount": 3,
     "visibleTagIds": [

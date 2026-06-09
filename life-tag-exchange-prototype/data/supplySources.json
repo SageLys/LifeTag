@@ -32,7 +32,280 @@
   {
     "id": "supply_black_box_wholesale",
     "displayName": "黑箱批发",
-    "description": "低价高风险，标签池更杂。",
-    "templateWeightModifiers": []
+    "description": "低价高风险，低薪、发疯、水货和黑箱商品更常见。",
+    "templateWeightModifiers": [
+      {
+        "tagIds": [
+          "tag_fake_quality",
+          "tag_low_salary_acceptance",
+          "tag_crazy"
+        ],
+        "sourceHint": "黑箱",
+        "multiplier": 2
+      }
+    ],
+    "archetype": "high_risk",
+    "durationDays": 2,
+    "spawnModifiers": [
+      {
+        "type": "template_weight_by_tag_or_source",
+        "params": {
+          "tagIds": [
+            "tag_fake_quality",
+            "tag_low_salary_acceptance",
+            "tag_crazy"
+          ],
+          "sourceHint": "黑箱",
+          "multiplier": 2
+        }
+      },
+      {
+        "type": "generated_product_modifier",
+        "params": {
+          "stat": "baseCost",
+          "op": "multiply",
+          "value": 0.8
+        }
+      },
+      {
+        "type": "dark_risk_chance",
+        "params": {
+          "op": "add",
+          "value": 0.2
+        }
+      }
+    ],
+    "effects": [
+      {
+        "type": "modify_spawn_weight",
+        "params": {
+          "tagIds": [
+            "tag_fake_quality",
+            "tag_low_salary_acceptance",
+            "tag_crazy"
+          ],
+          "sourceHint": "黑箱",
+          "multiplier": 2
+        },
+        "displayText": "高风险/黑箱商品出现权重 ×2.0"
+      },
+      {
+        "type": "modify_generated_product",
+        "params": {
+          "stat": "baseCost",
+          "op": "multiply",
+          "value": 0.8
+        },
+        "displayText": "生成商品成本 ×0.8"
+      },
+      {
+        "type": "modify_dark_risk_chance",
+        "params": {
+          "op": "add",
+          "value": 0.2
+        },
+        "displayText": "暗风险概率 +0.20"
+      }
+    ]
+  },
+  {
+    "id": "supply_campus_leftover",
+    "displayName": "校招剩料",
+    "archetype": "bigtech",
+    "durationDays": 2,
+    "description": "更容易刷出年轻、名校、小镇做题家商品，但职业背景暗风险上升。",
+    "templateWeightModifiers": [
+      {
+        "tagIds": [
+          "tag_young",
+          "tag_elite_school",
+          "tag_small_town_grinder"
+        ],
+        "multiplier": 1.8
+      }
+    ],
+    "spawnModifiers": [
+      {
+        "type": "template_weight_by_tag",
+        "params": {
+          "tagIds": [
+            "tag_young",
+            "tag_elite_school",
+            "tag_small_town_grinder"
+          ],
+          "multiplier": 1.8
+        }
+      },
+      {
+        "type": "dark_risk_chance",
+        "params": {
+          "category": "career_background",
+          "op": "add",
+          "value": 0.1
+        }
+      }
+    ],
+    "effects": [
+      {
+        "type": "modify_spawn_weight",
+        "params": {
+          "tagIds": [
+            "tag_young",
+            "tag_elite_school",
+            "tag_small_town_grinder"
+          ],
+          "multiplier": 1.8
+        },
+        "displayText": "年轻/名校/小镇做题家出现权重 ×1.8"
+      },
+      {
+        "type": "modify_dark_risk_chance",
+        "params": {
+          "category": "career_background",
+          "op": "add",
+          "value": 0.1
+        },
+        "displayText": "职业背景暗风险概率 +0.10"
+      }
+    ]
+  },
+  {
+    "id": "supply_flow_frozen_meat",
+    "displayName": "流量冻肉",
+    "archetype": "mcn",
+    "durationDays": 2,
+    "description": "更容易刷出会发疯、抽象、争议商品，但平台暗风险上升。",
+    "templateWeightModifiers": [
+      {
+        "tagIds": [
+          "tag_crazy",
+          "tag_absurd",
+          "tag_controversial"
+        ],
+        "multiplier": 1.8
+      }
+    ],
+    "spawnModifiers": [
+      {
+        "type": "template_weight_by_tag",
+        "params": {
+          "tagIds": [
+            "tag_crazy",
+            "tag_absurd",
+            "tag_controversial"
+          ],
+          "multiplier": 1.8
+        }
+      },
+      {
+        "type": "dark_risk_chance",
+        "params": {
+          "category": "platform",
+          "op": "add",
+          "value": 0.15
+        }
+      }
+    ],
+    "effects": [
+      {
+        "type": "modify_spawn_weight",
+        "params": {
+          "tagIds": [
+            "tag_crazy",
+            "tag_absurd",
+            "tag_controversial"
+          ],
+          "multiplier": 1.8
+        },
+        "displayText": "会发疯/抽象/争议出现权重 ×1.8"
+      },
+      {
+        "type": "modify_dark_risk_chance",
+        "params": {
+          "category": "platform",
+          "op": "add",
+          "value": 0.15
+        },
+        "displayText": "平台暗风险概率 +0.15"
+      }
+    ]
+  },
+  {
+    "id": "supply_marriage_boutique",
+    "displayName": "婚恋精品库",
+    "archetype": "family",
+    "durationDays": 2,
+    "description": "更容易刷出稳定、体面、海归商品，商品售价和成本小幅提高。",
+    "templateWeightModifiers": [
+      {
+        "tagIds": [
+          "tag_stable",
+          "tag_decent",
+          "tag_oversea_returnee"
+        ],
+        "multiplier": 1.8
+      }
+    ],
+    "spawnModifiers": [
+      {
+        "type": "template_weight_by_tag",
+        "params": {
+          "tagIds": [
+            "tag_stable",
+            "tag_decent",
+            "tag_oversea_returnee"
+          ],
+          "multiplier": 1.8
+        }
+      },
+      {
+        "type": "generated_product_modifier",
+        "params": {
+          "stat": "basePrice",
+          "op": "add",
+          "value": 10
+        }
+      },
+      {
+        "type": "generated_product_modifier",
+        "params": {
+          "stat": "baseCost",
+          "op": "add",
+          "value": 5
+        }
+      }
+    ],
+    "effects": [
+      {
+        "type": "modify_spawn_weight",
+        "params": {
+          "tagIds": [
+            "tag_stable",
+            "tag_decent",
+            "tag_oversea_returnee"
+          ],
+          "multiplier": 1.8
+        },
+        "displayText": "稳定/体面/海归出现权重 ×1.8"
+      },
+      {
+        "type": "modify_generated_product",
+        "params": {
+          "stat": "basePrice",
+          "op": "add",
+          "value": 10
+        },
+        "displayText": "生成商品售价 +10"
+      },
+      {
+        "type": "modify_generated_product",
+        "params": {
+          "stat": "baseCost",
+          "op": "add",
+          "value": 5
+        },
+        "displayText": "生成商品成本 +5"
+      }
+    ]
   }
 ]

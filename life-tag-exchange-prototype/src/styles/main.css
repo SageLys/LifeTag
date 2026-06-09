@@ -498,6 +498,28 @@ button:disabled {
   width: 100%;
 }
 
+.reward-section {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+.reward-section h3 {
+  margin: 0 0 8px;
+}
+
+.choice-list {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.reward-footer {
+  border-top: 1px solid var(--border);
+  margin-top: 14px;
+  padding-top: 12px;
+}
+
 .report-panel ul {
   margin: 0 0 14px;
   padding-left: 20px;

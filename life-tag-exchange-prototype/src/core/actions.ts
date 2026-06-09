@@ -2,7 +2,15 @@ import { FailReason, ProductStatus, RunPhase, RunResult } from './constants';
 import { endRun, finishDayAndStartNextDay } from './dayFlow';
 import { moveHandCardToDiscard, moveHandCardToExhaust } from './deckSystem';
 import { refreshDealPreviewIfPossible, resolveDeal } from './rules_deal';
-import { applyReward, canChooseReward } from './rules_rewards';
+import {
+  buyPaidShopReward,
+  canFinishRewardPhase,
+  chooseBonusReward,
+  chooseFreeBuildReward,
+  claimMaintenanceReward,
+  markRewardPhaseCompleted,
+  skipBonusReward,
+} from './rules_rewards';
 import { createConditionContext, evaluateConditions } from './rules_conditions';
 import {
   applyEffects,
@@ -92,10 +100,31 @@ export function getBaseActionCost(app: AppRuntime, actionId: string): BaseAction
   const actionDef = getBaseActionDef(app, actionId);
 
   // 当前 baseActions.json 缺少成本字段时使用内置成本，后续可完全数据驱动。
-  return {
+  const cost = {
     actionPointCost: typeof actionDef?.actionPointCost === 'number' ? actionDef.actionPointCost : fallback.actionPointCost,
     cashCost: typeof actionDef?.cashCost === 'number' ? actionDef.cashCost : fallback.cashCost,
   };
+
+  if (
+    actionId === 'action_wash_tag' &&
+    app.state.activePassives.some((passive) => passive.passiveId === 'passive_wash_label_pipeline' || passive.passiveId === 'passive_wash_line') &&
+    !app.state.dayState.phaseFlags.passiveWashLabelUsed
+  ) {
+    cost.actionPointCost = Math.max(0, cost.actionPointCost - 1);
+  }
+
+  const freeAction = app.state.temporaryRunModifiers.find(
+    (modifier) =>
+      modifier.scope === 'first_action' &&
+      modifier.target === actionId &&
+      modifier.stat === 'actionPointCost' &&
+      modifier.consumed < modifier.uses,
+  );
+  if (freeAction) {
+    cost.actionPointCost = 0;
+  }
+
+  return cost;
 }
 
 function getPayload(payload?: unknown): BaseActionPayload {
@@ -212,6 +241,21 @@ function spendBaseActionCost(app: AppRuntime, actionId: string): void {
   const cost = getBaseActionCost(app, actionId);
   app.state.dayState.actionPoints = Math.max(0, app.state.dayState.actionPoints - cost.actionPointCost);
   app.state.cash = Math.max(0, app.state.cash - cost.cashCost);
+  if (actionId === 'action_wash_tag') {
+    app.state.dayState.phaseFlags.passiveWashLabelUsed = true;
+  }
+  const freeAction = app.state.temporaryRunModifiers.find(
+    (modifier) =>
+      modifier.scope === 'first_action' &&
+      modifier.target === actionId &&
+      modifier.stat === 'actionPointCost' &&
+      modifier.consumed < modifier.uses,
+  );
+  if (freeAction) {
+    freeAction.consumed += 1;
+    addActionLog(app, `临时效果触发：${freeAction.displayName}。`);
+    app.state.temporaryRunModifiers = app.state.temporaryRunModifiers.filter((modifier) => modifier.consumed < modifier.uses);
+  }
 }
 
 function finishBaseAction(app: AppRuntime, actionId: string, message: string): ActionResult {
@@ -321,6 +365,29 @@ function getLoseCashEffectCost(effects: Effect[]): number {
   }, 0);
 }
 
+function getEffectiveCardCosts(app: AppRuntime, cardDef: CardDef, cardInstance: CardInstance): { apCost: number; cashCost: number } {
+  const apCost = getCardActionPointCost(cardDef, cardInstance);
+  let cashCost = getCardCashCost(cardDef, cardInstance);
+  if (
+    (cardDef.id === 'card_background_check' || cardDef.id === 'card_background_check_plus') &&
+    app.state.activePassives.some((passive) => passive.passiveId === 'passive_background_check_outsource' || passive.passiveId === 'passive_background_outsource') &&
+    !app.state.dayState.phaseFlags.passiveBackgroundCheckUsed
+  ) {
+    cashCost = Math.max(0, cashCost - 15);
+  }
+  const freePackage = app.state.temporaryRunModifiers.find(
+    (modifier) =>
+      modifier.scope === 'first_card_type' &&
+      modifier.target === cardDef.cardType &&
+      modifier.stat === 'cashCost' &&
+      modifier.consumed < modifier.uses,
+  );
+  if (freePackage) {
+    cashCost = 0;
+  }
+  return { apCost, cashCost };
+}
+
 function validateEffectAvailability(app: AppRuntime, effects: Effect[], targetProduct: ProductInstance | null): string | null {
   for (const effect of effects) {
     switch (effect.type) {
@@ -427,12 +494,12 @@ export function canPlayCard(app: AppRuntime, cardInstanceId: string, payload?: u
     return { ok: false, reason: `该卡牌包含暂未支持的效果：${unsupportedEffects[0]}。` };
   }
 
-  const apCost = getCardActionPointCost(cardDef, cardInstance);
+  const { apCost, cashCost: baseCashCost } = getEffectiveCardCosts(app, cardDef, cardInstance);
   if (app.state.dayState.actionPoints < apCost) {
     return { ok: false, reason: `行动点不足，需要 ${apCost} 点。` };
   }
 
-  const cashCost = getCardCashCost(cardDef, cardInstance) + getLoseCashEffectCost(effects);
+  const cashCost = baseCashCost + getLoseCashEffectCost(effects);
   if (app.state.cash < cashCost) {
     return { ok: false, reason: `现金不足，需要 ${cashCost} 现金。` };
   }
@@ -498,13 +565,14 @@ export function playCard(app: AppRuntime, cardInstanceId: string, payload?: unkn
   const effects = getCardEffects(cardDef, cardInstance);
   const effectContext = createEffectContext(app, cardDef, cardInstance, targetProduct);
 
-  app.state.dayState.actionPoints = Math.max(0, app.state.dayState.actionPoints - getCardActionPointCost(cardDef, cardInstance));
-  app.state.cash = Math.max(0, app.state.cash - getCardCashCost(cardDef, cardInstance));
+  const costs = getEffectiveCardCosts(app, cardDef, cardInstance);
+  app.state.dayState.actionPoints = Math.max(0, app.state.dayState.actionPoints - costs.apCost);
+  app.state.cash = Math.max(0, app.state.cash - costs.cashCost);
 
   const effectResult = applyEffects(effects, effectContext);
   if (!effectResult.ok) {
-    app.state.dayState.actionPoints += getCardActionPointCost(cardDef, cardInstance);
-    app.state.cash += getCardCashCost(cardDef, cardInstance);
+    app.state.dayState.actionPoints += costs.apCost;
+    app.state.cash += costs.cashCost;
     return {
       ok: false,
       reason: 'effect_failed',
@@ -513,6 +581,28 @@ export function playCard(app: AppRuntime, cardInstanceId: string, payload?: unkn
   }
 
   moveCardAfterPlay(app, cardInstance, cardDef);
+  if (cardDef.id === 'card_background_check' || cardDef.id === 'card_background_check_plus') {
+    app.state.dayState.phaseFlags.passiveBackgroundCheckUsed = true;
+    if (app.state.activePassives.some((passive) => passive.passiveId === 'passive_background_check_outsource' || passive.passiveId === 'passive_background_outsource')) {
+      const product = targetProduct;
+      if (product) {
+        product.productModifiers ??= [];
+        product.productModifiers.push({ stat: 'risk', op: 'add', value: -5, sourceType: 'passive', sourceId: 'passive_background_check_outsource', displayText: '背调外包：额外爆雷 -5' });
+      }
+    }
+  }
+  const freePackage = app.state.temporaryRunModifiers.find(
+    (modifier) =>
+      modifier.scope === 'first_card_type' &&
+      modifier.target === cardDef.cardType &&
+      modifier.stat === 'cashCost' &&
+      modifier.consumed < modifier.uses,
+  );
+  if (freePackage) {
+    freePackage.consumed += 1;
+    addActionLog(app, `临时效果触发：${freePackage.displayName}。`);
+    app.state.temporaryRunModifiers = app.state.temporaryRunModifiers.filter((modifier) => modifier.consumed < modifier.uses);
+  }
   refreshDealPreviewIfPossible(app);
   addActionLog(app, `使用【${cardDef.displayName}】。${effectResult.messages.join('')}`);
 
@@ -735,76 +825,52 @@ export function confirmSell(app: AppRuntime): ActionResult {
   };
 }
 
-export function chooseReward(app: AppRuntime, rewardInstanceId: string): ActionResult {
-  const rewardInstance = app.state.dayState.rewardOptions.find((reward) => reward.instanceId === rewardInstanceId);
-  const canChoose = canChooseReward(app, rewardInstance);
-
-  if (!canChoose.ok || !rewardInstance) {
-    const message = canChoose.reason ?? '奖励不存在。';
-    addActionLog(app, `选择奖励失败：${message}`);
-    return {
-      ok: false,
-      reason: message,
-      message,
-    };
-  }
-
-  const cashBefore = app.state.cash;
-  const reputationBefore = app.state.reputation;
-  if (rewardInstance.cost > 0) {
-    app.state.cash -= rewardInstance.cost;
-  }
-
-  const applyResult = applyReward(app, rewardInstance);
-  if (!applyResult.ok) {
-    if (rewardInstance.cost > 0) {
-      app.state.cash += rewardInstance.cost;
-    }
-    const message = applyResult.messages[applyResult.messages.length - 1] ?? '奖励应用失败。';
-    addActionLog(app, `选择奖励失败：${message}`);
-    return {
-      ok: false,
-      reason: message,
-      message,
-    };
-  }
-
-  app.state.dayState.chosenRewardId = rewardInstance.instanceId;
-  app.state.rewardLog.push({
-    day: app.state.currentDay,
-    rewardId: rewardInstance.rewardId,
-    rewardInstanceId: rewardInstance.instanceId,
-    rewardDisplayName: rewardInstance.displayName,
-    rewardType: rewardInstance.rewardType,
-    cost: rewardInstance.cost,
-    cashCost: rewardInstance.cost,
-    effectsApplied: applyResult.effectsApplied,
-    cashBefore,
-    cashAfter: app.state.cash,
-    reputationBefore,
-    reputationAfter: app.state.reputation,
-    deckChange: applyResult.deckChanges.join('；'),
-    passiveChange: applyResult.passiveChanges.join('；'),
-    supplySourceChange: applyResult.supplySourceChanges.join('；'),
-  });
-
-  const message = `第 ${app.state.currentDay} 天选择奖励：${rewardInstance.displayName}，花费 ${rewardInstance.cost} 现金。${applyResult.effectsApplied.join('；')}`;
-  addActionLog(app, message);
-
-  if (app.state.cash < 0 || app.state.reputation <= 0) {
-    failRunIfNeeded(app);
-    return {
-      ok: true,
-      message,
-    };
-  }
-
-  finishDayAndStartNextDay(app);
-
+function rewardTarget(payload?: unknown): { cardInstanceId?: string; productId?: string; poolCardId?: string } {
+  if (!payload || typeof payload !== 'object') return {};
+  const data = payload as Record<string, unknown>;
   return {
-    ok: true,
-    message,
+    cardInstanceId: typeof data.cardInstanceId === 'string' ? data.cardInstanceId : undefined,
+    productId: typeof data.productId === 'string' ? data.productId : undefined,
+    poolCardId: typeof data.poolCardId === 'string' ? data.poolCardId : undefined,
   };
+}
+
+function toActionResult(label: string, result: ReturnType<typeof claimMaintenanceReward>): ActionResult {
+  const message = result.ok ? `${label}成功。${result.effectsApplied.join('；')}` : result.messages[result.messages.length - 1] ?? `${label}失败。`;
+  return { ok: result.ok, reason: result.ok ? undefined : message, message };
+}
+
+export function chooseReward(app: AppRuntime, rewardInstanceId: string, payload?: unknown): ActionResult {
+  return toActionResult('选择免费构筑奖励', chooseFreeBuildReward(app, rewardInstanceId, rewardTarget(payload)));
+}
+
+export function claimMaintenance(app: AppRuntime, rewardInstanceId: string, payload?: unknown): ActionResult {
+  return toActionResult('领取维护奖励', claimMaintenanceReward(app, rewardInstanceId, rewardTarget(payload)));
+}
+
+export function buyPaidReward(app: AppRuntime, rewardInstanceId: string, payload?: unknown): ActionResult {
+  return toActionResult('购买付费奖励', buyPaidShopReward(app, rewardInstanceId, rewardTarget(payload)));
+}
+
+export function chooseBonus(app: AppRuntime, rewardInstanceId: string, payload?: unknown): ActionResult {
+  return toActionResult('选择爆单奖励', chooseBonusReward(app, rewardInstanceId, rewardTarget(payload)));
+}
+
+export function skipBonus(app: AppRuntime): ActionResult {
+  skipBonusReward(app);
+  return { ok: true, message: '已跳过爆单奖励。' };
+}
+
+export function finishRewardPhase(app: AppRuntime): ActionResult {
+  const canFinish = canFinishRewardPhase(app);
+  if (!canFinish.ok) {
+    const message = canFinish.reason ?? '还不能结束收店。';
+    addActionLog(app, `结束收店失败：${message}`);
+    return { ok: false, reason: message, message };
+  }
+  markRewardPhaseCompleted(app);
+  finishDayAndStartNextDay(app);
+  return { ok: true, message: '结束收店，进入下一天。' };
 }
 
 export function buyProduct(app: AppRuntime, productId: string): ActionResult {

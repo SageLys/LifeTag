@@ -2,11 +2,11 @@
   "id": "game_config_default",
   "displayName": "默认 8 天原型配置",
   "runLengthDays": 8,
-  "initialCash": 100,
+  "initialCash": 120,
   "targetTotalProfit": 500,
   "initialReputation": 100,
   "maxReputation": 100,
-  "dailyActionPoints": 3,
+  "dailyActionPoints": 4,
   "dailyDrawCount": 5,
   "dailyProductCandidateCount": 4,
   "dailyProductBuyLimit": 2,
@@ -75,5 +75,73 @@
       "count": 1
     }
   ],
-  "notes": "首版 8 天 HTML 快速验证配置。累计利润是通关目标，现金是构筑资源，信誉是血量。"
+  "notes": "首版 8 天 HTML 快速验证配置。累计利润是通关目标，现金是构筑资源，信誉是血量。",
+  "rewardSystem": {
+    "maintenancePointsPerDay": 3,
+    "freeBuildChoiceCount": 3,
+    "freeBuildPickCount": 1,
+    "paidShopMinOptions": 6,
+    "paidShopMaxOptions": 8,
+    "bonusRewardChoiceCount": 3,
+    "bonusRewardPickCount": 1,
+    "dayOnePaidRewardDiscount": 10
+  },
+  "bonusRewardTriggers": {
+    "dailyProfitAtLeast": 120,
+    "singleDealProfitAtLeast": 100,
+    "noAccidentAndSalesAtLeast": 2,
+    "blindBoxDealMaxAccidentLevel": "medium"
+  },
+  "initialDeckMode": "fixed_plus_random_packs",
+  "initialDeckFixedCardIds": [
+    "card_low_salary_pitch",
+    "card_decent_package",
+    "card_crazy_persona",
+    "card_background_check",
+    "card_pr_package",
+    "card_risk_underwriting"
+  ],
+  "initialDeckRandomPacks": [
+    {
+      "id": "starter_pack_bigtech",
+      "displayName": "大厂牛马流起始牌包",
+      "pickCount": 1,
+      "cardIds": [
+        "card_elite_endorsement",
+        "card_overtime_narrative",
+        "card_trial_transfer"
+      ]
+    },
+    {
+      "id": "starter_pack_family",
+      "displayName": "稳定相亲流起始牌包",
+      "pickCount": 1,
+      "cardIds": [
+        "card_emotional_stability_certificate",
+        "card_parent_background_check",
+        "card_decent_endorsement"
+      ]
+    },
+    {
+      "id": "starter_pack_mcn",
+      "displayName": "MCN 发疯流起始牌包",
+      "pickCount": 1,
+      "cardIds": [
+        "card_hot_search_warmup",
+        "card_black_red_package",
+        "card_platform_hedge"
+      ]
+    }
+  ],
+  "initialDeckCardIds": [
+    "card_low_salary_pitch",
+    "card_decent_package",
+    "card_crazy_persona",
+    "card_background_check",
+    "card_pr_package",
+    "card_risk_underwriting",
+    "card_elite_endorsement",
+    "card_emotional_stability_certificate",
+    "card_hot_search_warmup"
+  ]
 }

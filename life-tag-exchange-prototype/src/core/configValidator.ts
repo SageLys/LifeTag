@@ -107,11 +107,11 @@ function validateGameConfig(gameConfig: GameConfig, cardIds: Set<string>, errors
 
   const expectedNumbers: Array<[keyof GameConfig, number]> = [
     ['runLengthDays', 8],
-    ['initialCash', 100],
+    ['initialCash', 120],
     ['targetTotalProfit', 500],
     ['initialReputation', 100],
     ['maxReputation', 100],
-    ['dailyActionPoints', 3],
+    ['dailyActionPoints', 4],
     ['dailyDrawCount', 5],
     ['dailyProductCandidateCount', 4],
     ['dailyProductBuyLimit', 2],
@@ -138,6 +138,18 @@ function validateGameConfig(gameConfig: GameConfig, cardIds: Set<string>, errors
       errors.push(`[${fileName}][${gameConfig.id}] initialDeck.${entry.cardId}.count 必须大于 0，当前为 ${entry.count}`);
     }
     requireRef(fileName, gameConfig.id, 'initialDeck.cardId', entry.cardId, cardIds, 'cardId', errors);
+  }
+
+  for (const cardId of gameConfig.initialDeckCardIds ?? []) {
+    requireRef(fileName, gameConfig.id, 'initialDeckCardIds', cardId, cardIds, 'cardId', errors);
+  }
+  for (const cardId of gameConfig.initialDeckFixedCardIds ?? []) {
+    requireRef(fileName, gameConfig.id, 'initialDeckFixedCardIds', cardId, cardIds, 'cardId', errors);
+  }
+  for (const pack of gameConfig.initialDeckRandomPacks ?? []) {
+    for (const cardId of pack.cardIds) {
+      requireRef(fileName, gameConfig.id, `initialDeckRandomPacks.${pack.id}.cardIds`, cardId, cardIds, 'cardId', errors);
+    }
   }
 
   const expectedThresholds = {

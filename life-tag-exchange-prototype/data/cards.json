@@ -1,35 +1,207 @@
 [
   {
     "id": "card_low_salary_pitch",
-    "displayName": "低薪叙事包装",
+    "displayName": "低薪接受话术",
     "cardType": "tag_tool",
     "cost": 1,
-    "effects": [],
-    "effectText": "给商品添加或强化“低薪接受”叙事。"
+    "effects": [
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_low_salary_acceptance"
+        },
+        "displayText": "添加 [低薪接受]"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": 25,
+          "duration": "until_product_sold"
+        },
+        "displayText": "售价 +25"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": 10,
+          "duration": "until_product_sold"
+        },
+        "displayText": "爆雷 +10"
+      }
+    ],
+    "effectText": "添加 [低薪接受]；售价 +25；爆雷 +10",
+    "type": "tag_tool",
+    "archetype": "bigtech",
+    "actionPointCost": 1,
+    "cashCost": 0,
+    "targetType": "product",
+    "upgradedCardId": "card_low_salary_pitch_plus",
+    "description": "给商品添加 [低薪接受] 包装，并提高售价，但增加爆雷。"
   },
   {
     "id": "card_decent_package",
     "displayName": "体面包装",
     "cardType": "tag_tool",
     "cost": 1,
-    "effects": [],
-    "effectText": "给商品添加或强化“体面”叙事。"
+    "effects": [
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_decent"
+        },
+        "displayText": "添加 [体面]"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": 30,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "customer_type_is",
+            "params": {
+              "customerType": "family"
+            }
+          }
+        },
+        "displayText": "卖给家庭/相亲类顾客时售价 +30"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": 10,
+          "duration": "until_product_sold"
+        },
+        "displayText": "爆雷 +10"
+      }
+    ],
+    "effectText": "添加 [体面]；卖给家庭/相亲类顾客时售价 +30；爆雷 +10",
+    "type": "tag_tool",
+    "archetype": "family",
+    "actionPointCost": 1,
+    "cashCost": 0,
+    "targetType": "product",
+    "upgradedCardId": "card_decent_package_plus",
+    "description": "给商品添加 [体面] 包装。卖给相亲/家庭类顾客时加价明显。"
   },
   {
     "id": "card_crazy_persona",
-    "displayName": "发疯人设",
+    "displayName": "发疯人格包装",
     "cardType": "tag_tool",
     "cost": 1,
-    "effects": [],
-    "effectText": "给商品添加或强化“会发疯”标签。"
+    "effects": [
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_crazy"
+        },
+        "displayText": "添加 [会发疯]"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": 40,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "customer_type_is",
+            "params": {
+              "customerType": "mcn"
+            }
+          }
+        },
+        "displayText": "卖给 MCN 时售价 +40"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": 20,
+          "duration": "until_product_sold"
+        },
+        "displayText": "爆雷 +20"
+      }
+    ],
+    "effectText": "添加 [会发疯]；卖给 MCN 时售价 +40；爆雷 +20",
+    "type": "tag_tool",
+    "archetype": "mcn",
+    "actionPointCost": 1,
+    "cashCost": 0,
+    "targetType": "product",
+    "upgradedCardId": "card_crazy_persona_plus",
+    "description": "把商品包装成会发疯的人格商品。卖给 MCN 时高收益高风险。"
   },
   {
     "id": "card_elite_endorsement",
     "displayName": "名校背书",
-    "cardType": "tag_tool",
+    "cardType": "operation",
     "cost": 1,
-    "effects": [],
-    "effectText": "给商品添加或强化“名校”标签。"
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": 35,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "product_has_tag",
+            "params": {
+              "tagId": "tag_elite_school"
+            }
+          }
+        },
+        "displayText": "若已有 [名校]，售价 +35"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": 20,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "product_lacks_tag",
+            "params": {
+              "tagId": "tag_elite_school"
+            }
+          }
+        },
+        "displayText": "否则售价 +20"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": 15,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "product_lacks_tag",
+            "params": {
+              "tagId": "tag_elite_school"
+            }
+          }
+        },
+        "displayText": "否则爆雷 +15"
+      }
+    ],
+    "effectText": "若已有 [名校]，售价 +35；否则售价 +20；否则爆雷 +15",
+    "type": "operation",
+    "archetype": "bigtech",
+    "actionPointCost": 1,
+    "cashCost": 0,
+    "targetType": "product",
+    "description": "利用名校标签背书。已有 [名校] 时收益更高，否则强行背书会增加爆雷。"
   },
   {
     "id": "card_struggle_narrative",
@@ -145,43 +317,180 @@
   },
   {
     "id": "card_background_check",
-    "displayName": "背调预检",
+    "displayName": "深度背调",
     "cardType": "operation",
-    "cost": 2,
-    "effects": [],
-    "effectText": "预先查看或降低职业背景类暗风险。"
+    "cost": 1,
+    "effects": [
+      {
+        "type": "reveal_dark_risk_category",
+        "params": {},
+        "displayText": "揭示暗风险类别"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": -10,
+          "duration": "until_product_sold"
+        },
+        "displayText": "爆雷 -10"
+      }
+    ],
+    "effectText": "揭示暗风险类别；爆雷 -10",
+    "type": "operation",
+    "archetype": "risk_control",
+    "actionPointCost": 1,
+    "cashCost": 20,
+    "targetType": "product",
+    "upgradedCardId": "card_background_check_plus",
+    "description": "揭示商品暗风险类别，并降低本单爆雷。"
   },
   {
     "id": "card_trial_transfer",
     "displayName": "试用期转嫁",
     "cardType": "operation",
-    "cost": 2,
-    "effects": [],
-    "effectText": "处理试用期相关风险。"
+    "cost": 1,
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": -20,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "customer_type_is",
+            "params": {
+              "customerType": "career"
+            }
+          }
+        },
+        "displayText": "卖给职场类顾客时爆雷 -20"
+      },
+      {
+        "type": "modify_accident_result",
+        "params": {
+          "stat": "fine",
+          "op": "add",
+          "value": 10,
+          "duration": "until_product_sold"
+        },
+        "displayText": "若发生事故，罚款 +10"
+      }
+    ],
+    "effectText": "卖给职场类顾客时爆雷 -20；若发生事故，罚款 +10",
+    "type": "operation",
+    "archetype": "bigtech",
+    "actionPointCost": 1,
+    "cashCost": 10,
+    "targetType": "product",
+    "upgradedCardId": "card_trial_transfer_plus",
+    "description": "把风险转嫁到试用期。适合职场顾客，降低爆雷，但事故罚款略增。"
   },
   {
     "id": "card_pr_package",
-    "displayName": "公关包装",
+    "displayName": "公关套餐",
     "cardType": "operation",
-    "cost": 2,
-    "effects": [],
-    "effectText": "降低人设与平台侧风险。"
+    "cost": 1,
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": -25,
+          "duration": "until_product_sold"
+        },
+        "displayText": "爆雷 -25"
+      }
+    ],
+    "effectText": "爆雷 -25",
+    "type": "operation",
+    "archetype": "risk_control",
+    "actionPointCost": 1,
+    "cashCost": 25,
+    "targetType": "product",
+    "upgradedCardId": "card_pr_package_plus",
+    "description": "给选中商品做出售前公关，显著降低本单爆雷。"
   },
   {
     "id": "card_hot_search_warmup",
     "displayName": "热搜预热",
     "cardType": "operation",
-    "cost": 2,
-    "effects": [],
-    "effectText": "提升流量标签价格，同时增加风险。"
+    "cost": 1,
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": 35,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "customer_type_is",
+            "params": {
+              "customerType": "mcn"
+            }
+          }
+        },
+        "displayText": "卖给 MCN 时售价 +35"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": 15,
+          "duration": "until_product_sold"
+        },
+        "displayText": "爆雷 +15"
+      }
+    ],
+    "effectText": "卖给 MCN 时售价 +35；爆雷 +15",
+    "type": "operation",
+    "archetype": "mcn",
+    "actionPointCost": 1,
+    "cashCost": 10,
+    "targetType": "product",
+    "upgradedCardId": "card_hot_search_warmup_plus",
+    "description": "提前制造流量。卖给 MCN 时大幅加价，但增加风险。"
   },
   {
     "id": "card_risk_underwriting",
-    "displayName": "风险承保",
+    "displayName": "风险承销",
     "cardType": "operation",
-    "cost": 2,
-    "effects": [],
-    "effectText": "为一次交易提供事故缓冲。"
+    "cost": 1,
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": -10,
+          "duration": "until_product_sold"
+        },
+        "displayText": "售价 -10"
+      },
+      {
+        "type": "modify_accident_result",
+        "params": {
+          "stat": "fine",
+          "op": "multiply",
+          "value": 0.5,
+          "duration": "until_product_sold"
+        },
+        "displayText": "事故罚款 ×0.5"
+      }
+    ],
+    "effectText": "售价 -10；事故罚款 ×0.5",
+    "type": "operation",
+    "archetype": "risk_control",
+    "actionPointCost": 1,
+    "cashCost": 15,
+    "targetType": "product",
+    "upgradedCardId": "card_risk_underwriting_plus",
+    "description": "本单售价略降，但若发生事故，现金惩罚降低。"
   },
   {
     "id": "card_file_deletion",
@@ -195,9 +504,39 @@
     "id": "card_parent_background_check",
     "displayName": "家长背调",
     "cardType": "operation",
-    "cost": 2,
-    "effects": [],
-    "effectText": "面向家长委员会降低风险。"
+    "cost": 1,
+    "effects": [
+      {
+        "type": "reveal_hidden_tag",
+        "params": {
+          "count": 1
+        },
+        "displayText": "揭示 1 个隐藏标签"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": -15,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "customer_type_is",
+            "params": {
+              "customerType": "family"
+            }
+          }
+        },
+        "displayText": "卖给家庭类顾客时爆雷 -15"
+      }
+    ],
+    "effectText": "揭示 1 个隐藏标签；卖给家庭类顾客时爆雷 -15",
+    "type": "operation",
+    "archetype": "family",
+    "actionPointCost": 1,
+    "cashCost": 15,
+    "targetType": "product",
+    "description": "揭示隐藏标签，并在面对家庭类顾客时降低爆雷。"
   },
   {
     "id": "card_decent_repair",
@@ -227,9 +566,49 @@
     "id": "card_platform_hedge",
     "displayName": "平台对冲",
     "cardType": "operation",
-    "cost": 2,
-    "effects": [],
-    "effectText": "降低平台事故影响。"
+    "cost": 1,
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": -25,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "dark_risk_category_is_or_unrevealed",
+            "params": {
+              "category": "platform"
+            }
+          }
+        },
+        "displayText": "平台风险或未揭示时爆雷 -25"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": -10,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "dark_risk_category_is_not",
+            "params": {
+              "category": "platform"
+            }
+          }
+        },
+        "displayText": "否则爆雷 -10"
+      }
+    ],
+    "effectText": "平台风险或未揭示时爆雷 -25；否则爆雷 -10",
+    "type": "operation",
+    "archetype": "mcn",
+    "actionPointCost": 1,
+    "cashCost": 20,
+    "targetType": "product",
+    "upgradedCardId": "card_platform_hedge_plus",
+    "description": "针对平台侧暗风险进行对冲。平台风险或未揭示时收益更高。"
   },
   {
     "id": "card_seal_package",
@@ -302,5 +681,594 @@
     "cost": 2,
     "effects": [],
     "effectText": "复制下一张标签工具效果。"
+  },
+  {
+    "id": "card_low_salary_pitch_plus",
+    "displayName": "低薪接受话术+",
+    "type": "tag_tool",
+    "archetype": "bigtech",
+    "actionPointCost": 1,
+    "cashCost": 0,
+    "targetType": "product",
+    "description": "升级版。更强低薪包装，售价提升更明显。",
+    "effects": [
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_low_salary_acceptance"
+        },
+        "displayText": "添加 [低薪接受]"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": 40,
+          "duration": "until_product_sold"
+        },
+        "displayText": "售价 +40"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": 10,
+          "duration": "until_product_sold"
+        },
+        "displayText": "爆雷 +10"
+      }
+    ],
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effectText": "添加 [低薪接受]；售价 +40；爆雷 +10"
+  },
+  {
+    "id": "card_decent_package_plus",
+    "displayName": "体面包装+",
+    "type": "tag_tool",
+    "archetype": "family",
+    "actionPointCost": 1,
+    "cashCost": 0,
+    "targetType": "product",
+    "description": "升级版。更稳定的体面包装，售价更高且风险更低。",
+    "effects": [
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_decent"
+        },
+        "displayText": "添加 [体面]"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": 45,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "customer_type_is",
+            "params": {
+              "customerType": "family"
+            }
+          }
+        },
+        "displayText": "卖给家庭/相亲类顾客时售价 +45"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": 5,
+          "duration": "until_product_sold"
+        },
+        "displayText": "爆雷 +5"
+      }
+    ],
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effectText": "添加 [体面]；卖给家庭/相亲类顾客时售价 +45；爆雷 +5"
+  },
+  {
+    "id": "card_crazy_persona_plus",
+    "displayName": "发疯人格包装+",
+    "type": "tag_tool",
+    "archetype": "mcn",
+    "actionPointCost": 1,
+    "cashCost": 0,
+    "targetType": "product",
+    "description": "升级版。更强流量包装，小事故时信誉损失降低。",
+    "effects": [
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_crazy"
+        },
+        "displayText": "添加 [会发疯]"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": 55,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "customer_type_is",
+            "params": {
+              "customerType": "mcn"
+            }
+          }
+        },
+        "displayText": "卖给 MCN 时售价 +55"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": 20,
+          "duration": "until_product_sold"
+        },
+        "displayText": "爆雷 +20"
+      },
+      {
+        "type": "modify_accident_result",
+        "params": {
+          "accidentLevel": "minor",
+          "stat": "reputationLoss",
+          "op": "add",
+          "value": -5,
+          "duration": "until_product_sold"
+        },
+        "displayText": "若发生小事故，信誉损失 -5"
+      }
+    ],
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effectText": "添加 [会发疯]；卖给 MCN 时售价 +55；爆雷 +20；若发生小事故，信誉损失 -5"
+  },
+  {
+    "id": "card_background_check_plus",
+    "displayName": "深度背调+",
+    "type": "operation",
+    "archetype": "risk_control",
+    "actionPointCost": 1,
+    "cashCost": 20,
+    "targetType": "product",
+    "description": "升级版。揭示暗风险类别，并更大幅降低本单爆雷。",
+    "effects": [
+      {
+        "type": "reveal_dark_risk_category",
+        "params": {},
+        "displayText": "揭示暗风险类别"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": -15,
+          "duration": "until_product_sold"
+        },
+        "displayText": "爆雷 -15"
+      }
+    ],
+    "cardType": "operation",
+    "cost": 1,
+    "effectText": "揭示暗风险类别；爆雷 -15"
+  },
+  {
+    "id": "card_pr_package_plus",
+    "displayName": "公关套餐+",
+    "type": "operation",
+    "archetype": "risk_control",
+    "actionPointCost": 1,
+    "cashCost": 25,
+    "targetType": "product",
+    "description": "升级版。更强的出售前公关。",
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": -35,
+          "duration": "until_product_sold"
+        },
+        "displayText": "爆雷 -35"
+      }
+    ],
+    "cardType": "operation",
+    "cost": 1,
+    "effectText": "爆雷 -35"
+  },
+  {
+    "id": "card_trial_transfer_plus",
+    "displayName": "试用期转嫁+",
+    "type": "operation",
+    "archetype": "bigtech",
+    "actionPointCost": 1,
+    "cashCost": 10,
+    "targetType": "product",
+    "description": "升级版。更强转嫁，副作用更低。",
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": -30,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "customer_type_is",
+            "params": {
+              "customerType": "career"
+            }
+          }
+        },
+        "displayText": "卖给职场类顾客时爆雷 -30"
+      },
+      {
+        "type": "modify_accident_result",
+        "params": {
+          "stat": "fine",
+          "op": "add",
+          "value": 5,
+          "duration": "until_product_sold"
+        },
+        "displayText": "若发生事故，罚款 +5"
+      }
+    ],
+    "cardType": "operation",
+    "cost": 1,
+    "effectText": "卖给职场类顾客时爆雷 -30；若发生事故，罚款 +5"
+  },
+  {
+    "id": "card_hot_search_warmup_plus",
+    "displayName": "热搜预热+",
+    "type": "operation",
+    "archetype": "mcn",
+    "actionPointCost": 1,
+    "cashCost": 10,
+    "targetType": "product",
+    "description": "升级版。流量收益更高，并能把小事故转化成热度现金。",
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": 50,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "customer_type_is",
+            "params": {
+              "customerType": "mcn"
+            }
+          }
+        },
+        "displayText": "卖给 MCN 时售价 +50"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": 15,
+          "duration": "until_product_sold"
+        },
+        "displayText": "爆雷 +15"
+      },
+      {
+        "type": "modify_accident_result",
+        "params": {
+          "accidentLevel": "minor",
+          "stat": "cash",
+          "op": "add",
+          "value": 20,
+          "duration": "until_product_sold"
+        },
+        "displayText": "若发生小事故，额外现金 +20"
+      }
+    ],
+    "cardType": "operation",
+    "cost": 1,
+    "effectText": "卖给 MCN 时售价 +50；爆雷 +15；若发生小事故，额外现金 +20"
+  },
+  {
+    "id": "card_risk_underwriting_plus",
+    "displayName": "风险承销+",
+    "type": "operation",
+    "archetype": "risk_control",
+    "actionPointCost": 1,
+    "cashCost": 15,
+    "targetType": "product",
+    "description": "升级版。售价副作用更小，事故现金惩罚更低。",
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": -5,
+          "duration": "until_product_sold"
+        },
+        "displayText": "售价 -5"
+      },
+      {
+        "type": "modify_accident_result",
+        "params": {
+          "stat": "fine",
+          "op": "multiply",
+          "value": 0.3,
+          "duration": "until_product_sold"
+        },
+        "displayText": "事故罚款 ×0.3"
+      }
+    ],
+    "cardType": "operation",
+    "cost": 1,
+    "effectText": "售价 -5；事故罚款 ×0.3"
+  },
+  {
+    "id": "card_overtime_narrative",
+    "displayName": "加班叙事",
+    "type": "tag_tool",
+    "archetype": "bigtech",
+    "actionPointCost": 1,
+    "cashCost": 0,
+    "targetType": "product",
+    "description": "给商品添加 [能加班] 叙事，提升售价但增加爆雷。",
+    "effects": [
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_overtime"
+        },
+        "displayText": "添加 [能加班]"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": 25,
+          "duration": "until_product_sold"
+        },
+        "displayText": "售价 +25"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": 10,
+          "duration": "until_product_sold"
+        },
+        "displayText": "爆雷 +10"
+      }
+    ],
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effectText": "添加 [能加班]；售价 +25；爆雷 +10"
+  },
+  {
+    "id": "card_emotional_stability_certificate",
+    "displayName": "情绪稳定证明",
+    "type": "tag_tool",
+    "archetype": "family",
+    "actionPointCost": 1,
+    "cashCost": 10,
+    "targetType": "product",
+    "description": "给商品添加 [情绪稳定] 证明，适合家庭类顾客。",
+    "effects": [
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_emotionally_stable"
+        },
+        "displayText": "添加 [情绪稳定]"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": 30,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "customer_type_is",
+            "params": {
+              "customerType": "family"
+            }
+          }
+        },
+        "displayText": "卖给家庭类顾客时售价 +30"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": -5,
+          "duration": "until_product_sold"
+        },
+        "displayText": "爆雷 -5"
+      }
+    ],
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effectText": "添加 [情绪稳定]；卖给家庭类顾客时售价 +30；爆雷 -5"
+  },
+  {
+    "id": "card_decent_endorsement",
+    "displayName": "体面背书",
+    "type": "operation",
+    "archetype": "family",
+    "actionPointCost": 1,
+    "cashCost": 0,
+    "targetType": "product",
+    "description": "利用体面或海归标签背书。标签匹配时收益更高。",
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": 35,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "product_has_any_tag",
+            "params": {
+              "tagIds": [
+                "tag_decent",
+                "tag_oversea_returnee"
+              ]
+            }
+          }
+        },
+        "displayText": "若有 [体面] 或 [海归]，售价 +35"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": 20,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "product_lacks_all_tags",
+            "params": {
+              "tagIds": [
+                "tag_decent",
+                "tag_oversea_returnee"
+              ]
+            }
+          }
+        },
+        "displayText": "否则售价 +20"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": 10,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "product_lacks_all_tags",
+            "params": {
+              "tagIds": [
+                "tag_decent",
+                "tag_oversea_returnee"
+              ]
+            }
+          }
+        },
+        "displayText": "否则爆雷 +10"
+      }
+    ],
+    "cardType": "operation",
+    "cost": 1,
+    "effectText": "若有 [体面] 或 [海归]，售价 +35；否则售价 +20；否则爆雷 +10"
+  },
+  {
+    "id": "card_black_red_package",
+    "displayName": "黑红包装",
+    "type": "tag_tool",
+    "archetype": "mcn",
+    "actionPointCost": 1,
+    "cashCost": 0,
+    "targetType": "product",
+    "description": "给商品添加 [争议感]，卖给 MCN 时收益高但风险高。",
+    "effects": [
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_controversial"
+        },
+        "displayText": "添加 [争议感]"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": 40,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "customer_type_is",
+            "params": {
+              "customerType": "mcn"
+            }
+          }
+        },
+        "displayText": "卖给 MCN 时售价 +40"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": 20,
+          "duration": "until_product_sold"
+        },
+        "displayText": "爆雷 +20"
+      }
+    ],
+    "cardType": "tag_tool",
+    "cost": 1,
+    "effectText": "添加 [争议感]；卖给 MCN 时售价 +40；爆雷 +20"
+  },
+  {
+    "id": "card_platform_hedge_plus",
+    "displayName": "平台对冲+",
+    "type": "operation",
+    "cardType": "operation",
+    "archetype": "mcn",
+    "actionPointCost": 1,
+    "cashCost": 20,
+    "cost": 1,
+    "targetType": "product",
+    "description": "升级版。更强的平台侧风险对冲，未揭示或平台风险时降幅更大。",
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": -35,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "dark_risk_category_is_or_unrevealed",
+            "params": {
+              "category": "platform"
+            }
+          }
+        },
+        "displayText": "平台风险或未揭示时爆雷 -35"
+      },
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": -15,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "dark_risk_category_is_not",
+            "params": {
+              "category": "platform"
+            }
+          }
+        },
+        "displayText": "否则爆雷 -15"
+      }
+    ],
+    "effectText": "平台风险或未揭示时爆雷 -35；否则爆雷 -15"
   }
 ]

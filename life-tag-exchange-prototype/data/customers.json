@@ -21,7 +21,9 @@
     "preferredPricingModeIds": [
       "pricing_normal",
       "pricing_high"
-    ]
+    ],
+    "budget": 250,
+    "customerType": "career"
   },
   {
     "id": "customer_startup_boss",
@@ -43,7 +45,9 @@
     "preferredPricingModeIds": [
       "pricing_cheap",
       "pricing_normal"
-    ]
+    ],
+    "budget": 220,
+    "customerType": "career"
   },
   {
     "id": "customer_matchmaker",
@@ -67,7 +71,9 @@
     "preferredPricingModeIds": [
       "pricing_normal",
       "pricing_high"
-    ]
+    ],
+    "budget": 230,
+    "customerType": "family"
   },
   {
     "id": "customer_parent_committee",
@@ -90,7 +96,9 @@
     "priceSensitivity": 40,
     "preferredPricingModeIds": [
       "pricing_normal"
-    ]
+    ],
+    "budget": 260,
+    "customerType": "family"
   },
   {
     "id": "customer_short_video_mcn",
@@ -113,6 +121,35 @@
     "preferredPricingModeIds": [
       "pricing_normal",
       "pricing_blind_box"
-    ]
+    ],
+    "budget": 250,
+    "customerType": "mcn"
+  },
+  {
+    "id": "customer_matchmaking_agency",
+    "displayName": "相亲中介",
+    "description": "偏好稳定、体面、情绪稳定的包装。",
+    "preferredTagIds": [
+      "tag_stable",
+      "tag_decent",
+      "tag_emotionally_stable",
+      "tag_oversea_returnee",
+      "tag_social_savvy"
+    ],
+    "tabooTagIds": [
+      "tag_crazy",
+      "tag_absurd",
+      "tag_empty_persona",
+      "tag_fragile_heart"
+    ],
+    "riskTolerance": 35,
+    "priceSensitivity": 45,
+    "preferredPricingModeIds": [
+      "pricing_normal",
+      "pricing_high"
+    ],
+    "budget": 230,
+    "customerType": "family",
+    "aliasOf": "customer_matchmaker"
   }
 ]

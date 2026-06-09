@@ -5,7 +5,7 @@ import { createNewGame } from './gameState';
 import { generateMarketEvents } from './marketGenerator';
 import { generateProductCandidates } from './productGenerator';
 import { generateRunReport } from './runReport';
-import { generateRewardOptions } from './rules_rewards';
+import { ensureRewardState } from './rules_rewards';
 import { createRng } from './rng';
 import type { AppRuntime, RunState } from './types';
 
@@ -82,10 +82,15 @@ function ensurePhaseContent(app: AppRuntime): void {
       drawDailyHand(app);
       break;
     case RunPhase.DayReward:
-      if (app.state.dayState.rewardOptions.length === 0) {
-        app.state.dayState.rewardOptions = generateRewardOptions(app);
-        app.state.dayState.rewardOptionIds = app.state.dayState.rewardOptions.map((reward) => reward.instanceId);
-        addRunLog(app.state, `第 ${app.state.currentDay} 天收店，生成 ${app.state.dayState.rewardOptions.length} 个奖励选项。`);
+      if (!app.state.dayState.rewardState) {
+        ensureRewardState(app);
+        const rewardState = app.state.dayState.rewardState!;
+        const totalOptions =
+          rewardState.maintenanceOptions.length +
+          rewardState.freeBuildOptions.length +
+          rewardState.paidShopOptions.length +
+          rewardState.bonusOptions.length;
+        addRunLog(app.state, `第 ${app.state.currentDay} 天收店，生成 ${totalOptions} 个收店奖励选项。`);
       }
       break;
     default:
@@ -110,6 +115,10 @@ function createEmptyDayState(app: AppRuntime, dayNumber: number): RunState['dayS
     chosenRewardId: null,
     boughtProductCount: 0,
     soldProductCount: 0,
+    dailyProfit: 0,
+    maxSingleDealProfit: 0,
+    accidentCount: 0,
+    blindBoxDealAccidentLevels: [],
     selectedProductId: null,
     selectedCustomerId: null,
     selectedCustomerOrderId: null,
@@ -120,6 +129,42 @@ function createEmptyDayState(app: AppRuntime, dayNumber: number): RunState['dayS
     phaseFlags: {},
     log: [],
   };
+}
+
+function applyNextDayRunModifiers(app: AppRuntime): void {
+  const { state } = app;
+  for (const modifier of state.temporaryRunModifiers) {
+    if (modifier.timing !== 'next_day' || modifier.consumed >= modifier.uses) {
+      continue;
+    }
+    if (modifier.scope === 'day_start') {
+      if (modifier.stat === 'dailyActionPoints') {
+        state.dayState.actionPoints += modifier.value;
+        modifier.consumed += 1;
+        addRunLog(state, `临时效果触发：${modifier.displayName}，今日行动点 ${modifier.value >= 0 ? '+' : ''}${modifier.value}。`);
+      }
+      if (modifier.stat === 'dailyDrawCount' || modifier.stat === 'dailyProductCandidateCount') {
+        modifier.consumed += 0;
+      }
+    }
+  }
+  state.temporaryRunModifiers = state.temporaryRunModifiers.filter((modifier) => modifier.consumed < modifier.uses);
+}
+
+function ageSupplySourcesForNextDay(app: AppRuntime): void {
+  for (const source of app.state.activeSupplySources) {
+    if (typeof source.remainingDays === 'number') {
+      source.remainingDays -= 1;
+    }
+  }
+  const expired = app.state.activeSupplySources.filter((source) => typeof source.remainingDays === 'number' && source.remainingDays <= 0);
+  app.state.activeSupplySources = app.state.activeSupplySources.filter(
+    (source) => source.remainingDays === null || typeof source.remainingDays === 'undefined' || source.remainingDays > 0,
+  );
+  for (const source of expired) {
+    const name = app.index.supplySourcesById.get(source.supplySourceId)?.displayName ?? source.supplySourceId;
+    addRunLog(app.state, `货源倾向【${name}】已过期。`);
+  }
 }
 
 function ageInventoryForNextDay(app: AppRuntime): void {
@@ -191,9 +236,11 @@ export function finishDayAndStartNextDay(app: AppRuntime): void {
   addRunLog(state, `第 ${state.currentDay} 天结束，进入第 ${state.currentDay + 1} 天。`);
   discardHandForDayEnd(app);
   ageInventoryForNextDay(app);
+  ageSupplySourcesForNextDay(app);
   state.currentDay += 1;
   state.dayState = createEmptyDayState(app, state.currentDay);
   syncPhase(state, RunPhase.DayOpening);
+  applyNextDayRunModifiers(app);
   addRunLog(state, `第 ${state.currentDay} 天开店。`);
   ensurePhaseContent(app);
 }

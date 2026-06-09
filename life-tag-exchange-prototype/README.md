@@ -22,6 +22,14 @@
 - 最终报告。
 - Debug 测试局。
 
+## 本轮实现：新版收店与构筑反馈
+
+- 收店阶段已改为四区 RewardPhase：基础维护、免费构筑三选一、付费强奖励商店、爆单奖励。
+- 奖励效果已接入真实状态：加钱、回血、加卡、升级、删牌、加被动、加货源、临时保险、临时效果、库存处理。
+- 卡牌 `effects` 会读取 `data/cards.json` 中的 `params`、`upgradedCardId` 和 plus 版配置，升级后会替换实际 `cardDefId`。
+- 店铺被动、货源倾向、临时保险会显示在构筑面板，并参与售价、爆雷、事故或商品生成计算。
+- Debug 增加 `TEST_REWARD_ALL_TYPES`、`TEST_CARD_UPGRADE_EFFECT`、`TEST_PASSIVE_INSURANCE_TRIGGER`、`TEST_SUPPLY_SOURCE_GENERATION`、`TEST_REWARD_BONUS_TRIGGER`。
+
 ## 当前仍待优化
 
 - 数值平衡。

@@ -33,6 +33,22 @@ export interface GameConfig {
   inventoryLimit: number;
   marketEventsPerDay: number;
   rewardOptionsPerDay: number;
+  rewardSystem?: {
+    maintenancePointsPerDay?: number;
+    freeBuildChoiceCount?: number;
+    freeBuildPickCount?: number;
+    paidShopMinOptions?: number;
+    paidShopMaxOptions?: number;
+    bonusRewardChoiceCount?: number;
+    bonusRewardPickCount?: number;
+    dayOnePaidRewardDiscount?: number;
+  };
+  bonusRewardTriggers?: {
+    dailyProfitAtLeast?: number;
+    singleDealProfitAtLeast?: number;
+    noAccidentAndSalesAtLeast?: number;
+    blindBoxDealMaxAccidentLevel?: AccidentLevel;
+  };
   dailyMinimumSaleCount: number;
   freshnessLossPerDay: number;
   spoiledAt: number;
@@ -40,6 +56,14 @@ export interface GameConfig {
   spoiledRiskAdd: number;
   riskThresholds: Record<AccidentLevel, RiskThreshold>;
   initialDeckCardIds?: string[];
+  initialDeckMode?: 'fixed_plus_random_packs' | string;
+  initialDeckFixedCardIds?: string[];
+  initialDeckRandomPacks?: Array<{
+    id: string;
+    displayName?: string;
+    pickCount: number;
+    cardIds: string[];
+  }>;
   initialDeck: InitialDeckEntry[];
   notes?: string;
 }
@@ -108,6 +132,8 @@ export interface CustomerDef {
   riskTolerance: number;
   priceSensitivity: number;
   preferredPricingModeIds: string[];
+  budget?: number;
+  customerType?: string;
 }
 
 export interface MarketEventDef {
@@ -131,7 +157,7 @@ export interface CardDef {
   actionPointCost?: number;
   apCost?: number;
   cashCost?: number;
-  targetType?: 'none' | 'selected_product' | 'selected_deal' | 'selected_customer' | 'player';
+  targetType?: 'none' | 'product' | 'selected_product' | 'selected_deal' | 'selected_customer' | 'player';
   conditions?: Condition[];
   condition?: Condition;
   effects: Effect[];
@@ -139,6 +165,7 @@ export interface CardDef {
   consumeAfterUse?: boolean;
   discardAfterUse?: boolean;
   upgradedEffects?: Effect[];
+  upgradedCardId?: string;
   upgradedActionPointCost?: number;
   upgradedCashCost?: number;
   effectText?: string;
@@ -148,15 +175,22 @@ export interface CardDef {
 export interface ShopPassiveDef {
   id: string;
   displayName: string;
+  description?: string;
+  archetype?: string;
   effectText: string;
   effects: Effect[];
+  aliasOf?: string;
 }
 
 export interface SupplySourceDef {
   id: string;
   displayName: string;
   description: string;
+  durationDays?: number;
+  archetype?: string;
   templateWeightModifiers: Modifier[];
+  spawnModifiers?: Effect[];
+  effects?: Effect[];
 }
 
 export interface BaseActionDef {
@@ -192,6 +226,24 @@ export interface AccidentDef {
 export interface RewardOption {
   id: string;
   rewardType: RewardType;
+  type?: RewardType;
+  rewardSlot?: 'maintenance' | 'free_build' | 'paid_shop' | 'bonus' | 'legacy' | string;
+  archetype?: string;
+  maintenanceCost?: number;
+  price?: number;
+  dayOneDiscount?: number;
+  oncePerDayGroup?: string;
+  explicitlyRepeatable?: boolean;
+  cardId?: string;
+  cardPool?: string[];
+  passiveId?: string;
+  supplySourceId?: string;
+  supplyPool?: string[];
+  durationOverrideDays?: number;
+  amount?: number;
+  temporaryInsurance?: Record<string, JsonValue>;
+  requires?: JsonValue;
+  effects?: Effect[];
   displayName?: string;
   description: string;
   weight: number;
@@ -234,6 +286,8 @@ export interface Condition {
 
 export interface Effect {
   type: string;
+  displayText?: string;
+  params?: Record<string, JsonValue>;
   target?: string;
   value?: JsonValue;
   modifiers?: Modifier[];
@@ -257,6 +311,7 @@ export interface Modifier {
   sourceId?: string;
   sourceType?: string;
   displayText?: string;
+  condition?: JsonValue;
 }
 
 export interface BreakdownItem {
@@ -351,6 +406,7 @@ export interface DayState {
   productCandidates: ProductInstance[];
   customerOrders: CustomerOrder[];
   rewardOptions: RewardOptionInstance[];
+  rewardState?: RewardPhaseState;
   marketEventIds: string[];
   productCandidateIds: string[];
   customerOrderIds: string[];
@@ -358,6 +414,10 @@ export interface DayState {
   chosenRewardId?: string | null;
   boughtProductCount: number;
   soldProductCount: number;
+  dailyProfit: number;
+  maxSingleDealProfit: number;
+  accidentCount: number;
+  blindBoxDealAccidentLevels: AccidentLevel[];
   selectedProductId: string | null;
   selectedCustomerId: string | null;
   selectedCustomerOrderId: string | null;
@@ -387,6 +447,8 @@ export interface RunState {
   inventory: ProductInstance[];
   activePassives: PassiveState[];
   activeSupplySources: SupplySourceState[];
+  temporaryInsurances: TemporaryInsuranceState[];
+  temporaryRunModifiers: TemporaryRunModifierState[];
   deckState: DeckState;
   dayState: DayState;
   runLog: string[];
@@ -432,6 +494,7 @@ export interface CustomerOrder {
   darkRiskSensitivity: string[];
   maxRisk: number;
   pricingModeIds: string[];
+  customerType?: string;
   specialRules?: string[];
 }
 
@@ -456,6 +519,47 @@ export interface SupplySourceState {
   gainedDay: number;
   remainingDays?: number | null;
   source?: string;
+}
+
+export interface TemporaryInsuranceState {
+  id: string;
+  sourceRewardId: string;
+  displayName: string;
+  gainedDay: number;
+  remainingUses: number;
+  config: Record<string, JsonValue>;
+}
+
+export interface TemporaryRunModifierState {
+  id: string;
+  sourceRewardId: string;
+  displayName: string;
+  gainedDay: number;
+  timing: 'next_day' | 'this_day';
+  scope: string;
+  stat: string;
+  op: string;
+  value: number;
+  uses: number;
+  consumed: number;
+  target?: string;
+}
+
+export interface RewardPhaseState {
+  maintenancePointsRemaining: number;
+  maintenancePointsTotal: number;
+  maintenanceOptions: RewardOptionInstance[];
+  freeBuildOptions: RewardOptionInstance[];
+  paidShopOptions: RewardOptionInstance[];
+  bonusOptions: RewardOptionInstance[];
+  selectedFreeBuildRewardId: string | null;
+  selectedBonusRewardId: string | null;
+  purchasedPaidRewardIds: string[];
+  claimedMaintenanceRewardIds: string[];
+  skippedBonus: boolean;
+  bonusUnlocked: boolean;
+  bonusReasons: string[];
+  rewardPhaseCompleted: boolean;
 }
 
 export interface RewardLogEntry {
