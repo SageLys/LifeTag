@@ -17,6 +17,7 @@ function renderProductStats(product: ProductInstance): string {
 
 function renderActionBadges(product: ProductInstance): string {
   const badges = [
+    product.flags.sold || product.status === ProductStatus.Sold ? '已售' : null,
     product.flags.identified ? '已鉴定' : product.revealedHiddenTagIds.length > 0 ? '部分鉴定' : null,
     product.flags.packaged ? '已包装' : null,
     product.flags.hasPublicRelation ? '已公关' : null,
@@ -75,11 +76,11 @@ function renderInventoryCard(app: AppRuntime, product: ProductInstance): string 
   const canSelectForDeal = app.state.phase === RunPhase.DayProcess || app.state.phase === RunPhase.DaySell;
   const disabledReason = !canSelectForDeal
     ? '当前阶段不能选择商品'
-    : product.status !== ProductStatus.Inventory
-      ? '商品不在库存中'
-      : product.flags.sold
+    : product.flags.sold || product.status === ProductStatus.Sold
         ? '商品已售出'
-        : null;
+        : product.status !== ProductStatus.Inventory
+          ? '商品不在库存中'
+          : null;
 
   return `
     <article class="item-card ${isSelected ? 'is-selected selected' : ''}" data-product-kind="inventory" data-product-id="${escapeHtml(product.id)}">

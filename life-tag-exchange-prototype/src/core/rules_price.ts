@@ -76,6 +76,14 @@ function getEffectiveKnownTagIds(product: ProductInstance): string[] {
   return [...new Set(tagIds.filter(Boolean))];
 }
 
+function getEffectivePriceTagIds(context: CalculationContext): string[] {
+  if (context.mode !== 'resolve') {
+    return getEffectiveKnownTagIds(context.product);
+  }
+
+  return [...new Set([...getEffectiveKnownTagIds(context.product), ...context.product.hiddenTagIds].filter(Boolean))];
+}
+
 function getTagLabel(context: CalculationContext, tagId: string): string {
   return context.indexes.tagsById.get(tagId)?.displayName ?? tagId;
 }
@@ -257,7 +265,7 @@ export function calculatePrice(context: CalculationContext): PriceResult {
   const warnings: string[] = [];
   const priceBreakdown: BreakdownItem[] = [];
   const product = context.product;
-  const knownTagIds = getEffectiveKnownTagIds(product);
+  const knownTagIds = getEffectivePriceTagIds(context);
   let rawPrice = getProductBasePrice(product, warnings);
 
   priceBreakdown.push(item('product_base_price', '商品基础价', 'price', 'add', rawPrice, 'product', product.id));

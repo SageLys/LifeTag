@@ -184,6 +184,9 @@ export interface AccidentDef {
   displayName: string;
   loss: number;
   accidentText: string;
+  refundRate?: number;
+  fine?: number;
+  reputationLoss?: number;
 }
 
 export interface RewardOption {
@@ -303,6 +306,7 @@ export interface RiskResult {
   exactRisk?: number;
   riskBreakdown: RiskBreakdownItem[];
   unknownRiskBreakdown: UnknownRiskBreakdownItem[];
+  unknownResolvedBreakdown?: RiskBreakdownItem[];
   warnings: string[];
 }
 
@@ -476,14 +480,60 @@ export interface DealPreview {
 }
 
 export interface DealResult {
-  preview: DealPreview;
-  accepted: boolean;
+  dealId: string;
+  day: number;
+  productInstanceId: string;
+  productDisplayName: string;
+  customerOrderId: string;
+  customerDisplayName: string;
+  pricingModeId: string;
+  pricingModeDisplayName: string;
+  finalPrice: number;
+  finalRisk: number;
+  baseAccidentLevel: AccidentLevel;
+  finalAccidentLevel: AccidentLevel;
+  refundRate: number;
+  refund: number;
+  fine: number;
+  reputationLoss: number;
   cashDelta: number;
+  singleProfit: number;
+  totalProfitGain: number;
   reputationDelta: number;
+  currentCash: number;
+  currentTotalProfit: number;
+  currentReputation: number;
+  priceBreakdown: BreakdownItem[];
+  riskBreakdown: RiskBreakdownItem[];
+  unknownResolvedBreakdown: RiskBreakdownItem[];
+  accidentLevelModifierBreakdown: BreakdownItem[];
+  accidentOutcomeBreakdown: BreakdownItem[];
+  accidentChain: BreakdownItem[];
+  createdAt: string;
+  preview?: DealPreview;
+  accepted?: boolean;
   accident?: AccidentInstance;
 }
 
 export interface AccidentInstance {
+  accidentInstanceId: string;
+  dealId: string;
+  day: number;
+  title: string;
+  text: string;
+  finalRisk: number;
+  refund: number;
+  fine: number;
+  reputationLoss: number;
+  cashDelta: number;
+  totalProfitGain: number;
+  chain: BreakdownItem[];
+  relatedTags: string[];
+  relatedDarkRiskIds: string[];
+  relatedCustomerId: string;
+  relatedMarketEventId: string | null;
+  relatedPricingModeId: string;
+  createdAt: string;
   id: string;
   level: AccidentLevel;
   risk: number;

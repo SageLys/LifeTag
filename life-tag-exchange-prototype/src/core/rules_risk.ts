@@ -84,6 +84,14 @@ function getEffectiveKnownTagIds(product: ProductInstance): string[] {
   return [...new Set(tagIds.filter(Boolean))];
 }
 
+function getEffectiveRiskTagIds(context: CalculationContext): string[] {
+  if (context.mode !== 'resolve') {
+    return getEffectiveKnownTagIds(context.product);
+  }
+
+  return [...new Set([...getEffectiveKnownTagIds(context.product), ...context.product.hiddenTagIds].filter(Boolean))];
+}
+
 function getUnrevealedHiddenTagIds(product: ProductInstance): string[] {
   return product.hiddenTagIds.filter((tagId) => !product.revealedHiddenTagIds.includes(tagId));
 }
@@ -276,8 +284,9 @@ export function calculateRisk(context: CalculationContext): RiskResult {
   const warnings: string[] = [];
   const riskBreakdown: RiskBreakdownItem[] = [];
   const unknownRiskBreakdown: UnknownRiskBreakdownItem[] = [];
+  const unknownResolvedBreakdown: RiskBreakdownItem[] = [];
   const product = context.product;
-  const knownTagIds = getEffectiveKnownTagIds(product);
+  const knownTagIds = getEffectiveRiskTagIds(context);
   const knownTagSet = new Set(knownTagIds);
   const tabooTagSet = new Set(getTabooTagIds(context));
   const tabooRiskBonus = getTabooRiskBonus(context);
@@ -364,7 +373,17 @@ export function calculateRisk(context: CalculationContext): RiskResult {
 
   let unknownMin = 0;
   let unknownMax = 0;
-  const unrevealedHiddenTagIds = getUnrevealedHiddenTagIds(product);
+  const unresolvedHiddenTagIds = getUnrevealedHiddenTagIds(product);
+  const unrevealedHiddenTagIds = context.mode === 'resolve' ? [] : unresolvedHiddenTagIds;
+
+  if (context.mode === 'resolve') {
+    for (const hiddenTagId of unresolvedHiddenTagIds) {
+      const tag = context.indexes.tagsById.get(hiddenTagId);
+      unknownResolvedBreakdown.push(
+        riskItem('hidden_tag', hiddenTagId, `结算揭示隐藏标签${tag ? ` [${tag.displayName}]` : ''}`, tag ? getTagRisk(tag) : 0),
+      );
+    }
+  }
 
   for (const hiddenTagId of unrevealedHiddenTagIds) {
     const tag = context.indexes.tagsById.get(hiddenTagId);
@@ -407,10 +426,21 @@ export function calculateRisk(context: CalculationContext): RiskResult {
       continue;
     }
 
-    if (isDarkRiskFullyKnown(product, riskId)) {
+    if (isDarkRiskFullyKnown(product, riskId) || context.mode === 'resolve') {
       const actualRisk = getDarkRiskActualRisk(darkRisk);
       knownRisk += actualRisk;
-      riskBreakdown.push(riskItem('dark_risk', riskId, `[${darkRisk.displayName}] 暗风险`, actualRisk));
+      const resolvedItem = riskItem(
+        'dark_risk',
+        riskId,
+        context.mode === 'resolve' && !isDarkRiskFullyKnown(product, riskId)
+          ? `[${darkRisk.displayName}] 结算揭示暗风险`
+          : `[${darkRisk.displayName}] 暗风险`,
+        actualRisk,
+      );
+      riskBreakdown.push(resolvedItem);
+      if (context.mode === 'resolve' && !isDarkRiskFullyKnown(product, riskId)) {
+        unknownResolvedBreakdown.push(resolvedItem);
+      }
       continue;
     }
 
@@ -423,10 +453,10 @@ export function calculateRisk(context: CalculationContext): RiskResult {
     unknownRiskBreakdown.push(unknownItem('dark_risk', 'dark_risk_unknown', label, range.riskMin, range.riskMax));
   }
 
-  if (unrevealedHiddenTagIds.length > 0) {
+  if (context.mode !== 'resolve' && unrevealedHiddenTagIds.length > 0) {
     warnings.push('存在未揭示隐藏标签，爆雷值只能预估区间。');
   }
-  if (product.darkRiskIds.some((riskId) => isDarkRiskUnknown(product, riskId))) {
+  if (context.mode !== 'resolve' && product.darkRiskIds.some((riskId) => isDarkRiskUnknown(product, riskId))) {
     warnings.push('存在未完全揭示暗风险，普通鉴定不能完全排除该风险。');
   }
   if (context.pricingMode.id === 'pricing_high') {
@@ -452,6 +482,7 @@ export function calculateRisk(context: CalculationContext): RiskResult {
       exactRisk: knownRisk,
       riskBreakdown,
       unknownRiskBreakdown,
+      unknownResolvedBreakdown,
       warnings,
     };
   }
@@ -463,6 +494,7 @@ export function calculateRisk(context: CalculationContext): RiskResult {
     riskMax,
     riskBreakdown,
     unknownRiskBreakdown,
+    unknownResolvedBreakdown,
     warnings,
   };
 }

@@ -1,8 +1,10 @@
 import {
+  getInventoryProductById,
   getSelectedCustomerOrder,
   getSelectedPricingMode,
   getSelectedProduct,
 } from '../core/selectors';
+import { ProductStatus, RunPhase } from '../core/constants';
 import type { AppRuntime, BreakdownItem, RiskBreakdownItem, UnknownRiskBreakdownItem } from '../core/types';
 import { escapeHtml } from './formatters';
 
@@ -64,6 +66,39 @@ function getMissingSelections(app: AppRuntime): string[] {
   return missingSelections;
 }
 
+function getConfirmSellDisabledReason(app: AppRuntime): string | null {
+  if (app.state.phase !== RunPhase.DaySell) {
+    return '当前阶段不是 DAY_SELL';
+  }
+  if (!app.state.dayState.selectedProductId) {
+    return '未选择商品';
+  }
+  const rawProduct = getInventoryProductById(app, app.state.dayState.selectedProductId);
+  if (!rawProduct) {
+    return '未选择商品';
+  }
+  if (rawProduct.flags.sold || rawProduct.status === ProductStatus.Sold) {
+    return '商品已出售';
+  }
+  if (rawProduct.status !== ProductStatus.Inventory) {
+    return '商品不在库存';
+  }
+  if (!getSelectedCustomerOrder(app)) {
+    return '未选择顾客';
+  }
+  if (!getSelectedPricingMode(app)) {
+    return '未选择定价方式';
+  }
+  const preview = app.state.dayState.currentDealPreview;
+  if (!preview) {
+    return '交易预览计算失败';
+  }
+  if (!preview.canConfirmSell) {
+    return preview.disabledReason ?? '交易预览计算失败';
+  }
+  return null;
+}
+
 function renderRiskSummary(app: AppRuntime): string {
   const preview = app.state.dayState.currentDealPreview;
   if (!preview) {
@@ -94,6 +129,7 @@ function renderRiskSummary(app: AppRuntime): string {
 export function renderDealPreview(app: AppRuntime): string {
   const preview = app.state.dayState.currentDealPreview;
   const missingSelections = getMissingSelections(app);
+  const disabledReason = getConfirmSellDisabledReason(app);
 
   if (!preview) {
     return `
@@ -101,7 +137,11 @@ export function renderDealPreview(app: AppRuntime): string {
         <h2>交易预览</h2>
         ${renderSelectionSummary(app)}
         <p class="hint-text">请选择：${missingSelections.join('、') || '无'}</p>
-        <button type="button" data-action="clear-deal-selection">清空选择</button>
+        <div class="phase-actions">
+          <button type="button" data-action="confirm-sell" disabled>确认出售</button>
+          <button type="button" data-action="clear-deal-selection">清空选择</button>
+        </div>
+        <p class="disabled-reason">${escapeHtml(disabledReason ?? '交易预览计算失败')}</p>
       </section>
     `;
   }
@@ -126,10 +166,10 @@ export function renderDealPreview(app: AppRuntime): string {
       <ul>${renderUnknownRiskBreakdown(preview.unknownRiskBreakdown)}</ul>
       ${preview.warnings.map((warning) => `<p class="warning-text">${escapeHtml(warning)}</p>`).join('')}
       <div class="phase-actions">
-        <button type="button" data-action="confirm-sell-placeholder" disabled>确认出售</button>
+        <button type="button" data-action="confirm-sell" ${disabledReason ? 'disabled' : ''}>确认出售</button>
         <button type="button" data-action="clear-deal-selection">清空选择</button>
       </div>
-      <p class="disabled-reason">${escapeHtml(preview.disabledReason ?? '出售结算将在 P0-11 实现')}</p>
+      ${disabledReason ? `<p class="disabled-reason">${escapeHtml(disabledReason)}</p>` : ''}
     </section>
   `;
 }

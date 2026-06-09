@@ -1,6 +1,6 @@
-import { ProductStatus, RunPhase } from './constants';
+import { FailReason, ProductStatus, RunPhase, RunResult } from './constants';
 import { moveHandCardToDiscard, moveHandCardToExhaust } from './deckSystem';
-import { refreshDealPreviewIfPossible } from './rules_deal';
+import { refreshDealPreviewIfPossible, resolveDeal } from './rules_deal';
 import { createConditionContext, evaluateConditions } from './rules_conditions';
 import {
   applyEffects,
@@ -18,17 +18,21 @@ import {
   getCardDef,
   getInventoryProductById,
   getProductCandidateById,
+  getSelectedCustomerOrder,
+  getSelectedPricingMode,
+  getSelectedProduct,
   getUnrevealedHiddenTagIds,
   getUnresolvedDarkRiskIds,
   hasUnknownProductInfo,
   isProductOperable,
 } from './selectors';
-import type { AppRuntime, BaseActionDef, CardDef, CardInstance, Effect, ProductInstance, TagDef } from './types';
+import type { AppRuntime, BaseActionDef, CardDef, CardInstance, DealResult, Effect, ProductInstance, TagDef } from './types';
 
 export interface ActionResult {
   ok: boolean;
   reason?: string;
   message: string;
+  dealResult?: DealResult;
 }
 
 type BaseActionId = 'action_identify' | 'action_package' | 'action_pr' | 'action_wash_tag';
@@ -626,12 +630,104 @@ export function clearDealSelection(app: AppRuntime): ActionResult {
   };
 }
 
+function getConfirmSellDisabledReason(app: AppRuntime): string | null {
+  if (app.state.phase !== RunPhase.DaySell || app.state.dayState.phase !== RunPhase.DaySell) {
+    return '当前阶段不是出售阶段。';
+  }
+
+  const selectedProductId = app.state.dayState.selectedProductId;
+  if (!selectedProductId) {
+    return '未选择商品。';
+  }
+
+  const rawProduct = app.state.inventory.find((product) => product.id === selectedProductId);
+  if (!rawProduct) {
+    return '未选择商品。';
+  }
+  if (rawProduct.flags.sold || rawProduct.status === ProductStatus.Sold) {
+    return '商品已出售。';
+  }
+  if (rawProduct.status !== ProductStatus.Inventory) {
+    return '商品不在库存。';
+  }
+
+  const product = getSelectedProduct(app);
+  if (!product) {
+    return '未选择商品。';
+  }
+
+  if (!getSelectedCustomerOrder(app) || !app.state.dayState.selectedCustomerOrderId) {
+    return '未选择顾客。';
+  }
+
+  const pricingMode = getSelectedPricingMode(app);
+  if (!pricingMode || !app.state.dayState.selectedPricingModeId) {
+    return '未选择定价方式。';
+  }
+  if (pricingMode.id === 'pricing_blind_box' && !hasUnknownProductInfo(product)) {
+    return '定价方式不可用。';
+  }
+
+  const preview = app.state.dayState.currentDealPreview;
+  if (!preview) {
+    return '交易预览计算失败。';
+  }
+  if (preview.canConfirmSell === false || preview.disabledReason) {
+    return preview.disabledReason ?? '交易预览计算失败。';
+  }
+
+  return null;
+}
+
+function failRunIfNeeded(app: AppRuntime): void {
+  if (app.state.cash < 0) {
+    app.state.result = RunResult.Failed;
+    app.state.failReason = 'cash_below_zero' as FailReason;
+    app.state.phase = RunPhase.RunFailed;
+    app.state.dayState.phase = RunPhase.RunFailed;
+    addActionLog(app, '资金链断裂，现金低于 0，本局失败。');
+    return;
+  }
+
+  if (app.state.reputation <= 0) {
+    app.state.result = RunResult.Failed;
+    app.state.failReason = 'reputation_zero' as FailReason;
+    app.state.phase = RunPhase.RunFailed;
+    app.state.dayState.phase = RunPhase.RunFailed;
+    addActionLog(app, '店铺信誉崩盘，信誉归零，本局失败。');
+  }
+}
+
 export function confirmSell(app: AppRuntime): ActionResult {
-  void app;
+  const disabledReason = getConfirmSellDisabledReason(app);
+  if (disabledReason) {
+    addActionLog(app, `出售失败：${disabledReason}`);
+    return {
+      ok: false,
+      reason: disabledReason,
+      message: disabledReason,
+    };
+  }
+
+  const dealResult = resolveDeal(app);
+  app.state.dealLog.push(dealResult);
+  if (dealResult.accident) {
+    app.state.accidentLog.push(dealResult.accident);
+  }
+
+  const message =
+    `成交 ${dealResult.productDisplayName} → ${dealResult.customerDisplayName}，` +
+    `售价 ${dealResult.finalPrice}，爆雷 ${dealResult.finalRisk}，事故 ${dealResult.finalAccidentLevel}，` +
+    `退款 ${dealResult.refund}，罚款 ${dealResult.fine}，信誉 ${dealResult.reputationDelta}，` +
+    `现金 ${dealResult.cashDelta}，单笔利润 ${dealResult.singleProfit}，累计利润 +${dealResult.totalProfitGain}。`;
+  addActionLog(app, message);
+  failRunIfNeeded(app);
+  refreshDealPreviewIfPossible(app);
+
   return {
-    ok: false,
-    reason: 'not_implemented',
-    message: '出售结算将在 P0-11 实现。',
+    ok: true,
+    message,
+    dealResult,
   };
 }
 

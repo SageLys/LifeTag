@@ -12,6 +12,7 @@ import {
 import { advancePhase, returnToProcess } from '../core/dayFlow';
 import type { AppRuntime } from '../core/types';
 import { renderApp } from './render';
+import { closeModal, showDealResult } from './uiState';
 
 export function bindEvents(app: AppRuntime): void {
   const root = document.querySelector<HTMLDivElement>('#app');
@@ -73,11 +74,20 @@ export function bindEvents(app: AppRuntime): void {
       return;
     }
 
-    if (target instanceof HTMLButtonElement && target.dataset.action === 'confirm-sell-placeholder') {
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'confirm-sell') {
       if (!target.disabled) {
-        confirmSell(app);
+        const result = confirmSell(app);
+        if (result.ok && result.dealResult) {
+          showDealResult(result.dealResult);
+        }
         renderApp(app);
       }
+      return;
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'close-modal') {
+      closeModal();
+      renderApp(app);
       return;
     }
 
