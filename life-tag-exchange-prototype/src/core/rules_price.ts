@@ -176,6 +176,10 @@ function conditionMatches(modifier: Modifier, context: CalculationContext, known
   }
 }
 
+function getMarketModifierLabel(marketEventDisplayName: string, modifier: Modifier): string {
+  return modifier.displayText ? `今日新闻 ${marketEventDisplayName}：${modifier.displayText}` : `今日新闻 ${marketEventDisplayName}`;
+}
+
 function applyMarketModifiers(
   context: CalculationContext,
   knownTagIds: string[],
@@ -201,10 +205,30 @@ function applyMarketModifiers(
 
     if (modifier.stat === 'price' && modifier.op === 'add') {
       priceAdd += modifier.value;
-      breakdown.push(item(`market_${marketEvent.id}_${modifier.id ?? breakdown.length}`, `今日新闻 ${marketEvent.displayName}`, 'price', 'add', modifier.value, 'market_event', marketEvent.id));
+      breakdown.push(
+        item(
+          `market_${marketEvent.id}_${modifier.id ?? breakdown.length}`,
+          getMarketModifierLabel(marketEvent.displayName, modifier),
+          'price',
+          'add',
+          modifier.value,
+          'market_event',
+          marketEvent.id,
+        ),
+      );
     } else if (modifier.stat === 'priceMultiplier' && modifier.op === 'multiply') {
       multipliers.push(modifier.value);
-      breakdown.push(item(`market_multiplier_${marketEvent.id}_${modifier.id ?? breakdown.length}`, `今日新闻 ${marketEvent.displayName}`, 'priceMultiplier', 'multiply', `×${modifier.value}`, 'market_event', marketEvent.id));
+      breakdown.push(
+        item(
+          `market_multiplier_${marketEvent.id}_${modifier.id ?? breakdown.length}`,
+          getMarketModifierLabel(marketEvent.displayName, modifier),
+          'priceMultiplier',
+          'multiply',
+          `×${modifier.value}`,
+          'market_event',
+          marketEvent.id,
+        ),
+      );
     }
   }
 
