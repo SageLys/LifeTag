@@ -72,6 +72,42 @@ npm run build
 npm run dev
 ```
 
+## Debug 与固定测试局
+
+Debug 只用于开发测试和验收回归，不代表正式玩法入口。
+
+打开方式：
+- 在本地地址后追加 `?debug=1`。
+- 或点击页面右下角 `Debug：打开 / 关闭` 按钮。
+
+Debug 面板能力：
+- 查看 RunState / DayState / DeckState / UI 状态摘要。
+- 设置固定 seed，后续随机生成会使用该 seed。
+- 一键加载固定测试局。
+- 复制完整 AppState、RunState、DayState、DeckState、DealPreview、选中对象、最后交易、最后事故和 RunReport JSON。
+- Clipboard API 不可用时，会显示 textarea fallback。
+- 使用手动验收清单记录回归进度。
+
+固定测试局：
+- `SCENARIO_A_BOOT_SMOKE`：启动与基础状态局，目标 `DAY_OPENING`。
+- `SCENARIO_B_SAFE_DEAL`：无事故安全交易局，目标 `DAY_SELL`。
+- `SCENARIO_C_HIDDEN_RISK_RANGE`：隐藏标签风险区间局，目标 `DAY_SELL`。
+- `SCENARIO_D_DARK_RISK_ACCIDENT`：暗风险事故局，目标 `DAY_SELL`。
+- `SCENARIO_E_SEVERE_ACCIDENT_FAILURE`：严重事故导致失败局，目标 `DAY_SELL`。
+- `SCENARIO_F_REWARD_NEXT_DAY`：奖励进入下一天局，目标 `DAY_REWARD`。
+- `SCENARIO_G_FINAL_VICTORY`：第 8 天胜利局，目标 `DAY_REWARD`。
+- `SCENARIO_H_FINAL_PROFIT_FAIL`：第 8 天利润未达标失败局，目标 `DAY_REWARD`。
+- `SCENARIO_I_SOLD_LOCK`：已售商品锁定局，目标 `DAY_PROCESS`。
+- `SCENARIO_J_CARD_EFFECT`：卡牌效果局，目标 `DAY_PROCESS`。
+- `SCENARIO_K_PAID_REWARD_DISABLED`：付费奖励现金不足局，目标 `DAY_REWARD`。
+- `SCENARIO_L_SPOILAGE`：新鲜度与腐败局，目标 `DAY_REWARD`。
+
+推荐回归顺序：
+1. 先跑 `SCENARIO_A_BOOT_SMOKE` 验证基础启动。
+2. 跑 `SCENARIO_B_SAFE_DEAL`、`SCENARIO_D_DARK_RISK_ACCIDENT`、`SCENARIO_E_SEVERE_ACCIDENT_FAILURE` 验证出售和事故。
+3. 跑 `SCENARIO_F_REWARD_NEXT_DAY`、`SCENARIO_G_FINAL_VICTORY`、`SCENARIO_H_FINAL_PROFIT_FAIL` 验证奖励、下一天和终局。
+4. 跑 `SCENARIO_C_HIDDEN_RISK_RANGE`、`SCENARIO_I_SOLD_LOCK`、`SCENARIO_J_CARD_EFFECT`、`SCENARIO_K_PAID_REWARD_DISABLED`、`SCENARIO_L_SPOILAGE` 做专项回归。
+
 预览生产构建：
 
 ```bash

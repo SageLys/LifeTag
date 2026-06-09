@@ -3,6 +3,7 @@ import { formatCount, getConfigCounts } from './formatters';
 import { renderActions } from './renderActions';
 import { renderCustomers } from './renderCustomers';
 import { renderDealPreview } from './renderDealPreview';
+import { renderDebug } from './renderDebug';
 import { renderHand } from './renderHand';
 import { renderLog } from './renderLog';
 import { renderMarket } from './renderMarket';
@@ -17,7 +18,7 @@ import { renderResolveSummary } from './renderResolveSummary';
 import { renderRewards } from './renderRewards';
 import { renderTopBar } from './renderTopBar';
 
-const DEVELOPMENT_STAGE = 'P0-12：收店奖励、下一天与最终报告';
+const DEVELOPMENT_STAGE = 'P0-13：Debug 面板、固定测试局与验收回归';
 
 export function renderApp(app: AppRuntime): void {
   const root = document.querySelector<HTMLDivElement>('#app');
@@ -53,7 +54,7 @@ export function renderApp(app: AppRuntime): void {
 
       <section class="panel guardrail-panel" aria-label="当前范围提示区">
         <h2>当前范围提示</h2>
-        <p>P0-12 阶段开放每日收店奖励、进入下一天、第 8 天胜负判定和最终报告。</p>
+        <p>P0-13 阶段加入 Debug 面板、固定测试局、状态 JSON 复制和手动回归清单；不新增正式玩法规则。</p>
       </section>
 
       <div class="workspace-grid">
@@ -73,6 +74,7 @@ export function renderApp(app: AppRuntime): void {
       </div>
 
       ${renderModal()}
+      ${renderDebug(app)}
     </main>
   `;
 }
