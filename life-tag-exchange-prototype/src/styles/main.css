@@ -236,6 +236,12 @@ p {
   grid-column: span 2;
 }
 
+.resolve-summary,
+.rewards-panel,
+.report-panel {
+  grid-column: span 2;
+}
+
 .log-panel ol {
   margin: 0;
   padding-left: 20px;
@@ -446,6 +452,15 @@ button:disabled {
   gap: 6px;
   max-height: 260px;
   overflow: auto;
+  margin: 0 0 14px;
+  padding-left: 20px;
+}
+
+.reward-card button {
+  width: 100%;
+}
+
+.report-panel ul {
   margin: 0 0 14px;
   padding-left: 20px;
 }

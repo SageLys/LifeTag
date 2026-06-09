@@ -1,6 +1,8 @@
 import { FailReason, ProductStatus, RunPhase, RunResult } from './constants';
+import { endRun, finishDayAndStartNextDay } from './dayFlow';
 import { moveHandCardToDiscard, moveHandCardToExhaust } from './deckSystem';
 import { refreshDealPreviewIfPossible, resolveDeal } from './rules_deal';
+import { applyReward, canChooseReward } from './rules_rewards';
 import { createConditionContext, evaluateConditions } from './rules_conditions';
 import {
   applyEffects,
@@ -682,19 +684,21 @@ function getConfirmSellDisabledReason(app: AppRuntime): string | null {
 function failRunIfNeeded(app: AppRuntime): void {
   if (app.state.cash < 0) {
     app.state.result = RunResult.Failed;
-    app.state.failReason = 'cash_below_zero' as FailReason;
+    app.state.failReason = FailReason.CashBelowZero;
     app.state.phase = RunPhase.RunFailed;
     app.state.dayState.phase = RunPhase.RunFailed;
     addActionLog(app, '资金链断裂，现金低于 0，本局失败。');
+    endRun(app);
     return;
   }
 
   if (app.state.reputation <= 0) {
     app.state.result = RunResult.Failed;
-    app.state.failReason = 'reputation_zero' as FailReason;
+    app.state.failReason = FailReason.ReputationZero;
     app.state.phase = RunPhase.RunFailed;
     app.state.dayState.phase = RunPhase.RunFailed;
     addActionLog(app, '店铺信誉崩盘，信誉归零，本局失败。');
+    endRun(app);
   }
 }
 
@@ -728,6 +732,78 @@ export function confirmSell(app: AppRuntime): ActionResult {
     ok: true,
     message,
     dealResult,
+  };
+}
+
+export function chooseReward(app: AppRuntime, rewardInstanceId: string): ActionResult {
+  const rewardInstance = app.state.dayState.rewardOptions.find((reward) => reward.instanceId === rewardInstanceId);
+  const canChoose = canChooseReward(app, rewardInstance);
+
+  if (!canChoose.ok || !rewardInstance) {
+    const message = canChoose.reason ?? '奖励不存在。';
+    addActionLog(app, `选择奖励失败：${message}`);
+    return {
+      ok: false,
+      reason: message,
+      message,
+    };
+  }
+
+  const cashBefore = app.state.cash;
+  const reputationBefore = app.state.reputation;
+  if (rewardInstance.cost > 0) {
+    app.state.cash -= rewardInstance.cost;
+  }
+
+  const applyResult = applyReward(app, rewardInstance);
+  if (!applyResult.ok) {
+    if (rewardInstance.cost > 0) {
+      app.state.cash += rewardInstance.cost;
+    }
+    const message = applyResult.messages[applyResult.messages.length - 1] ?? '奖励应用失败。';
+    addActionLog(app, `选择奖励失败：${message}`);
+    return {
+      ok: false,
+      reason: message,
+      message,
+    };
+  }
+
+  app.state.dayState.chosenRewardId = rewardInstance.instanceId;
+  app.state.rewardLog.push({
+    day: app.state.currentDay,
+    rewardId: rewardInstance.rewardId,
+    rewardInstanceId: rewardInstance.instanceId,
+    rewardDisplayName: rewardInstance.displayName,
+    rewardType: rewardInstance.rewardType,
+    cost: rewardInstance.cost,
+    cashCost: rewardInstance.cost,
+    effectsApplied: applyResult.effectsApplied,
+    cashBefore,
+    cashAfter: app.state.cash,
+    reputationBefore,
+    reputationAfter: app.state.reputation,
+    deckChange: applyResult.deckChanges.join('；'),
+    passiveChange: applyResult.passiveChanges.join('；'),
+    supplySourceChange: applyResult.supplySourceChanges.join('；'),
+  });
+
+  const message = `第 ${app.state.currentDay} 天选择奖励：${rewardInstance.displayName}，花费 ${rewardInstance.cost} 现金。${applyResult.effectsApplied.join('；')}`;
+  addActionLog(app, message);
+
+  if (app.state.cash < 0 || app.state.reputation <= 0) {
+    failRunIfNeeded(app);
+    return {
+      ok: true,
+      message,
+    };
+  }
+
+  finishDayAndStartNextDay(app);
+
+  return {
+    ok: true,
+    message,
   };
 }
 

@@ -192,12 +192,22 @@ export interface AccidentDef {
 export interface RewardOption {
   id: string;
   rewardType: RewardType;
+  displayName?: string;
   description: string;
   weight: number;
+  cost?: number;
   payload: Record<string, JsonValue>;
 }
 
 export type RewardDef = RewardOption;
+
+export interface RewardOptionInstance extends RewardOption {
+  instanceId: string;
+  rewardId: string;
+  displayName: string;
+  cost: number;
+  effectSummary: string;
+}
 
 export interface EndingEvaluationDef {
   id: string;
@@ -340,11 +350,12 @@ export interface DayState {
   marketEvents: MarketEventDef[];
   productCandidates: ProductInstance[];
   customerOrders: CustomerOrder[];
-  rewardOptions: RewardOption[];
+  rewardOptions: RewardOptionInstance[];
   marketEventIds: string[];
   productCandidateIds: string[];
   customerOrderIds: string[];
   rewardOptionIds: string[];
+  chosenRewardId?: string | null;
   boughtProductCount: number;
   soldProductCount: number;
   selectedProductId: string | null;
@@ -382,6 +393,7 @@ export interface RunState {
   dealLog: DealResult[];
   accidentLog: AccidentInstance[];
   rewardLog: RewardLogEntry[];
+  runReport: RunReport | null;
 }
 
 export interface ProductInstance {
@@ -449,8 +461,19 @@ export interface SupplySourceState {
 export interface RewardLogEntry {
   day: number;
   rewardId: string;
+  rewardInstanceId?: string;
+  rewardDisplayName?: string;
   rewardType: RewardType;
+  cost?: number;
   cashCost?: number;
+  effectsApplied?: string[];
+  cashBefore?: number;
+  cashAfter?: number;
+  reputationBefore?: number;
+  reputationAfter?: number;
+  deckChange?: string;
+  passiveChange?: string;
+  supplySourceChange?: string;
 }
 
 export interface DealPreview {
@@ -543,11 +566,29 @@ export interface AccidentInstance {
 }
 
 export interface RunReport {
+  reportId: string;
   result: RunResult;
+  failReason: FailReason;
   endingEvaluationId?: string;
+  dayReached: number;
+  finalCash: number;
+  finalTotalProfit: number;
+  targetTotalProfit: number;
+  finalReputation: number;
+  totalDeals: number;
+  totalAccidents: number;
+  maxAccidentLevel: AccidentLevel;
+  maxSingleProfit: number;
+  totalProfitGain: number;
+  activePassives: string[];
+  activeSupplySources: string[];
+  deckSize: number;
+  mainRiskSources: string[];
+  endingTitle: string;
+  endingText: string;
+  createdAt: string;
   totalCash: number;
   totalReputation: number;
-  totalAccidents: number;
   summaryItems: BreakdownItem[];
 }
 

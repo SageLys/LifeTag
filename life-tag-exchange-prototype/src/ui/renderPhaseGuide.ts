@@ -20,9 +20,7 @@ function getMainButtonLabel(app: AppRuntime): string {
     case RunPhase.DaySell:
       return '结束今日出售，进入结算阶段';
     case RunPhase.DayResolve:
-      return '进入收店阶段';
-    case RunPhase.DayReward:
-      return state.currentDay < state.maxDays ? '进入下一天' : '结束本局，查看占位报告';
+      return '进入收店奖励';
     case RunPhase.RunEnd:
     case RunPhase.RunFailed:
       return '重新开始';
@@ -31,15 +29,29 @@ function getMainButtonLabel(app: AppRuntime): string {
   }
 }
 
+function getPhaseHint(app: AppRuntime): string {
+  if (app.state.phase === RunPhase.DayReward) {
+    return '选择一个收店奖励。部分强力奖励需要消耗现金。选择后将进入下一天；第 8 天选择后进入最终清算。';
+  }
+  if (app.state.phase === RunPhase.DayResolve) {
+    return '查看今日成交、事故、现金、累计利润和信誉变化，然后进入收店奖励。';
+  }
+  if (app.state.phase === RunPhase.RunEnd || app.state.phase === RunPhase.RunFailed) {
+    return '本局已经结束。查看最终报告后可以重新开始。';
+  }
+  return '按每日流程推进。出售阶段可以多次确认出售，结束出售后进入日结。';
+}
+
 export function renderPhaseGuide(app: AppRuntime): string {
   const showReturnButton = app.state.phase === RunPhase.DaySell;
+  const showMainButton = app.state.phase !== RunPhase.DayReward;
 
   return `
     <section class="panel phase-guide" aria-label="PhaseGuideBar">
       <h2>阶段提示</h2>
-      <p>P0-9 阶段开放基础操作、售价预览、爆雷区间和事故预测；暂不开放卡牌效果、确认出售与事故结算。</p>
+      <p>${getPhaseHint(app)}</p>
       <div class="phase-actions">
-        <button id="advance-phase" type="button">${getMainButtonLabel(app)}</button>
+        ${showMainButton ? `<button id="advance-phase" type="button">${getMainButtonLabel(app)}</button>` : ''}
         ${showReturnButton ? '<button id="return-to-process" class="secondary-button" type="button">返回处理阶段</button>' : ''}
       </div>
     </section>

@@ -12,9 +12,12 @@ import { renderPhasePanel } from './renderPanels';
 import { renderPricing } from './renderPricing';
 import { renderProductDetail } from './renderProductDetail';
 import { renderInventoryPanel, renderProducts } from './renderProducts';
+import { renderReport } from './renderReport';
+import { renderResolveSummary } from './renderResolveSummary';
+import { renderRewards } from './renderRewards';
 import { renderTopBar } from './renderTopBar';
 
-const DEVELOPMENT_STAGE = 'P0-9：基础操作：鉴定、包装、公关、洗标';
+const DEVELOPMENT_STAGE = 'P0-12：收店奖励、下一天与最终报告';
 
 export function renderApp(app: AppRuntime): void {
   const root = document.querySelector<HTMLDivElement>('#app');
@@ -50,7 +53,7 @@ export function renderApp(app: AppRuntime): void {
 
       <section class="panel guardrail-panel" aria-label="当前范围提示区">
         <h2>当前范围提示</h2>
-        <p>P0-9 阶段开放基础操作加工商品；仍不开放卡牌效果、确认出售和事故结算。</p>
+        <p>P0-12 阶段开放每日收店奖励、进入下一天、第 8 天胜负判定和最终报告。</p>
       </section>
 
       <div class="workspace-grid">
@@ -63,6 +66,9 @@ export function renderApp(app: AppRuntime): void {
         ${renderHand(app)}
         ${renderActions(app)}
         ${renderDealPreview(app)}
+        ${renderResolveSummary(app)}
+        ${renderRewards(app)}
+        ${renderReport(app)}
         ${renderLog(app)}
       </div>
 

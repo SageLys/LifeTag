@@ -40,6 +40,7 @@ export function createInitialGameState(gameConfig: GameConfig): RunState {
       productCandidateIds: [],
       customerOrderIds: [],
       rewardOptionIds: [],
+      chosenRewardId: null,
       boughtProductCount: 0,
       soldProductCount: 0,
       selectedProductId: null,
@@ -55,6 +56,7 @@ export function createInitialGameState(gameConfig: GameConfig): RunState {
     dealLog: [],
     accidentLog: [],
     rewardLog: [],
+    runReport: null,
   };
 }
 

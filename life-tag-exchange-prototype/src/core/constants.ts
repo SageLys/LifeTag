@@ -15,6 +15,7 @@ export type RunPhase = (typeof RunPhase)[keyof typeof RunPhase];
 
 export const RunResult = {
   InProgress: 'in_progress',
+  Victory: 'victory',
   Success: 'success',
   Failed: 'failed',
 } as const;
@@ -23,8 +24,11 @@ export type RunResult = (typeof RunResult)[keyof typeof RunResult];
 export const FailReason = {
   None: 'none',
   ReputationTooLow: 'reputation_too_low',
+  ReputationZero: 'reputation_zero',
   AccidentOverload: 'accident_overload',
   CashDepleted: 'cash_depleted',
+  CashBelowZero: 'cash_below_zero',
+  ProfitTargetNotMet: 'profit_target_not_met',
 } as const;
 export type FailReason = (typeof FailReason)[keyof typeof FailReason];
 

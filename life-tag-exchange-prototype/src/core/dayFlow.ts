@@ -1,9 +1,11 @@
-import { RunPhase } from './constants';
+import { FailReason, ProductStatus, RunPhase, RunResult } from './constants';
 import { generateCustomerOrders } from './customerGenerator';
 import { discardHand, drawCards } from './deckSystem';
 import { createNewGame } from './gameState';
 import { generateMarketEvents } from './marketGenerator';
 import { generateProductCandidates } from './productGenerator';
+import { generateRunReport } from './runReport';
+import { generateRewardOptions } from './rules_rewards';
 import { createRng } from './rng';
 import type { AppRuntime, RunState } from './types';
 
@@ -52,11 +54,9 @@ function drawDailyHand(app: AppRuntime): void {
   if (drawPileBefore < requestedDrawCount && discardPileBefore > 0) {
     addRunLog(state, '抽牌堆不足，弃牌堆洗入抽牌堆。');
   }
-
   if (drawnCards.length < requestedDrawCount) {
     addRunLog(state, `牌堆不足，本次只抽取 ${drawnCards.length} 张。`);
   }
-
   addRunLog(state, `第 ${state.currentDay} 天：抽取 ${drawnCards.length} 张经营手牌。`);
 }
 
@@ -81,6 +81,13 @@ function ensurePhaseContent(app: AppRuntime): void {
     case RunPhase.DayDraw:
       drawDailyHand(app);
       break;
+    case RunPhase.DayReward:
+      if (app.state.dayState.rewardOptions.length === 0) {
+        app.state.dayState.rewardOptions = generateRewardOptions(app);
+        app.state.dayState.rewardOptionIds = app.state.dayState.rewardOptions.map((reward) => reward.instanceId);
+        addRunLog(app.state, `第 ${app.state.currentDay} 天收店，生成 ${app.state.dayState.rewardOptions.length} 个奖励选项。`);
+      }
+      break;
     default:
       break;
   }
@@ -100,6 +107,7 @@ function createEmptyDayState(app: AppRuntime, dayNumber: number): RunState['dayS
     productCandidateIds: [],
     customerOrderIds: [],
     rewardOptionIds: [],
+    chosenRewardId: null,
     boughtProductCount: 0,
     soldProductCount: 0,
     selectedProductId: null,
@@ -108,6 +116,7 @@ function createEmptyDayState(app: AppRuntime, dayNumber: number): RunState['dayS
     selectedPricingModeId: null,
     currentDealPreview: null,
     temporaryDayModifiers: [],
+    temporaryDealModifiers: [],
     phaseFlags: {},
     log: [],
   };
@@ -118,6 +127,9 @@ function ageInventoryForNextDay(app: AppRuntime): void {
   const spoiledAt = app.configs.gameConfig.spoiledAt;
 
   for (const product of app.state.inventory) {
+    if (product.status !== ProductStatus.Inventory || product.flags.sold) {
+      continue;
+    }
     product.freshnessCurrent = Math.max(0, product.freshnessCurrent - loss);
     if (product.freshnessCurrent <= spoiledAt) {
       product.flags.spoiled = true;
@@ -135,7 +147,33 @@ export function startNewRun(app: AppRuntime): void {
   }
 }
 
-export function startNextDay(app: AppRuntime): void {
+export function endRun(app: AppRuntime): void {
+  const { state } = app;
+
+  if (state.cash < 0) {
+    state.result = RunResult.Failed;
+    state.failReason = FailReason.CashBelowZero;
+    syncPhase(state, RunPhase.RunFailed);
+  } else if (state.reputation <= 0) {
+    state.result = RunResult.Failed;
+    state.failReason = FailReason.ReputationZero;
+    syncPhase(state, RunPhase.RunFailed);
+  } else if (state.totalProfit >= state.targetTotalProfit) {
+    state.result = RunResult.Victory;
+    state.failReason = FailReason.None;
+    syncPhase(state, RunPhase.RunEnd);
+  } else {
+    state.result = RunResult.Failed;
+    state.failReason = FailReason.ProfitTargetNotMet;
+    syncPhase(state, RunPhase.RunFailed);
+  }
+
+  clearPhaseSelections(state);
+  state.runReport = generateRunReport(app);
+  addRunLog(state, `第 ${state.currentDay} 天结束，本局${state.result === RunResult.Victory ? '胜利' : '失败'}：${state.runReport.endingTitle}。`);
+}
+
+export function finishDayAndStartNextDay(app: AppRuntime): void {
   const { state } = app;
 
   if (state.phase !== RunPhase.DayReward) {
@@ -146,22 +184,21 @@ export function startNextDay(app: AppRuntime): void {
   if (state.currentDay >= state.maxDays) {
     discardHandForDayEnd(app);
     addRunLog(state, `第 ${state.currentDay} 天结束。`);
-    syncPhase(state, RunPhase.RunEnd);
-    clearPhaseSelections(state);
-    addRunLog(state, `第 ${state.maxDays} 天结束，进入 RUN_END 占位报告。`);
+    endRun(app);
     return;
   }
 
-  addRunLog(state, `第 ${state.currentDay} 天结束。`);
+  addRunLog(state, `第 ${state.currentDay} 天结束，进入第 ${state.currentDay + 1} 天。`);
   discardHandForDayEnd(app);
   ageInventoryForNextDay(app);
   state.currentDay += 1;
   state.dayState = createEmptyDayState(app, state.currentDay);
   syncPhase(state, RunPhase.DayOpening);
-  addRunLog(state, `进入第 ${state.currentDay} 天。`);
   addRunLog(state, `第 ${state.currentDay} 天开店。`);
   ensurePhaseContent(app);
 }
+
+export const startNextDay = finishDayAndStartNextDay;
 
 export function advancePhase(app: AppRuntime): void {
   const { state } = app;
@@ -172,7 +209,7 @@ export function advancePhase(app: AppRuntime): void {
   }
 
   if (state.phase === RunPhase.DayReward) {
-    startNextDay(app);
+    addRunLog(state, '请先选择一个收店奖励。');
     return;
   }
 
@@ -202,6 +239,9 @@ export function returnToProcess(app: AppRuntime): void {
   addRunLog(state, '从 DAY_SELL 返回 DAY_PROCESS。');
 }
 
-export function checkRunEndConditions(): boolean {
-  return false;
+export function checkRunEndConditions(app?: AppRuntime): boolean {
+  if (!app) {
+    return false;
+  }
+  return app.state.currentDay >= app.state.maxDays && app.state.phase === RunPhase.DayReward;
 }

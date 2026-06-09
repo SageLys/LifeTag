@@ -1,5 +1,6 @@
 import {
   buyProduct,
+  chooseReward,
   clearDealSelection,
   confirmSell,
   playCard,
@@ -80,6 +81,14 @@ export function bindEvents(app: AppRuntime): void {
         if (result.ok && result.dealResult) {
           showDealResult(result.dealResult);
         }
+        renderApp(app);
+      }
+      return;
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'choose-reward') {
+      if (!target.disabled) {
+        chooseReward(app, target.dataset.rewardInstanceId ?? '');
         renderApp(app);
       }
       return;
