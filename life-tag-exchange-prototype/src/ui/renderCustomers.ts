@@ -42,7 +42,7 @@ export function renderCustomers(app: AppRuntime): string {
   return `
     <section class="panel customers-panel" aria-label="顾客区">
       <h2>顾客订单</h2>
-      <p class="hint-text">选择顾客后会刷新售价、爆雷区间和事故预测；确认出售将在 P0-11 实现。</p>
+      <p class="hint-text">选择顾客后会刷新售价、爆雷区间和事故预测。</p>
       <div class="item-list">${content}</div>
     </section>
   `;

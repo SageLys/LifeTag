@@ -1,69 +1,36 @@
 # 人生标签交易所：牛马肉铺
 
-HTML 快速验证原型，用于验证首版配置、核心流程边界和后续 TypeScript 规则模块组织。
+《人生标签交易所：牛马肉铺》文字试玩 demo，用于让朋友快速体验 8 天经营闭环。
 
-## 当前开发阶段
-
-P0-7：售价计算与价格 breakdown。
-
-本阶段在 P0-6 选择链路基础上开放真实售价预览和价格拆解，不实现爆雷、事故、出售结算、奖励、存档或 Debug 测试局。
+玩家每天看市场新闻、进货、接单、抽牌、加工、出售，并在收店时选择奖励。目标是在 8 天内把累计利润做到目标值，同时守住现金和信誉。
 
 ## 当前已实现
 
-- Vite / TypeScript 项目可启动。
-- 配置加载、配置校验和配置索引。
-- 点击开始新局。
-- RunState 初始化。
-- DayState 初始化。
-- DeckState 初始化。
-- 初始牌组实例化。
-- 每日阶段推进。
-- DAY_SELL 返回 DAY_PROCESS。
-- 第 1 天到第 8 天推进。
-- 第 8 天结束后进入 RUN_END 占位报告。
-- DAY_OPENING 生成今日市场新闻。
-- DAY_PURCHASE 生成 4 个商品候选。
-- DAY_CUSTOMER 生成 3 个顾客订单。
-- 商品候选和顾客订单使用运行时实例 ID。
-- 未揭示隐藏标签和暗风险详情不提前泄露。
-- DAY_PURCHASE 阶段可以买入商品。
-- 买入会扣除现金。
-- 买入商品进入库存。
-- 每日最多买入 2 个商品。
-- 库存上限为 6 个商品。
-- 库存跨天保留。
-- 新局创建 10 张初始牌实例。
-- DAY_DRAW 自动抽取每日手牌。
-- 抽牌堆不足时弃牌堆洗回抽牌堆。
-- 进入下一天前弃置剩余手牌。
-- DAY_PROCESS / DAY_SELL 可选择库存商品。
-- 可选择今日顾客订单。
-- 可选择定价方式。
-- 三项选择齐全后显示交易预览壳。
-- 售价预览使用商品基础价、已知标签、顾客偏好、标签关系、定价倍率和预算上限。
-- 交易预览显示价格 breakdown。
-- 阶段日志。
-- 顶部状态栏实时更新。
-- 配置或程序加载失败时显示 `fatal-error`。
-
-## 当前未实现
-
-- 加工操作。
-- 卡牌效果。
+- 8 天单局流程。
+- 市场新闻。
+- 进货。
+- 顾客订单。
+- 抽牌。
 - 基础操作。
 - 卡牌效果。
-- 商品 / 顾客 / 定价选择。
 - 交易预览。
-- 爆雷计算。
+- 售价、爆雷区间、事故预测。
+- 确认出售。
 - 事故结算。
 - 收店奖励。
-- 出售结算。
-- 正式胜负判定。
-- 正式最终报告。
-- 存档。
+- 第 8 天胜负判定。
+- 最终报告。
 - Debug 测试局。
 
-## 运行命令
+## 当前仍待优化
+
+- 数值平衡。
+- 新手引导细节。
+- 视觉表现。
+- 存档。
+- 朋友试玩反馈后的二轮调整。
+
+## 运行方式
 
 ```bash
 npm install
@@ -72,91 +39,9 @@ npm run build
 npm run dev
 ```
 
-## Debug 与固定测试局
+普通试玩：访问 `npm run dev` 输出的本地地址即可。
 
-Debug 只用于开发测试和验收回归，不代表正式玩法入口。
-
-打开方式：
-- 在本地地址后追加 `?debug=1`。
-- 或点击页面右下角 `Debug：打开 / 关闭` 按钮。
-
-Debug 面板能力：
-- 查看 RunState / DayState / DeckState / UI 状态摘要。
-- 设置固定 seed，后续随机生成会使用该 seed。
-- 一键加载固定测试局。
-- 复制完整 AppState、RunState、DayState、DeckState、DealPreview、选中对象、最后交易、最后事故和 RunReport JSON。
-- Clipboard API 不可用时，会显示 textarea fallback。
-- 使用手动验收清单记录回归进度。
-
-固定测试局：
-- `SCENARIO_A_BOOT_SMOKE`：启动与基础状态局，目标 `DAY_OPENING`。
-- `SCENARIO_B_SAFE_DEAL`：无事故安全交易局，目标 `DAY_SELL`。
-- `SCENARIO_C_HIDDEN_RISK_RANGE`：隐藏标签风险区间局，目标 `DAY_SELL`。
-- `SCENARIO_D_DARK_RISK_ACCIDENT`：暗风险事故局，目标 `DAY_SELL`。
-- `SCENARIO_E_SEVERE_ACCIDENT_FAILURE`：严重事故导致失败局，目标 `DAY_SELL`。
-- `SCENARIO_F_REWARD_NEXT_DAY`：奖励进入下一天局，目标 `DAY_REWARD`。
-- `SCENARIO_G_FINAL_VICTORY`：第 8 天胜利局，目标 `DAY_REWARD`。
-- `SCENARIO_H_FINAL_PROFIT_FAIL`：第 8 天利润未达标失败局，目标 `DAY_REWARD`。
-- `SCENARIO_I_SOLD_LOCK`：已售商品锁定局，目标 `DAY_PROCESS`。
-- `SCENARIO_J_CARD_EFFECT`：卡牌效果局，目标 `DAY_PROCESS`。
-- `SCENARIO_K_PAID_REWARD_DISABLED`：付费奖励现金不足局，目标 `DAY_REWARD`。
-- `SCENARIO_L_SPOILAGE`：新鲜度与腐败局，目标 `DAY_REWARD`。
-
-推荐回归顺序：
-1. 先跑 `SCENARIO_A_BOOT_SMOKE` 验证基础启动。
-2. 跑 `SCENARIO_B_SAFE_DEAL`、`SCENARIO_D_DARK_RISK_ACCIDENT`、`SCENARIO_E_SEVERE_ACCIDENT_FAILURE` 验证出售和事故。
-3. 跑 `SCENARIO_F_REWARD_NEXT_DAY`、`SCENARIO_G_FINAL_VICTORY`、`SCENARIO_H_FINAL_PROFIT_FAIL` 验证奖励、下一天和终局。
-4. 跑 `SCENARIO_C_HIDDEN_RISK_RANGE`、`SCENARIO_I_SOLD_LOCK`、`SCENARIO_J_CARD_EFFECT`、`SCENARIO_K_PAID_REWARD_DISABLED`、`SCENARIO_L_SPOILAGE` 做专项回归。
-
-预览生产构建：
-
-```bash
-npm run preview
-```
-
-## 手动验收步骤
-
-1. 运行 `npm install`。
-2. 运行 `npm run check`，确认 TypeScript 检查通过。
-3. 运行 `npm run build`，确认生产构建通过。
-4. 运行 `npm run dev`。
-5. 打开终端输出的本地地址，通常是 `http://127.0.0.1:5173/` 或 `http://localhost:5173/`。
-6. 确认页面显示“当前开发阶段：P0-7：售价计算与价格 breakdown”。
-7. 确认顶部状态栏没有 `undefined`、`null`、`NaN`。
-8. 点击“开始新局”，确认进入第 1 天 `DAY_OPENING`，市场新闻面板显示今日新闻。
-9. 点击进入 `DAY_PURCHASE`，确认商品候选面板显示 4 个商品候选。
-10. 点击“买入”，确认现金减少、库存数量增加、商品显示“已买入”。
-11. 当今日买入达到 2 个后，未买商品按钮显示“今日进货已达上限”。
-12. 点击进入 `DAY_CUSTOMER`，确认顾客订单面板显示 3 个顾客订单。
-13. 点击进入 `DAY_DRAW`，确认自动抽 5 张牌，手牌为 5，抽牌堆为 5。
-14. 确认手牌卡显示卡名、类型、成本、效果摘要，“使用”按钮 disabled。
-15. 继续点击主按钮推进到 `DAY_PROCESS`。
-16. 点击库存商品“选择用于交易”，确认商品卡出现 selected。
-17. 点击顾客“选择顾客”，确认顾客卡出现 selected。
-18. 点击定价方式“正常卖”或“高价卖”，确认定价卡出现 selected。
-19. 确认交易预览面板显示真实 estimatedPrice、estimatedProfit、rawPrice、预算封顶前价格和顾客预算。
-20. 确认价格拆解包含商品基础价、标签价值、顾客偏好、标签关系、定价倍率和预算上限。
-21. 切换定价方式，确认预计售价合理变化。
-22. 点击“清空选择”，确认三项选择清空，预览回到缺失项提示。
-23. 确认未选择商品时盲盒价 disabled。
-24. 确认确认出售按钮 disabled，并提示 P0-11 实现。
-25. 继续推进到 `DAY_SELL`，确认售价预览仍可查看。
-26. 在 `DAY_REWARD` 点击“进入下一天”，确认剩余手牌进入弃牌堆。
-27. 打开浏览器控制台，确认没有阻塞级红色错误。
-
-## 常见问题
-
-### 页面白屏怎么办
-
-先打开浏览器控制台查看错误。如果页面中出现“配置或程序加载失败”，优先按错误 message 检查配置文件路径、JSON 格式或配置校验问题。
-
-### 配置加载失败怎么办
-
-确认 `data/` 下配置文件名与 `src/core/configLoader.ts` 一致。当前奖励文件使用 `rewards.json`，不是 `rewardPools.json`。
-
-### npm run build 失败怎么办
-
-先运行 `npm run check` 查看 TypeScript 错误，再根据终端中的文件路径和行号修复。配置口径错误通常会在页面启动时由 `validateConfigs(configs)` 抛出。
+Debug：在 URL 后添加 `?debug=1` 才显示 Debug 入口。Debug 用于开发者调试、固定测试局和状态 JSON 查看，不是普通试玩入口。
 
 ## 分层原则
 
@@ -164,41 +49,3 @@ npm run preview
 - `src/core/` 只放规则、状态、数据加载、校验、索引、类型。
 - `src/ui/` 只放显示、按钮、DOM 事件。
 - `src/main.ts` 只负责加载配置、校验、建索引、创建状态、调用 render、绑定事件。
-
-## P0-8 验收说明
-
-P0-8 已加入交易预览阶段的爆雷计算、风险区间和事故预测。此阶段仍不实现确认出售、现金结算、累计利润、信誉、DealResult、AccidentInstance 或事故结算弹窗；这些属于 P0-11。
-
-1. 运行 `npm run check` 和 `npm run build`，确认 TypeScript 与生产构建通过。
-2. 启动 `npm run dev`，开始新局并推进到 `DAY_PROCESS`。
-3. 买入一个含未揭示隐藏标签或未完全揭示暗风险的商品，选择顾客和定价方式。
-4. 在交易预览中确认显示“爆雷显示：区间”、已知风险、风险下限、风险上限、事故预测区间、已知风险 breakdown、未知风险 breakdown 和 warnings。
-5. 确认未知风险只显示“未揭示隐藏标签”“未完全揭示的暗风险”或类别提示，不显示未揭示 tagId、隐藏标签名、darkRiskId、暗风险真实名称、actualRisk 或事故文案。
-6. 选择没有未知信息的商品时，盲盒价按钮应禁用；如已进入预览，也会提示“不建议使用盲盒价”。
-7. 对无未知信息商品选择非盲盒定价，交易预览应显示“爆雷显示：精确值”和单一事故等级。
-
-## P0-9 验收说明
-
-P0-9 已加入基础操作：鉴定、包装、公关、洗标。此阶段仍不实现卡牌系统、确认出售、DealResult、AccidentInstance 或事故结算；卡牌属于 P0-10，确认出售与事故结算属于 P0-11。
-
-1. 运行 `npm run check` 和 `npm run build`。
-2. 启动 `npm run dev`，开始新局，买入商品并推进到 `DAY_PROCESS`。
-3. 选择库存商品，确认基础操作面板显示鉴定、包装、公关、洗标说明和 disabledReason。
-4. 使用鉴定：行动点减少 1，揭示 1 个隐藏标签，不揭示暗风险具体内容，交易预览刷新。
-5. 使用包装：行动点减少 1，现金减少 10，商品显示已包装，priceBreakdown 出现基础包装 ×1.2，riskBreakdown 出现基础包装 +10。
-6. 使用公关：行动点减少 1，现金减少 20，商品显示已公关，riskBreakdown 出现公关处理 -20。
-7. 在商品详情对可洗已知标签使用洗标：行动点减少 1，现金减少 20，标签显示已压制，priceBreakdown 中该标签价格为 0，riskBreakdown 中该标签保留残余风险。
-8. 确认 DAY_SELL、行动点不足、现金不足、已售/非库存商品、无隐藏标签、重复包装、重复公关、重复洗标时按钮 disabled。
-
-## P0-10 验收说明
-
-P0-10 已加入卡牌 Condition / Effect 与出牌系统。此阶段仍不实现确认出售、事故结算或收店奖励；确认出售与事故结算属于 P0-11，收店奖励属于 P0-12。
-
-1. 运行 `npm run check` 和 `npm run build`。
-2. 启动 `npm run dev`，开始新局并推进到 `DAY_PROCESS`。
-3. 选择库存商品后，手牌卡应显示 AP 成本、现金成本、目标、效果摘要、去向和 disabledReason。
-4. 使用标签工具卡后，商品详情出现 appliedTag，交易预览的价格 / 风险 breakdown 刷新，卡牌从 hand 移入 discardPile。
-5. 使用揭示类卡牌后，隐藏标签或暗风险类别线索更新；未 full reveal 的暗风险不得显示真实名称。
-6. 使用价格 / 风险修正卡后，DealPreview 的 priceBreakdown / riskBreakdown 显示卡牌来源。
-7. 使用抽牌卡后，手牌数量变化，抽牌堆不足时会洗弃牌堆。
-8. 非 `DAY_PROCESS`、AP 不足、现金不足、目标不合法、条件不满足或效果暂未支持时，卡牌按钮应 disabled。

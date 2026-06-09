@@ -15,7 +15,7 @@ export function renderTopBar(app: AppRuntime): string {
 
   return `
     <section class="panel top-bar" aria-label="HeaderStatusBar">
-      <h2>HeaderStatusBar</h2>
+      <h2>状态栏</h2>
       <p class="status-line">
         第 ${safeNumber(state.currentDay, 1)} / ${safeNumber(state.maxDays, app.configs.gameConfig.runLengthDays)} 天｜
         ${state.phase ?? 'RUN_INIT'}｜

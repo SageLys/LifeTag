@@ -397,7 +397,7 @@ const SCENARIO_DATA: Array<Omit<TestScenario, 'setup'> & { setupName: string }> 
   {
     id: 'SCENARIO_J_CARD_EFFECT',
     displayName: '卡牌效果局',
-    description: '验证 P0-10 卡牌最小效果仍可用。',
+    description: '验证卡牌最小效果仍可用。',
     targetPhase: RunPhase.DayProcess,
     setupName: 'cardEffect',
     expected: ['卡牌按钮可用或显示明确 disabled reason', '使用后 AP/cash/牌堆/商品状态变化。'],
@@ -406,7 +406,7 @@ const SCENARIO_DATA: Array<Omit<TestScenario, 'setup'> & { setupName: string }> 
   {
     id: 'SCENARIO_K_PAID_REWARD_DISABLED',
     displayName: '付费奖励现金不足局',
-    description: '验证 P0-12 现金不足奖励 disabled。',
+    description: '验证现金不足奖励 disabled。',
     targetPhase: RunPhase.DayReward,
     setupName: 'paidRewardDisabled',
     expected: ['付费奖励 disabled', '显示现金不足', '点击不会进入下一天。'],

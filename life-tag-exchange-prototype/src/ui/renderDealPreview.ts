@@ -130,6 +130,14 @@ export function renderDealPreview(app: AppRuntime): string {
   const preview = app.state.dayState.currentDealPreview;
   const missingSelections = getMissingSelections(app);
   const disabledReason = getConfirmSellDisabledReason(app);
+  const isSellPhase = app.state.phase === RunPhase.DaySell;
+  const actions = `
+    <div class="phase-actions">
+      ${isSellPhase ? `<button type="button" data-action="confirm-sell" ${disabledReason ? 'disabled' : ''}>确认出售</button>` : ''}
+      <button type="button" data-action="clear-deal-selection">清空选择</button>
+    </div>
+    ${isSellPhase && disabledReason ? `<p class="disabled-reason">${escapeHtml(disabledReason)}</p>` : ''}
+  `;
 
   if (!preview) {
     return `
@@ -137,11 +145,7 @@ export function renderDealPreview(app: AppRuntime): string {
         <h2>交易预览</h2>
         ${renderSelectionSummary(app)}
         <p class="hint-text">请选择：${missingSelections.join('、') || '无'}</p>
-        <div class="phase-actions">
-          <button type="button" data-action="confirm-sell" disabled>确认出售</button>
-          <button type="button" data-action="clear-deal-selection">清空选择</button>
-        </div>
-        <p class="disabled-reason">${escapeHtml(disabledReason ?? '交易预览计算失败')}</p>
+        ${actions}
       </section>
     `;
   }
@@ -165,11 +169,7 @@ export function renderDealPreview(app: AppRuntime): string {
       <h3>未知风险</h3>
       <ul>${renderUnknownRiskBreakdown(preview.unknownRiskBreakdown)}</ul>
       ${preview.warnings.map((warning) => `<p class="warning-text">${escapeHtml(warning)}</p>`).join('')}
-      <div class="phase-actions">
-        <button type="button" data-action="confirm-sell" ${disabledReason ? 'disabled' : ''}>确认出售</button>
-        <button type="button" data-action="clear-deal-selection">清空选择</button>
-      </div>
-      ${disabledReason ? `<p class="disabled-reason">${escapeHtml(disabledReason)}</p>` : ''}
+      ${actions}
     </section>
   `;
 }

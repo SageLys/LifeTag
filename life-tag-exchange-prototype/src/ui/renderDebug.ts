@@ -47,6 +47,10 @@ function renderToggle(debugEnabled: boolean): string {
   `;
 }
 
+function canShowDebugEntry(): boolean {
+  return typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('debug') === '1';
+}
+
 function renderSummary(app: AppRuntime): string {
   const state = app.state;
   const day = state.dayState;
@@ -189,6 +193,10 @@ function renderChecklist(): string {
 }
 
 export function renderDebug(app: AppRuntime): string {
+  if (!canShowDebugEntry()) {
+    return '';
+  }
+
   const debug = getDebugState();
   if (!debug.enabled) {
     return renderToggle(false);
@@ -198,7 +206,7 @@ export function renderDebug(app: AppRuntime): string {
     ${renderToggle(true)}
     <section class="panel debug-panel" aria-label="Debug 面板">
       <h2>Debug 面板</h2>
-      <p class="hint-text">仅用于开发验收。这里可以查看隐藏信息与直接注入测试局，不代表正式玩法入口。</p>
+      <p class="hint-text">开发者调试入口，可以查看隐藏信息与直接注入测试局，不代表普通试玩入口。</p>
       ${renderSummary(app)}
       ${renderSeed(app)}
       ${renderScenarios()}

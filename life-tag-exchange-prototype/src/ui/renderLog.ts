@@ -5,7 +5,7 @@ import { getUiState } from './uiState';
 const guardrailLogs = [
   '程序启动成功。',
   '配置加载成功。',
-  '当前阶段：P0-9 基础操作。',
+  '文字试玩界面已就绪。',
 ];
 
 export function renderLog(app: AppRuntime): string {

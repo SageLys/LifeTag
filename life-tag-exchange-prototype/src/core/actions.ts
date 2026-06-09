@@ -91,7 +91,7 @@ export function getBaseActionCost(app: AppRuntime, actionId: string): BaseAction
   const fallback = FALLBACK_BASE_ACTION_COSTS[actionId as BaseActionId] ?? { actionPointCost: 1, cashCost: 0 };
   const actionDef = getBaseActionDef(app, actionId);
 
-  // TODO: P0 后续应完全数据驱动；当前 baseActions.json 缺少成本字段时使用 P0-9 fallback。
+  // 当前 baseActions.json 缺少成本字段时使用内置成本，后续可完全数据驱动。
   return {
     actionPointCost: typeof actionDef?.actionPointCost === 'number' ? actionDef.actionPointCost : fallback.actionPointCost,
     cashCost: typeof actionDef?.cashCost === 'number' ? actionDef.cashCost : fallback.cashCost,

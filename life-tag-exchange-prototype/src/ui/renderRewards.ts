@@ -1,7 +1,8 @@
 import { RunPhase } from '../core/constants';
 import { canChooseReward } from '../core/rules_rewards';
-import type { AppRuntime, RewardOptionInstance } from '../core/types';
+import type { AppRuntime, CardInstance, RewardOptionInstance } from '../core/types';
 import { escapeHtml } from './formatters';
+import { renderCardInfo } from './renderCards';
 
 function getRewardTypeLabel(type: string): string {
   switch (type) {
@@ -24,6 +25,58 @@ function getRewardTypeLabel(type: string): string {
   }
 }
 
+function getPayloadString(reward: RewardOptionInstance, key: string): string | null {
+  const value = reward.payload[key];
+  return typeof value === 'string' ? value : null;
+}
+
+function renderRewardDetails(app: AppRuntime, reward: RewardOptionInstance): string {
+  const cardId = getPayloadString(reward, 'cardId');
+  const passiveId = getPayloadString(reward, 'passiveId');
+  const supplySourceId = getPayloadString(reward, 'supplySourceId');
+
+  if (cardId) {
+    const card: CardInstance = {
+      id: `reward_preview_${cardId}`,
+      instanceId: `reward_preview_${cardId}`,
+      cardId,
+      cardDefId: cardId,
+      upgraded: reward.rewardType === 'upgrade_card',
+      createdDay: app.state.currentDay,
+    };
+    return `
+      <details class="info-details">
+        <summary>${reward.rewardType === 'upgrade_card' ? '升级后卡牌效果' : '新增卡牌效果'}</summary>
+        ${renderCardInfo(app, card)}
+      </details>
+    `;
+  }
+
+  if (passiveId) {
+    const passive = app.index.passivesById.get(passiveId);
+    return `
+      <details class="info-details">
+        <summary>店铺被动作用</summary>
+        <p><strong>${escapeHtml(passive?.displayName ?? passiveId)}</strong></p>
+        <p>${escapeHtml(passive?.effectText ?? '暂无效果说明。')}</p>
+      </details>
+    `;
+  }
+
+  if (supplySourceId) {
+    const source = app.index.supplySourcesById.get(supplySourceId);
+    return `
+      <details class="info-details">
+        <summary>货源倾向作用</summary>
+        <p><strong>${escapeHtml(source?.displayName ?? supplySourceId)}</strong></p>
+        <p>${escapeHtml(source?.description ?? '暂无说明。')}</p>
+      </details>
+    `;
+  }
+
+  return '';
+}
+
 function renderRewardCard(app: AppRuntime, reward: RewardOptionInstance): string {
   const canChoose = canChooseReward(app, reward);
   const costText = reward.cost > 0 ? `花费 ${reward.cost} 现金` : '免费';
@@ -35,6 +88,7 @@ function renderRewardCard(app: AppRuntime, reward: RewardOptionInstance): string
       <p>${escapeHtml(reward.description)}</p>
       <p><strong>费用：</strong>${escapeHtml(costText)}</p>
       <p><strong>效果：</strong>${escapeHtml(reward.effectSummary)}</p>
+      ${renderRewardDetails(app, reward)}
       <button
         type="button"
         data-action="choose-reward"
