@@ -280,6 +280,11 @@ function hasUnknownInformation(product: ProductInstance): boolean {
   return getUnrevealedHiddenTagIds(product).length > 0 || product.darkRiskIds.some((riskId) => isDarkRiskUnknown(product, riskId));
 }
 
+function getMarketModifierRiskLabel(marketEventDisplayName: string, modifier: Modifier, factor: number): string {
+  const prefix = modifier.displayText ? `今日新闻 ${marketEventDisplayName}：${modifier.displayText}` : `今日新闻 ${marketEventDisplayName}`;
+  return factor < 1 ? `${prefix}（已压制残余风险）` : prefix;
+}
+
 export function calculateRisk(context: CalculationContext): RiskResult {
   const warnings: string[] = [];
   const riskBreakdown: RiskBreakdownItem[] = [];
@@ -335,7 +340,14 @@ export function calculateRisk(context: CalculationContext): RiskResult {
     const factor = getModifierSuppressionFactor(modifier, product);
     const value = Math.round(modifier.value * factor);
     knownRisk += value;
-    riskBreakdown.push(riskItem('market_event', context.marketEvent?.id ?? 'market_event_unknown', `今日新闻 ${context.marketEvent?.displayName ?? '未知新闻'}${factor < 1 ? ' 已压制残余风险' : ''}`, value));
+    riskBreakdown.push(
+      riskItem(
+        'market_event',
+        context.marketEvent?.id ?? 'market_event_unknown',
+        getMarketModifierRiskLabel(context.marketEvent?.displayName ?? '未知新闻', modifier, factor),
+        value,
+      ),
+    );
   }
 
   const isSpoiled =
