@@ -128,3 +128,41 @@ npm run preview
 - `src/core/` 只放规则、状态、数据加载、校验、索引、类型。
 - `src/ui/` 只放显示、按钮、DOM 事件。
 - `src/main.ts` 只负责加载配置、校验、建索引、创建状态、调用 render、绑定事件。
+
+## P0-8 验收说明
+
+P0-8 已加入交易预览阶段的爆雷计算、风险区间和事故预测。此阶段仍不实现确认出售、现金结算、累计利润、信誉、DealResult、AccidentInstance 或事故结算弹窗；这些属于 P0-11。
+
+1. 运行 `npm run check` 和 `npm run build`，确认 TypeScript 与生产构建通过。
+2. 启动 `npm run dev`，开始新局并推进到 `DAY_PROCESS`。
+3. 买入一个含未揭示隐藏标签或未完全揭示暗风险的商品，选择顾客和定价方式。
+4. 在交易预览中确认显示“爆雷显示：区间”、已知风险、风险下限、风险上限、事故预测区间、已知风险 breakdown、未知风险 breakdown 和 warnings。
+5. 确认未知风险只显示“未揭示隐藏标签”“未完全揭示的暗风险”或类别提示，不显示未揭示 tagId、隐藏标签名、darkRiskId、暗风险真实名称、actualRisk 或事故文案。
+6. 选择没有未知信息的商品时，盲盒价按钮应禁用；如已进入预览，也会提示“不建议使用盲盒价”。
+7. 对无未知信息商品选择非盲盒定价，交易预览应显示“爆雷显示：精确值”和单一事故等级。
+
+## P0-9 验收说明
+
+P0-9 已加入基础操作：鉴定、包装、公关、洗标。此阶段仍不实现卡牌系统、确认出售、DealResult、AccidentInstance 或事故结算；卡牌属于 P0-10，确认出售与事故结算属于 P0-11。
+
+1. 运行 `npm run check` 和 `npm run build`。
+2. 启动 `npm run dev`，开始新局，买入商品并推进到 `DAY_PROCESS`。
+3. 选择库存商品，确认基础操作面板显示鉴定、包装、公关、洗标说明和 disabledReason。
+4. 使用鉴定：行动点减少 1，揭示 1 个隐藏标签，不揭示暗风险具体内容，交易预览刷新。
+5. 使用包装：行动点减少 1，现金减少 10，商品显示已包装，priceBreakdown 出现基础包装 ×1.2，riskBreakdown 出现基础包装 +10。
+6. 使用公关：行动点减少 1，现金减少 20，商品显示已公关，riskBreakdown 出现公关处理 -20。
+7. 在商品详情对可洗已知标签使用洗标：行动点减少 1，现金减少 20，标签显示已压制，priceBreakdown 中该标签价格为 0，riskBreakdown 中该标签保留残余风险。
+8. 确认 DAY_SELL、行动点不足、现金不足、已售/非库存商品、无隐藏标签、重复包装、重复公关、重复洗标时按钮 disabled。
+
+## P0-10 验收说明
+
+P0-10 已加入卡牌 Condition / Effect 与出牌系统。此阶段仍不实现确认出售、事故结算或收店奖励；确认出售与事故结算属于 P0-11，收店奖励属于 P0-12。
+
+1. 运行 `npm run check` 和 `npm run build`。
+2. 启动 `npm run dev`，开始新局并推进到 `DAY_PROCESS`。
+3. 选择库存商品后，手牌卡应显示 AP 成本、现金成本、目标、效果摘要、去向和 disabledReason。
+4. 使用标签工具卡后，商品详情出现 appliedTag，交易预览的价格 / 风险 breakdown 刷新，卡牌从 hand 移入 discardPile。
+5. 使用揭示类卡牌后，隐藏标签或暗风险类别线索更新；未 full reveal 的暗风险不得显示真实名称。
+6. 使用价格 / 风险修正卡后，DealPreview 的 priceBreakdown / riskBreakdown 显示卡牌来源。
+7. 使用抽牌卡后，手牌数量变化，抽牌堆不足时会洗弃牌堆。
+8. 非 `DAY_PROCESS`、AP 不足、现金不足、目标不合法、条件不满足或效果暂未支持时，卡牌按钮应 disabled。

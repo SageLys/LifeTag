@@ -3,7 +3,7 @@ import type { AppRuntime, ProductInstance } from '../core/types';
 import { escapeHtml } from './formatters';
 
 const DARK_RISK_CATEGORY_LABELS: Record<string, string> = {
-  career_background: '职业背景',
+  career_background: '履历',
   persona: '人设',
   platform: '平台',
 };
@@ -31,17 +31,33 @@ export function formatDarkRiskHint(app: AppRuntime, product: ProductInstance): s
     return '无';
   }
 
+  const fullRevealedNames = product.darkRiskIds
+    .filter((riskId) => {
+      const revealLevel = product.darkRiskRevealLevels[riskId] as string | undefined;
+      return revealLevel === 'full' || revealLevel === DarkRiskRevealLevel.Revealed || product.revealedDarkRiskIds.includes(riskId);
+    })
+    .map((riskId) => app.index.darkRisksById.get(riskId)?.displayName)
+    .filter((name): name is string => Boolean(name));
+
   const revealedCategories = product.darkRiskIds
-    .filter((riskId) => product.darkRiskRevealLevels[riskId] === DarkRiskRevealLevel.Hinted)
+    .filter((riskId) => {
+      const revealLevel = product.darkRiskRevealLevels[riskId] as string | undefined;
+      return revealLevel === DarkRiskRevealLevel.Hinted || revealLevel === 'category';
+    })
     .map((riskId) => app.index.darkRisksById.get(riskId)?.category)
     .filter((category) => Boolean(category))
     .map((category) => String(category));
 
-  if (revealedCategories.length === 0) {
-    return '存在';
+  const parts = [
+    ...fullRevealedNames.map((name) => `已揭示：${name}`),
+    ...[...new Set(revealedCategories)].map((category) => `可能存在${DARK_RISK_CATEGORY_LABELS[category] ?? category}类风险`),
+  ];
+
+  if (parts.length === 0) {
+    return '可能存在未揭示暗风险';
   }
 
-  return [...new Set(revealedCategories)].map((category) => DARK_RISK_CATEGORY_LABELS[category] ?? category).join('、');
+  return parts.join('、');
 }
 
 export function formatDarkRiskCategories(categories: string[]): string {
@@ -53,6 +69,10 @@ export function formatDarkRiskCategories(categories: string[]): string {
 }
 
 export function formatProductStatus(product: ProductInstance): string {
+  if (product.flags.sold || product.status === 'sold') {
+    return '已售出';
+  }
+
   if (product.flags.spoiled) {
     return '库存中（已变质）';
   }

@@ -2,10 +2,12 @@ import {
   buyProduct,
   clearDealSelection,
   confirmSell,
+  playCard,
   selectCustomerOrder,
   selectPricingMode,
   selectProduct,
   selectProductCandidate,
+  useBaseAction,
 } from '../core/actions';
 import { advancePhase, returnToProcess } from '../core/dayFlow';
 import type { AppRuntime } from '../core/types';
@@ -74,6 +76,35 @@ export function bindEvents(app: AppRuntime): void {
     if (target instanceof HTMLButtonElement && target.dataset.action === 'confirm-sell-placeholder') {
       if (!target.disabled) {
         confirmSell(app);
+        renderApp(app);
+      }
+      return;
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'use-base-action') {
+      if (!target.disabled) {
+        useBaseAction(app, target.dataset.actionId ?? '', {
+          productId: target.dataset.productId || undefined,
+        });
+        renderApp(app);
+      }
+      return;
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'wash-tag') {
+      if (!target.disabled) {
+        useBaseAction(app, target.dataset.actionId ?? 'action_wash_tag', {
+          productId: target.dataset.productId || undefined,
+          tagId: target.dataset.tagId || undefined,
+        });
+        renderApp(app);
+      }
+      return;
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'play-card') {
+      if (!target.disabled) {
+        playCard(app, target.dataset.cardInstanceId ?? '');
         renderApp(app);
       }
       return;

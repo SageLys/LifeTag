@@ -1,5 +1,5 @@
 import { ProductStatus, RunPhase } from './constants';
-import type { AppRuntime, CustomerOrder, MarketEventDef, PricingModeDef, ProductInstance, TagDef } from './types';
+import type { AppRuntime, CardDef, CardInstance, CustomerOrder, DeckState, MarketEventDef, PricingModeDef, ProductInstance, TagDef } from './types';
 
 type PreferenceEntry = string | { tagId: string; priceBonus?: number };
 
@@ -97,7 +97,10 @@ export function getCurrentCustomerOrders(app: AppRuntime): CustomerOrder[] {
 
 export function hasUnknownProductInfo(product: ProductInstance): boolean {
   const hasHiddenTags = product.hiddenTagIds.some((tagId) => !product.revealedHiddenTagIds.includes(tagId));
-  const hasUnknownDarkRisks = product.darkRiskIds.some((riskId) => !product.revealedDarkRiskIds.includes(riskId));
+  const hasUnknownDarkRisks = product.darkRiskIds.some((riskId) => {
+    const revealLevel = product.darkRiskRevealLevels[riskId] as string | undefined;
+    return revealLevel !== 'full' && revealLevel !== 'treated' && revealLevel !== 'revealed' && !product.revealedDarkRiskIds.includes(riskId);
+  });
   return hasHiddenTags || hasUnknownDarkRisks;
 }
 
@@ -150,4 +153,58 @@ export function getCustomerPreferenceBonus(customerOrder: CustomerOrder, tagId: 
 export function getCustomerBudget(customerOrder: CustomerOrder): number {
   const compatibleOrder = customerOrder as CustomerOrder & { maxBudget?: number; baseBudget?: number };
   return compatibleOrder.budget ?? compatibleOrder.maxBudget ?? compatibleOrder.baseBudget ?? 9999;
+}
+
+export function getCardDef(app: AppRuntime, cardInstance: CardInstance): CardDef | null {
+  return app.index.cardsById.get(cardInstance.cardDefId) ?? app.index.cardsById.get(cardInstance.cardId) ?? null;
+}
+
+export function getAllKnownTagIds(product: ProductInstance): string[] {
+  return [...new Set([...product.visibleTagIds, ...product.revealedHiddenTagIds, ...product.appliedTagIds].filter(Boolean))];
+}
+
+export function getEffectiveKnownTagIds(product: ProductInstance): string[] {
+  const compatibleProduct = product as ProductInstance & { temporaryTagIds?: string[]; visibleTemporaryTagIds?: string[] };
+  return [
+    ...new Set(
+      [
+        ...product.visibleTagIds,
+        ...product.revealedHiddenTagIds,
+        ...product.appliedTagIds,
+        ...(compatibleProduct.visibleTemporaryTagIds ?? []),
+        ...(compatibleProduct.temporaryTagIds ?? []),
+      ].filter(Boolean),
+    ),
+  ];
+}
+
+export function getUnrevealedHiddenTagIds(product: ProductInstance): string[] {
+  return product.hiddenTagIds.filter((tagId) => !product.revealedHiddenTagIds.includes(tagId));
+}
+
+export function getUnresolvedDarkRiskIds(product: ProductInstance): string[] {
+  return product.darkRiskIds.filter((riskId) => {
+    const revealLevel = product.darkRiskRevealLevels[riskId] as string | undefined;
+    return revealLevel !== 'full' && revealLevel !== 'treated' && revealLevel !== 'revealed' && !product.revealedDarkRiskIds.includes(riskId);
+  });
+}
+
+export function isProductOperable(product: ProductInstance | null | undefined): product is ProductInstance {
+  if (!product) {
+    return false;
+  }
+  return (
+    (product.status === ProductStatus.Inventory || product.status === ProductStatus.Spoiled || product.flags.inInventory) &&
+    product.status !== ProductStatus.Sold &&
+    product.status !== ProductStatus.Discarded &&
+    !product.flags.sold
+  );
+}
+
+export function findCardInstanceInHand(deckState: DeckState, cardInstanceId: string): CardInstance | null {
+  return deckState.hand.find((card) => card.id === cardInstanceId || card.instanceId === cardInstanceId) ?? null;
+}
+
+export function isCardInHand(deckState: DeckState, cardInstanceId: string): boolean {
+  return Boolean(findCardInstanceInHand(deckState, cardInstanceId));
 }

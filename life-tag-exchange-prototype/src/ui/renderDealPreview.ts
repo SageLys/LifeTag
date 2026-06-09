@@ -3,7 +3,7 @@ import {
   getSelectedPricingMode,
   getSelectedProduct,
 } from '../core/selectors';
-import type { AppRuntime, BreakdownItem } from '../core/types';
+import type { AppRuntime, BreakdownItem, RiskBreakdownItem, UnknownRiskBreakdownItem } from '../core/types';
 import { escapeHtml } from './formatters';
 
 function renderBreakdown(items: BreakdownItem[]): string {
@@ -11,8 +11,28 @@ function renderBreakdown(items: BreakdownItem[]): string {
     return '<li>暂无</li>';
   }
 
+  return items.map((item) => `<li>${escapeHtml(item.label)}：${escapeHtml(String(item.value))}</li>`).join('');
+}
+
+function formatSigned(value: number): string {
+  return value >= 0 ? `+${value}` : String(value);
+}
+
+function renderRiskBreakdown(items: RiskBreakdownItem[]): string {
+  if (items.length === 0) {
+    return '<li>暂无</li>';
+  }
+
+  return items.map((item) => `<li>${escapeHtml(item.label)}：${formatSigned(item.value)}</li>`).join('');
+}
+
+function renderUnknownRiskBreakdown(items: UnknownRiskBreakdownItem[]): string {
+  if (items.length === 0) {
+    return '<li>暂无</li>';
+  }
+
   return items
-    .map((item) => `<li>${escapeHtml(item.label)}：${escapeHtml(String(item.value))}</li>`)
+    .map((item) => `<li>${escapeHtml(item.label)}：${formatSigned(item.riskMin)} ~ ${formatSigned(item.riskMax)}</li>`)
     .join('');
 }
 
@@ -44,6 +64,33 @@ function getMissingSelections(app: AppRuntime): string[] {
   return missingSelections;
 }
 
+function renderRiskSummary(app: AppRuntime): string {
+  const preview = app.state.dayState.currentDealPreview;
+  if (!preview) {
+    return '';
+  }
+
+  if (preview.riskDisplayType === 'exact') {
+    return `
+      <div><dt>爆雷显示</dt><dd>精确值</dd></div>
+      <div><dt>爆雷值</dt><dd>${preview.exactRisk ?? preview.riskMin}</dd></div>
+      <div><dt>已知风险</dt><dd>${preview.knownRisk}</dd></div>
+      <div><dt>风险下限</dt><dd>${preview.riskMin}</dd></div>
+      <div><dt>风险上限</dt><dd>${preview.riskMax}</dd></div>
+      <div><dt>事故预测</dt><dd>${escapeHtml(preview.accidentPreview.label)}</dd></div>
+    `;
+  }
+
+  return `
+    <div><dt>爆雷显示</dt><dd>区间</dd></div>
+    <div><dt>爆雷区间</dt><dd>${preview.riskMin}-${preview.riskMax}</dd></div>
+    <div><dt>已知风险</dt><dd>${preview.knownRisk}</dd></div>
+    <div><dt>风险下限</dt><dd>${preview.riskMin}</dd></div>
+    <div><dt>风险上限</dt><dd>${preview.riskMax}</dd></div>
+    <div><dt>事故预测</dt><dd>${escapeHtml(preview.accidentPreview.label)}</dd></div>
+  `;
+}
+
 export function renderDealPreview(app: AppRuntime): string {
   const preview = app.state.dayState.currentDealPreview;
   const missingSelections = getMissingSelections(app);
@@ -69,13 +116,14 @@ export function renderDealPreview(app: AppRuntime): string {
         <div><dt>原始价格</dt><dd>${preview.rawPrice}</dd></div>
         <div><dt>预算前价格</dt><dd>${preview.priceBeforeBudgetCap}</dd></div>
         <div><dt>顾客预算</dt><dd>${preview.effectiveBudget}</dd></div>
-        <div><dt>风险显示</dt><dd>P0-8 实现</dd></div>
+        ${renderRiskSummary(app)}
       </dl>
-      <p class="hint-text">${escapeHtml(preview.accidentPreviewText)}</p>
       <h3>价格拆解</h3>
       <ul>${renderBreakdown(preview.priceBreakdown)}</ul>
-      <h3>风险拆解</h3>
-      <ul>${renderBreakdown(preview.riskBreakdown)}</ul>
+      <h3>已知风险</h3>
+      <ul>${renderRiskBreakdown(preview.riskBreakdown)}</ul>
+      <h3>未知风险</h3>
+      <ul>${renderUnknownRiskBreakdown(preview.unknownRiskBreakdown)}</ul>
       ${preview.warnings.map((warning) => `<p class="warning-text">${escapeHtml(warning)}</p>`).join('')}
       <div class="phase-actions">
         <button type="button" data-action="confirm-sell-placeholder" disabled>确认出售</button>

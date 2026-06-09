@@ -78,6 +78,17 @@ export function moveHandCardToDiscard(deckState: DeckState, cardInstanceId: stri
   return card;
 }
 
+export function moveHandCardToExhaust(deckState: DeckState, cardInstanceId: string): CardInstance | null {
+  const cardIndex = deckState.hand.findIndex((card) => card.id === cardInstanceId || card.instanceId === cardInstanceId);
+  if (cardIndex < 0) {
+    return null;
+  }
+
+  const [card] = deckState.hand.splice(cardIndex, 1);
+  deckState.exhaustPile.push(card);
+  return card;
+}
+
 export function getDeckCounts(deckState: DeckState): {
   drawCount: number;
   handCount: number;

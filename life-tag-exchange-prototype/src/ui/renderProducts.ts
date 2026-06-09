@@ -15,11 +15,28 @@ function renderProductStats(product: ProductInstance): string {
   `;
 }
 
+function renderActionBadges(product: ProductInstance): string {
+  const badges = [
+    product.flags.identified ? '已鉴定' : product.revealedHiddenTagIds.length > 0 ? '部分鉴定' : null,
+    product.flags.packaged ? '已包装' : null,
+    product.flags.hasPublicRelation ? '已公关' : null,
+    product.suppressedTagIds.length > 0 ? `已压制 ${product.suppressedTagIds.length} 个标签` : null,
+    product.flags.spoiled ? '已变质' : null,
+  ].filter(Boolean);
+
+  if (badges.length === 0) {
+    return '';
+  }
+
+  return `<p>${badges.map((badge) => `<span class="status-pill">${escapeHtml(String(badge))}</span>`).join(' ')}</p>`;
+}
+
 function renderSafeProductInfo(app: AppRuntime, product: ProductInstance): string {
   return `
     <p><strong>显性标签：</strong>${formatTagNames(app, product.visibleTagIds)}</p>
     <p><strong>隐藏标签：</strong>${formatHiddenTagPlaceholders(product)}</p>
     <p><strong>暗风险：</strong>${escapeHtml(formatDarkRiskHint(app, product))}</p>
+    ${renderActionBadges(product)}
     ${product.flags.spoiled ? '<p class="warning-text">已变质</p>' : ''}
   `;
 }
@@ -68,7 +85,7 @@ function renderInventoryCard(app: AppRuntime, product: ProductInstance): string 
     <article class="item-card ${isSelected ? 'is-selected selected' : ''}" data-product-kind="inventory" data-product-id="${escapeHtml(product.id)}">
       <h3>${escapeHtml(product.displayName)}</h3>
       ${isSelected ? '<p class="selection-badge">已选商品</p>' : ''}
-      <p><strong>状态：</strong>${formatProductStatus(product)}</p>
+      <p><strong>状态：</strong>${escapeHtml(formatProductStatus(product))}</p>
       ${renderProductStats(product)}
       ${renderSafeProductInfo(app, product)}
       <button
@@ -92,7 +109,7 @@ export function renderProducts(app: AppRuntime): string {
   return `
     <section class="panel products-panel" aria-label="商品区">
       <h2>商品候选</h2>
-      <p class="hint-text">P0-5 可在进货阶段买入商品；买入后进入库存，不影响累计利润。</p>
+      <p class="hint-text">在进货阶段买入商品；买入会扣现金，但不影响累计利润。</p>
       <div class="item-list">${content}</div>
     </section>
   `;

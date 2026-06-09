@@ -300,6 +300,29 @@ p {
   padding-left: 20px;
 }
 
+.tag-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.tag-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #ece6dd;
+  padding: 6px 0;
+}
+
+.tag-row button {
+  width: auto;
+  margin-top: 0;
+  padding: 6px 10px;
+}
+
 .selection-summary {
   border: 1px solid #ece6dd;
   border-radius: 8px;

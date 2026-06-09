@@ -124,9 +124,23 @@ export interface MarketEventDef {
 export interface CardDef {
   id: string;
   displayName: string;
+  description?: string;
+  type?: CardType;
   cardType: CardType;
   cost: number;
+  actionPointCost?: number;
+  apCost?: number;
+  cashCost?: number;
+  targetType?: 'none' | 'selected_product' | 'selected_deal' | 'selected_customer' | 'player';
+  conditions?: Condition[];
+  condition?: Condition;
   effects: Effect[];
+  exhaustAfterUse?: boolean;
+  consumeAfterUse?: boolean;
+  discardAfterUse?: boolean;
+  upgradedEffects?: Effect[];
+  upgradedActionPointCost?: number;
+  upgradedCashCost?: number;
   effectText?: string;
   flavorText?: string;
 }
@@ -150,6 +164,8 @@ export interface BaseActionDef {
   displayName: string;
   description: string;
   dailyLimit: number;
+  actionPointCost?: number;
+  cashCost?: number;
   effects: Effect[];
 }
 
@@ -192,6 +208,15 @@ export interface Condition {
   target?: string;
   operator?: string;
   value?: JsonValue;
+  conditions?: Condition[];
+  condition?: Condition;
+  tagId?: string;
+  tagIds?: string[];
+  targetTagId?: string;
+  category?: string;
+  customerId?: string;
+  pricingModeId?: string;
+  marketEventId?: string;
 }
 
 export interface Effect {
@@ -199,6 +224,14 @@ export interface Effect {
   target?: string;
   value?: JsonValue;
   modifiers?: Modifier[];
+  tagId?: string;
+  tagIds?: string[];
+  targetTagId?: string;
+  count?: number;
+  category?: string;
+  modifier?: Modifier;
+  duration?: string;
+  forceSuppress?: boolean;
 }
 
 export interface Modifier {
@@ -209,6 +242,8 @@ export interface Modifier {
   durationType?: ModifierDurationType;
   targetId?: string;
   sourceId?: string;
+  sourceType?: string;
+  displayText?: string;
 }
 
 export interface BreakdownItem {
@@ -229,6 +264,45 @@ export interface PriceResult {
   finalPrice: number;
   estimatedProfit: number;
   priceBreakdown: BreakdownItem[];
+  warnings: string[];
+}
+
+export type RiskDisplayType = 'exact' | 'range';
+
+export interface RiskBreakdownItem {
+  sourceType: string;
+  sourceId: string;
+  label: string;
+  stat: 'risk';
+  op: 'add' | 'multiply' | 'set' | 'min' | 'max';
+  value: number;
+  visibleToPlayer: boolean;
+}
+
+export interface UnknownRiskBreakdownItem {
+  sourceType: 'hidden_tag' | 'dark_risk' | 'system';
+  sourceId: string;
+  label: string;
+  riskMin: number;
+  riskMax: number;
+  visibleToPlayer: boolean;
+}
+
+export interface AccidentPreview {
+  levelMin: AccidentLevel;
+  levelMax: AccidentLevel;
+  label: string;
+  isRange: boolean;
+}
+
+export interface RiskResult {
+  riskDisplayType: RiskDisplayType;
+  knownRisk: number;
+  riskMin: number;
+  riskMax: number;
+  exactRisk?: number;
+  riskBreakdown: RiskBreakdownItem[];
+  unknownRiskBreakdown: UnknownRiskBreakdownItem[];
   warnings: string[];
 }
 
@@ -275,6 +349,7 @@ export interface DayState {
   selectedPricingModeId: string | null;
   currentDealPreview: DealPreview | null;
   temporaryDayModifiers: Modifier[];
+  temporaryDealModifiers?: Modifier[];
   phaseFlags: Record<string, boolean>;
   log: string[];
 }
@@ -326,6 +401,8 @@ export interface ProductInstance {
   suppressedTagIds: string[];
   flags: Record<string, boolean>;
   tagSources: Record<string, TagSource>;
+  productModifiers?: Modifier[];
+  dealModifiers?: Modifier[];
 }
 
 export interface CustomerOrder {
@@ -383,13 +460,15 @@ export interface DealPreview {
   rawPrice: number;
   priceBeforeBudgetCap: number;
   effectiveBudget: number;
-  riskDisplayType: 'exact' | 'range' | 'placeholder';
+  riskDisplayType: RiskDisplayType;
+  knownRisk: number;
   riskMin: number;
   riskMax: number;
-  accidentPreviewText: string;
+  exactRisk?: number;
+  accidentPreview: AccidentPreview;
   priceBreakdown: BreakdownItem[];
-  riskBreakdown: BreakdownItem[];
-  unknownRiskBreakdown: BreakdownItem[];
+  riskBreakdown: RiskBreakdownItem[];
+  unknownRiskBreakdown: UnknownRiskBreakdownItem[];
   warnings: string[];
   missingSelections: string[];
   canConfirmSell: boolean;

@@ -14,7 +14,7 @@ import { renderProductDetail } from './renderProductDetail';
 import { renderInventoryPanel, renderProducts } from './renderProducts';
 import { renderTopBar } from './renderTopBar';
 
-const DEVELOPMENT_STAGE = 'P0-7：售价计算与价格 breakdown';
+const DEVELOPMENT_STAGE = 'P0-9：基础操作：鉴定、包装、公关、洗标';
 
 export function renderApp(app: AppRuntime): void {
   const root = document.querySelector<HTMLDivElement>('#app');
@@ -50,7 +50,7 @@ export function renderApp(app: AppRuntime): void {
 
       <section class="panel guardrail-panel" aria-label="当前范围提示区">
         <h2>当前范围提示</h2>
-        <p>P0-7 阶段开放真实售价预览和价格拆解；仍不开放爆雷、事故和出售结算。</p>
+        <p>P0-9 阶段开放基础操作加工商品；仍不开放卡牌效果、确认出售和事故结算。</p>
       </section>
 
       <div class="workspace-grid">

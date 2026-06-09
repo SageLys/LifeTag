@@ -6,7 +6,7 @@ import { escapeHtml } from './formatters';
 function getPricingDisabledReason(app: AppRuntime, pricingMode: PricingModeDef): string | null {
   const isPricingPhase = app.state.phase === RunPhase.DayProcess || app.state.phase === RunPhase.DaySell;
   if (!isPricingPhase) {
-    return '只能在处理或出售阶段选择定价';
+    return '只能在处理或出售阶段选择定价。';
   }
 
   if (pricingMode.id !== 'pricing_blind_box') {
@@ -15,11 +15,11 @@ function getPricingDisabledReason(app: AppRuntime, pricingMode: PricingModeDef):
 
   const selectedProduct = getInventoryProductById(app, app.state.dayState.selectedProductId ?? '');
   if (!selectedProduct) {
-    return '请选择商品后判断是否可用';
+    return '请选择商品后判断是否可用。';
   }
 
   if (!hasUnknownProductInfo(selectedProduct)) {
-    return '该商品没有未知信息，不能使用盲盒价';
+    return '该商品没有未知信息，不能使用盲盒价。';
   }
 
   return null;
@@ -56,7 +56,7 @@ export function renderPricing(app: AppRuntime): string {
   return `
     <section class="panel pricing-panel" aria-label="定价方式">
       <h2>定价方式</h2>
-      <p class="hint-text">P0-6 只选择定价并生成预览壳，真实售价将在 P0-7 实现。</p>
+      <p class="hint-text">选择定价后会刷新售价、爆雷区间和事故预测。</p>
       <div class="item-list">${content}</div>
     </section>
   `;

@@ -5,9 +5,9 @@ import { formatDarkRiskCategories, formatTagNames } from './ui_helpers';
 
 function renderCustomerCard(app: AppRuntime, order: CustomerOrder): string {
   const isSelected = app.state.dayState.selectedCustomerOrderId === order.id;
-  const rules = order.specialRules && order.specialRules.length > 0 ? order.specialRules.join('；') : '无';
+  const rules = order.specialRules && order.specialRules.length > 0 ? order.specialRules.join('、') : '无';
   const canSelect = app.state.phase === RunPhase.DayCustomer || app.state.phase === RunPhase.DayProcess || app.state.phase === RunPhase.DaySell;
-  const disabledReason = canSelect ? null : '当前阶段不能选择顾客';
+  const disabledReason = canSelect ? null : '当前阶段不能选择顾客。';
 
   return `
     <article class="item-card ${isSelected ? 'is-selected selected' : ''}" data-customer-order-id="${escapeHtml(order.id)}">
@@ -42,7 +42,7 @@ export function renderCustomers(app: AppRuntime): string {
   return `
     <section class="panel customers-panel" aria-label="顾客区">
       <h2>顾客订单</h2>
-      <p class="hint-text">P0-6 可选择今日顾客；真实出售结算暂未开放。</p>
+      <p class="hint-text">选择顾客后会刷新售价、爆雷区间和事故预测；确认出售将在 P0-11 实现。</p>
       <div class="item-list">${content}</div>
     </section>
   `;

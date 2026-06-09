@@ -59,10 +59,12 @@ function getProductCost(product: ProductInstance, warnings: string[]): number {
 }
 
 function getEffectiveKnownTagIds(product: ProductInstance): string[] {
-  const compatibleProduct = product as ProductInstance & { temporaryTagIds?: string[]; hiddenTags?: Array<{ tagId: string; revealed?: boolean }> };
-  const revealedStructuredHiddenTags = compatibleProduct.hiddenTags
-    ?.filter((hiddenTag) => hiddenTag.revealed)
-    .map((hiddenTag) => hiddenTag.tagId) ?? [];
+  const compatibleProduct = product as ProductInstance & {
+    temporaryTagIds?: string[];
+    hiddenTags?: Array<{ tagId: string; revealed?: boolean }>;
+  };
+  const revealedStructuredHiddenTags =
+    compatibleProduct.hiddenTags?.filter((hiddenTag) => hiddenTag.revealed).map((hiddenTag) => hiddenTag.tagId) ?? [];
   const tagIds = [
     ...product.visibleTagIds,
     ...product.revealedHiddenTagIds,
@@ -82,12 +84,7 @@ function isSuppressed(product: ProductInstance, tagId: string): boolean {
   return product.suppressedTagIds.includes(tagId);
 }
 
-function applyCustomerPreference(
-  context: CalculationContext,
-  customerOrder: CustomerOrder,
-  tagId: string,
-  warnings: string[],
-): number {
+function applyCustomerPreference(context: CalculationContext, customerOrder: CustomerOrder, tagId: string, warnings: string[]): number {
   const preferredTagIds = getCustomerPreferredTagIds(customerOrder);
   if (!preferredTagIds.includes(tagId)) {
     return 0;
@@ -101,7 +98,13 @@ function applyCustomerPreference(
   return bonus;
 }
 
-function applyTagRelations(context: CalculationContext, knownTagIds: string[], breakdown: BreakdownItem[], warnings: string[]): number {
+function applyTagRelations(
+  context: CalculationContext,
+  knownTagIds: string[],
+  product: ProductInstance,
+  breakdown: BreakdownItem[],
+  warnings: string[],
+): number {
   let delta = 0;
   const knownTagSet = new Set(knownTagIds);
 
@@ -109,13 +112,14 @@ function applyTagRelations(context: CalculationContext, knownTagIds: string[], b
     if (!knownTagSet.has(relation.tagA) || !knownTagSet.has(relation.tagB)) {
       continue;
     }
-    const priceDelta = getNumber(relation.priceDelta, 0);
+    const hasSuppressedTag = isSuppressed(product, relation.tagA) || isSuppressed(product, relation.tagB);
+    const priceDelta = hasSuppressedTag ? 0 : getNumber(relation.priceDelta, 0);
     delta += priceDelta;
     const relationLabel = relation.relationType === 'support' ? '支撑关系' : '冲突关系';
     breakdown.push(
       item(
         relation.id,
-        `[${getTagLabel(context, relation.tagA)}] + [${getTagLabel(context, relation.tagB)}] ${relationLabel}`,
+        `[${getTagLabel(context, relation.tagA)}] + [${getTagLabel(context, relation.tagB)}] ${relationLabel}${hasSuppressedTag ? '（含已压制标签）' : ''}`,
         'price',
         'add',
         priceDelta,
@@ -154,7 +158,7 @@ function conditionMatches(modifier: Modifier, context: CalculationContext, known
     case 'product_has_tag':
       return Boolean(condition.tagId && knownTagIds.includes(condition.tagId));
     case 'product_has_any_tag':
-      return Boolean(condition.tagIds?.some((tagId) => knownTagIds.includes(tagId)));
+      return Boolean(condition.tagIds?.some((conditionTagId) => knownTagIds.includes(conditionTagId)));
     case 'customer_is':
       return condition.customerId === context.customerOrder.customerId;
     case 'pricing_mode_is':
@@ -182,7 +186,7 @@ function applyMarketModifiers(
     if (!conditionMatches(modifier, context, knownTagIds)) {
       const compatibleModifier = modifier as Modifier & { condition?: unknown };
       if (compatibleModifier.condition) {
-        warnings.push(`市场新闻 ${marketEvent.displayName} 的复杂条件暂未在 P0-7 支持。`);
+        warnings.push(`市场新闻 ${marketEvent.displayName} 的复杂条件暂未支持。`);
       }
       continue;
     }
@@ -222,22 +226,27 @@ function applySimplePriceModifiers(context: CalculationContext, breakdown: Break
   const compatibleDayState = context.dayState as typeof context.dayState & { temporaryDealModifiers?: Modifier[] };
   const modifiers = [
     ...(compatibleProduct.priceModifiers ?? []),
+    ...(context.product.productModifiers ?? []),
+    ...(context.product.dealModifiers ?? []),
     ...(compatibleProduct.modifiers ?? []),
     ...context.dayState.temporaryDayModifiers,
     ...(compatibleDayState.temporaryDealModifiers ?? []),
-  ];
+  ].filter((modifier) => !modifier.targetId || modifier.targetId === context.product.id);
   let add = 0;
   const multipliers: number[] = [];
 
   for (const modifier of modifiers) {
     if (modifier.stat === 'price' && modifier.op === 'add') {
       add += modifier.value;
-      breakdown.push(item(modifier.id ?? `modifier_${breakdown.length}`, '价格修正', 'price', 'add', modifier.value, 'modifier', modifier.sourceId ?? modifier.id ?? 'unknown'));
+      breakdown.push(item(modifier.id ?? `modifier_${breakdown.length}`, modifier.displayText ?? '价格修正', 'price', 'add', modifier.value, 'modifier', modifier.sourceId ?? modifier.id ?? 'unknown'));
     } else if (modifier.stat === 'priceMultiplier' && modifier.op === 'multiply') {
+      if (modifier.sourceId === 'action_package' && context.product.flags.packaged) {
+        continue;
+      }
       multipliers.push(modifier.value);
-      breakdown.push(item(modifier.id ?? `modifier_multiplier_${breakdown.length}`, '价格倍率修正', 'priceMultiplier', 'multiply', `×${modifier.value}`, 'modifier', modifier.sourceId ?? modifier.id ?? 'unknown'));
+      breakdown.push(item(modifier.id ?? `modifier_multiplier_${breakdown.length}`, modifier.displayText ?? '价格倍率修正', 'priceMultiplier', 'multiply', `×${modifier.value}`, 'modifier', modifier.sourceId ?? modifier.id ?? 'unknown'));
     } else {
-      warnings.push(`价格修正 ${modifier.id ?? 'unknown'} 暂未在 P0-7 支持。`);
+      warnings.push(`价格修正 ${modifier.id ?? 'unknown'} 暂未支持。`);
     }
   }
 
@@ -287,7 +296,7 @@ export function calculatePrice(context: CalculationContext): PriceResult {
     }
   }
 
-  rawPrice += applyTagRelations(context, knownTagIds, priceBreakdown, warnings);
+  rawPrice += applyTagRelations(context, knownTagIds, product, priceBreakdown, warnings);
   const marketResult = applyMarketModifiers(context, knownTagIds, priceBreakdown, warnings);
   rawPrice += marketResult.priceAdd;
 
