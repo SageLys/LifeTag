@@ -746,6 +746,82 @@ th, td {
   gap: 12px;
 }
 
+.status-entry-grid {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.status-entry {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  min-height: 64px;
+  text-align: left;
+}
+
+.status-entry strong,
+.status-entry span {
+  display: block;
+}
+
+.status-entry span {
+  color: var(--paper-dark);
+  font-size: 12px;
+}
+
+.passive-overview {
+  border-top: 1px solid rgba(36, 23, 14, 0.18);
+  padding-top: 10px;
+}
+
+.passive-overview h3 {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.detail-page {
+  display: grid;
+  gap: 12px;
+}
+
+.detail-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid rgba(184, 134, 59, 0.38);
+  border-radius: 7px;
+  padding: 14px 16px;
+  background: rgba(17, 13, 10, 0.9);
+  color: var(--paper);
+}
+
+.detail-page-header h2 {
+  margin-bottom: 4px;
+  font-size: 24px;
+}
+
+.detail-page-header p {
+  margin-bottom: 0;
+  color: var(--paper-dark);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.reward-history-panel {
+  grid-column: 1 / -1;
+}
+
+.reward-history-card ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
 .empty-note,
 .hint-text {
   color: var(--ink-soft);
@@ -868,6 +944,7 @@ th, td {
   .loop-cards,
   .reward-steps,
   .report-columns,
+  .detail-grid,
   .tool-grid { grid-template-columns: 1fr; }
   .item-stats,
   .receipt-stats { grid-template-columns: 1fr; }

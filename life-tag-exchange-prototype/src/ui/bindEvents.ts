@@ -28,7 +28,7 @@ import {
 import { advancePhase, returnToProcess, skipSaleAndResolveDay } from '../core/dayFlow';
 import type { AppRuntime } from '../core/types';
 import { renderApp } from './render';
-import { closeModal, showDealResult } from './uiState';
+import { closeModal, openUiView, showDealResult, type UiState } from './uiState';
 
 export function bindEvents(app: AppRuntime): void {
   const root = document.querySelector<HTMLDivElement>('#app');
@@ -41,6 +41,7 @@ export function bindEvents(app: AppRuntime): void {
     if (!(target instanceof HTMLElement)) {
       return;
     }
+    const clickedButton = target.closest<HTMLButtonElement>('button');
 
     if (target.id === 'advance-phase' || target.id === 'start-new-run') {
       if (target instanceof HTMLButtonElement && target.dataset.confirmNoPurchase === 'true' && app.state.dayState.boughtProductCount === 0) {
@@ -74,6 +75,12 @@ export function bindEvents(app: AppRuntime): void {
     if (target instanceof HTMLButtonElement && target.dataset.action === 'reward-wizard-next') {
       const nextStep = Math.max(2, Math.min(6, Number(target.dataset.nextStep ?? 6)));
       app.state.dayState.phaseFlags[`rewardWizardStep${nextStep}`] = true;
+      renderApp(app);
+      return;
+    }
+
+    if (clickedButton?.dataset.action === 'open-ui-view') {
+      openUiView((clickedButton.dataset.view ?? 'game') as UiState['currentView']);
       renderApp(app);
       return;
     }

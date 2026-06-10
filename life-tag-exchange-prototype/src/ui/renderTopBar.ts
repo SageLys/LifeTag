@@ -17,7 +17,11 @@ function chip(iconClass: string, label: string, value: string | number): string 
 export function renderTopBar(app: AppRuntime): string {
   const { state } = app;
   const actionPoints = safeNumber(state.dayState?.actionPoints);
-  const handCount = state.deckState?.hand?.length ?? 0;
+  const deckCount =
+    (state.deckState?.drawPile?.length ?? 0) +
+    (state.deckState?.hand?.length ?? 0) +
+    (state.deckState?.discardPile?.length ?? 0) +
+    (state.deckState?.exhaustPile?.length ?? 0);
 
   return `
     <section class="top-bar" aria-label="经营状态">
@@ -27,7 +31,7 @@ export function renderTopBar(app: AppRuntime): string {
       ${chip('icon-reputation', '信誉', `${safeNumber(state.reputation)} / ${safeNumber(state.maxReputation, app.configs.gameConfig.maxReputation)}`)}
       ${chip('icon-ap', '行动点', actionPoints)}
       ${chip('icon-inventory', '库存', `${state.inventory?.filter((item) => !item.flags.sold).length ?? 0} / ${app.configs.gameConfig.inventoryLimit}`)}
-      ${chip('icon-hand', '手牌', handCount)}
+      ${chip('icon-hand', '牌库', deckCount)}
     </section>
   `;
 }

@@ -3,7 +3,9 @@ import { renderDebug } from './renderDebug';
 import { renderModal } from './renderModal';
 import { renderPhaseGuide } from './renderPhaseGuide';
 import { renderMainStageContent } from './renderStageContent';
+import { renderDeckDetailPage, renderShopRewardsDetailPage } from './renderShopStatusPanel';
 import { renderTopBar } from './renderTopBar';
+import { getUiState } from './uiState';
 
 function renderHeaderChrome(): string {
   return `
@@ -22,6 +24,17 @@ function renderHeaderChrome(): string {
   `;
 }
 
+function renderScreenContent(app: AppRuntime): string {
+  switch (getUiState().currentView) {
+    case 'deck_detail':
+      return renderDeckDetailPage(app);
+    case 'shop_rewards_detail':
+      return renderShopRewardsDetailPage(app);
+    default:
+      return renderMainStageContent(app);
+  }
+}
+
 export function renderApp(app: AppRuntime): void {
   const root = document.querySelector<HTMLDivElement>('#app');
   if (!root) {
@@ -33,7 +46,7 @@ export function renderApp(app: AppRuntime): void {
       ${renderHeaderChrome()}
       ${renderTopBar(app)}
       ${renderPhaseGuide(app)}
-      ${renderMainStageContent(app)}
+      ${renderScreenContent(app)}
       ${renderModal()}
       ${renderDebug(app)}
     </main>
