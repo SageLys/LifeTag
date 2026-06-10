@@ -36,7 +36,7 @@ function renderKnownTagList(app: AppRuntime, product: ProductInstance): string {
       return `
         <li class="tag-row">
           <span>[${escapeHtml(tagName)}] ${escapeHtml(sourceLabel)}</span>
-          ${isSuppressed ? '<span class="status-pill">已压制</span>' : ''}
+          ${isSuppressed ? '<span class="tag-chip">已洗掉</span>' : ''}
           ${tag && !tag.isWashable ? '<span class="hint-text">不可洗</span>' : ''}
           <button
             type="button"
@@ -46,7 +46,6 @@ function renderKnownTagList(app: AppRuntime, product: ProductInstance): string {
             data-tag-id="${escapeHtml(tagId)}"
             ${disabledReason ? 'disabled' : ''}
           >洗标</button>
-          ${disabledReason && !isSuppressed && tag?.isWashable ? `<span class="disabled-reason">${escapeHtml(disabledReason)}</span>` : ''}
         </li>
       `;
     })
@@ -59,14 +58,14 @@ function renderFlags(product: ProductInstance): string {
     product.flags.packaged ? '已包装' : null,
     product.flags.hasPublicRelation ? '已公关' : null,
     product.flags.sold ? '已售出' : null,
-    product.flags.spoiled ? '已腐败' : null,
+    product.flags.spoiled ? '已变质' : null,
   ].filter(Boolean);
 
   if (flags.length === 0) {
-    return '无';
+    return '未加工';
   }
 
-  return flags.map((flag) => `<span class="status-pill">${escapeHtml(String(flag))}</span>`).join(' ');
+  return flags.map((flag) => `<span class="tag-chip">${escapeHtml(String(flag))}</span>`).join('');
 }
 
 export function renderProductDetail(app: AppRuntime): string {
@@ -74,31 +73,30 @@ export function renderProductDetail(app: AppRuntime): string {
 
   if (!product) {
     return `
-      <section class="panel" aria-label="商品详情">
-        <h2>商品详情</h2>
-        <p>当前没有选中商品。点击商品候选或库存商品查看详情。</p>
+      <section class="panel product-detail art-frame art-frame-clipboard" aria-label="商品详情">
+        <div class="section-title"><h2>选中商品详情</h2><span>评估剪贴板</span></div>
+        <p class="empty-note">从库存中选择一块原料，案板才会亮起来。</p>
       </section>
     `;
   }
 
   return `
-    <section class="panel" aria-label="商品详情">
-      <h2>商品详情</h2>
+    <section class="panel product-detail art-frame art-frame-clipboard" aria-label="商品详情">
+      <div class="section-title"><h2>选中商品详情</h2><span>${escapeHtml(formatProductStatus(product))}</span></div>
       <h3>${escapeHtml(product.displayName)}</h3>
       ${product.description ? `<p>${escapeHtml(product.description)}</p>` : ''}
-      <p><strong>当前状态：</strong>${escapeHtml(formatProductStatus(product))}</p>
       <dl class="item-stats">
-        <div><dt>进价</dt><dd>${product.cost}</dd></div>
-        <div><dt>基础价</dt><dd>${product.basePrice}</dd></div>
-        <div><dt>基础风险</dt><dd>${product.baseRisk}</dd></div>
-        <div><dt>新鲜度</dt><dd>${product.freshnessCurrent} / ${product.freshnessMax}</dd></div>
+        <div><dt>进价</dt><dd class="number">${product.cost}</dd></div>
+        <div><dt>基础价</dt><dd class="number">${product.basePrice}</dd></div>
+        <div><dt>基础爆雷</dt><dd class="number">${product.baseRisk}</dd></div>
+        <div><dt>新鲜度</dt><dd class="number">${product.freshnessCurrent} / ${product.freshnessMax}</dd></div>
       </dl>
       <p><strong>隐藏标签：</strong>${formatHiddenTagPlaceholders(product)}</p>
       <p><strong>暗风险提示：</strong>${escapeHtml(formatDarkRiskHint(app, product))}</p>
-      <p><strong>操作状态：</strong>${renderFlags(product)}</p>
+      <div class="badge-row"><strong>加工状态：</strong>${renderFlags(product)}</div>
       <h3>已知标签</h3>
       <ul class="tag-list">${renderKnownTagList(app, product)}</ul>
-      <p class="hint-text">未揭示隐藏标签和未完全揭示暗风险不会在详情中显示真实名称。</p>
+      <p class="hint-text">未揭示隐藏标签和未完全揭示暗风险只显示占位或类别提示。</p>
     </section>
   `;
 }

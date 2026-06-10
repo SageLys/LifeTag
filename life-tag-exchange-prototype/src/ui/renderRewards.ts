@@ -1,9 +1,10 @@
 import { RunPhase } from '../core/constants';
-import { canFinishRewardPhase } from '../core/rules_rewards';
-import { canChooseReward, ensureRewardState, getRemovableCards, getUpgradableCards } from '../core/rules_rewards';
+import { canChooseReward, canFinishRewardPhase, ensureRewardState, getRemovableCards, getUpgradableCards } from '../core/rules_rewards';
 import type { AppRuntime, CardInstance, RewardOptionInstance } from '../core/types';
 import { escapeHtml } from './formatters';
 import { renderCardInfo } from './renderCards';
+
+type RewardAction = 'claim-maintenance-reward' | 'choose-reward' | 'buy-paid-reward' | 'choose-bonus-reward';
 
 function getRewardTypeLabel(type: string): string {
   switch (type) {
@@ -25,7 +26,7 @@ function getArchetypeLabel(archetype?: string): string {
   switch (archetype) {
     case 'bigtech': return '大厂流';
     case 'family': return '相亲流';
-    case 'mcn': return 'MCN 流';
+    case 'mcn': return 'MCN流';
     case 'risk_control': return '风控流';
     case 'high_risk': return '高风险流';
     case 'general': return '通用';
@@ -83,7 +84,7 @@ function renderDetails(app: AppRuntime, reward: RewardOptionInstance): string {
   return '';
 }
 
-function renderTargetChoices(app: AppRuntime, reward: RewardOptionInstance, action: string): string {
+function renderTargetChoices(app: AppRuntime, reward: RewardOptionInstance, action: RewardAction): string {
   if (reward.rewardType === 'upgrade_card') {
     const cards = getUpgradableCards(app);
     return cards.length > 0 ? `<div class="choice-list">${cards.map((card) => {
@@ -105,17 +106,28 @@ function renderTargetChoices(app: AppRuntime, reward: RewardOptionInstance, acti
   return '';
 }
 
-function renderRewardCard(app: AppRuntime, reward: RewardOptionInstance, action: string, buttonText: string, disabled = false, stateText = ''): string {
+function rewardCostText(reward: RewardOptionInstance, action: RewardAction): string {
+  if (action === 'claim-maintenance-reward') {
+    return `消耗维护点：${reward.maintenanceCost ?? 1}`;
+  }
+  if (action === 'buy-paid-reward') {
+    return `价格：${reward.cost} 现金`;
+  }
+  return reward.cost > 0 ? `费用：${reward.cost} 现金` : '费用：免费';
+}
+
+function renderRewardCard(app: AppRuntime, reward: RewardOptionInstance, action: RewardAction, buttonText: string, disabled = false, stateText = ''): string {
   const canChoose = canChooseReward(app, reward);
   const disabledReason = disabled ? stateText : canChoose.ok ? '' : canChoose.reason ?? '不可选择';
   const targetChoices = !disabled && canChoose.ok ? renderTargetChoices(app, reward, action) : '';
   const needsTarget = ['upgrade_card', 'remove_card', 'product_repair'].includes(reward.rewardType) && targetChoices;
   return `
-    <article class="item-card reward-card">
+    <article class="item-card reward-card art-frame art-frame-reward-card">
+      <div class="reward-art" aria-hidden="true"></div>
       <h3>${escapeHtml(reward.displayName)}</h3>
-      <p><strong>类型：</strong>${escapeHtml(getRewardTypeLabel(reward.rewardType))}${reward.archetype ? ` · ${escapeHtml(getArchetypeLabel(reward.archetype))}` : ''}</p>
+      <p><strong>类型：</strong>${escapeHtml(getRewardTypeLabel(reward.rewardType))}${reward.archetype ? ` / ${escapeHtml(getArchetypeLabel(reward.archetype))}` : ''}</p>
       <p>${escapeHtml(reward.description)}</p>
-      <p><strong>费用：</strong>${reward.cost > 0 ? `${reward.cost} 现金` : '免费'}${reward.maintenanceCost ? ` · ${reward.maintenanceCost} 维护点` : ''}</p>
+      <p><strong>${escapeHtml(rewardCostText(reward, action))}</strong></p>
       <p><strong>效果：</strong>${escapeHtml(reward.effectSummary)}</p>
       ${renderDetails(app, reward)}
       ${targetChoices}
@@ -125,88 +137,110 @@ function renderRewardCard(app: AppRuntime, reward: RewardOptionInstance, action:
   `;
 }
 
-function renderMaintenance(app: AppRuntime): string {
+function getWizardStep(app: AppRuntime): number {
+  const flags = app.state.dayState.phaseFlags;
+  if (flags.rewardWizardStep6) return 6;
+  if (flags.rewardWizardStep5) return 5;
+  if (flags.rewardWizardStep4) return 4;
+  if (flags.rewardWizardStep3) return 3;
+  return 2;
+}
+
+function renderStepRail(step: number): string {
+  const labels = ['日结摘要', '基础维护', '免费构筑', '付费商店', '爆单奖励', '收店总结'];
+  return `<div class="reward-steps">${labels.map((label, index) => `<span class="${index + 1 === step ? 'is-active' : index + 1 < step ? 'is-done' : ''}">${index + 1}. ${label}</span>`).join('')}</div>`;
+}
+
+function nextButton(step: number, label = '下一步'): string {
+  return `<div class="phase-actions reward-nav"><button type="button" data-action="reward-wizard-next" data-next-step="${step}">${label}</button></div>`;
+}
+
+function renderCurrentStep(app: AppRuntime, step: number): string {
   const state = ensureRewardState(app);
-  return `
-    <section class="reward-section">
+  if (step === 2) {
+    return `
       <h3>基础维护</h3>
-      <p class="hint-text">维护点：${state.maintenancePointsRemaining} / ${state.maintenancePointsTotal}</p>
-      <div class="item-list">${state.maintenanceOptions.map((reward) => {
+      <p class="hint-text">剩余维护点：${state.maintenancePointsRemaining} / ${state.maintenancePointsTotal}。资源足够时可以领取多个维护奖励，选完后手动进入下一步。</p>
+      <div class="item-list reward-grid">${state.maintenanceOptions.map((reward) => {
         const claimed = state.claimedMaintenanceRewardIds.includes(reward.rewardId) && !reward.explicitlyRepeatable;
         const pointShort = state.maintenancePointsRemaining < (reward.maintenanceCost ?? 1);
         const sameGroup = Boolean(reward.oncePerDayGroup && state.maintenanceOptions.some((item) => item.oncePerDayGroup === reward.oncePerDayGroup && state.claimedMaintenanceRewardIds.includes(item.rewardId)));
-        const reason = claimed ? '已领取' : pointShort ? '维护点不足' : sameGroup ? '同组强维护项今日已领取' : '';
+        const reason = claimed ? '已领取' : pointShort ? `维护点不足，还差 ${(reward.maintenanceCost ?? 1) - state.maintenancePointsRemaining}` : sameGroup ? '同组维护今日已领取' : '';
         return renderRewardCard(app, reward, 'claim-maintenance-reward', claimed ? '已领取' : '领取', Boolean(reason), reason);
       }).join('')}</div>
-    </section>
-  `;
-}
-
-function renderFreeBuild(app: AppRuntime): string {
-  const state = ensureRewardState(app);
-  return `
-    <section class="reward-section">
-      <h3>免费构筑三选一</h3>
-      <div class="item-list">${state.freeBuildOptions.map((reward) => {
+      ${nextButton(3, '维护完成，去免费构筑')}
+    `;
+  }
+  if (step === 3) {
+    return `
+      <h3>免费构筑</h3>
+      <p class="hint-text">免费构筑只能选择 1 项。</p>
+      <div class="item-list reward-grid">${state.freeBuildOptions.map((reward) => {
         const selected = state.selectedFreeBuildRewardId === reward.rewardId;
         const locked = Boolean(state.selectedFreeBuildRewardId && !selected);
         return renderRewardCard(app, reward, 'choose-reward', selected ? '已选择' : '选择', selected || locked, selected ? '已选择' : locked ? '已锁定' : '');
       }).join('')}</div>
-    </section>
-  `;
-}
-
-function renderPaidShop(app: AppRuntime): string {
-  const state = ensureRewardState(app);
-  return `
-    <section class="reward-section">
-      <h3>付费强奖励商店</h3>
-      <p class="hint-text">当前现金：${app.state.cash}。每项今日最多购买一次，可以购买多个。</p>
-      <div class="item-list">${state.paidShopOptions.map((reward) => {
+      ${state.selectedFreeBuildRewardId ? nextButton(4, '进入付费商店') : '<p class="disabled-reason">请先选择 1 项免费构筑。</p>'}
+    `;
+  }
+  if (step === 4) {
+    return `
+      <h3>付费商店</h3>
+      <p class="hint-text">当前现金：${app.state.cash}。现金足够时可以买多个，买完后手动进入下一步。</p>
+      <div class="item-list reward-grid">${state.paidShopOptions.map((reward) => {
         const bought = state.purchasedPaidRewardIds.includes(reward.rewardId);
         const short = app.state.cash < reward.cost;
         const reason = bought ? '已购买' : short ? `现金不足，需要 ${reward.cost}` : '';
         return renderRewardCard(app, reward, 'buy-paid-reward', bought ? '已购买' : '购买', Boolean(reason), reason);
       }).join('')}</div>
-    </section>
-  `;
-}
-
-function renderBonus(app: AppRuntime): string {
-  const state = ensureRewardState(app);
-  if (!state.bonusUnlocked) {
-    return `<section class="reward-section"><h3>爆单奖励</h3><p class="hint-text">今日未触发爆单奖励。触发条件：当日利润、单笔利润、无事故多单或低事故盲盒交易达到配置要求。</p></section>`;
+      ${nextButton(5, '商店逛完，去看爆单奖励')}
+    `;
   }
-  return `
-    <section class="reward-section">
+  if (step === 5) {
+    if (!state.bonusUnlocked) {
+      return `
+        <h3>爆单奖励</h3>
+        <p class="hint-text">今日未触发爆单奖励。</p>
+        ${nextButton(6, '进入收店总结')}
+      `;
+    }
+    return `
       <h3>爆单奖励</h3>
       <p class="hint-text">触发原因：${state.bonusReasons.map(escapeHtml).join('；')}</p>
-      <div class="item-list">${state.bonusOptions.map((reward) => {
+      <div class="item-list reward-grid">${state.bonusOptions.map((reward) => {
         const selected = state.selectedBonusRewardId === reward.rewardId;
         const locked = Boolean((state.selectedBonusRewardId && !selected) || state.skippedBonus);
         return renderRewardCard(app, reward, 'choose-bonus-reward', selected ? '已选择' : '选择', selected || locked, selected ? '已选择' : locked ? '已锁定' : '');
       }).join('')}</div>
-      <button type="button" data-action="skip-bonus-reward" ${state.selectedBonusRewardId || state.skippedBonus ? 'disabled' : ''}>跳过爆单奖励</button>
-      ${state.skippedBonus ? '<p class="disabled-reason">已跳过</p>' : ''}
-    </section>
+      <div class="phase-actions reward-nav">
+        <button type="button" data-action="skip-bonus-reward" ${state.selectedBonusRewardId || state.skippedBonus ? 'disabled' : ''}>跳过</button>
+        ${(state.selectedBonusRewardId || state.skippedBonus) ? '<button type="button" data-action="reward-wizard-next" data-next-step="6">进入收店总结</button>' : ''}
+      </div>
+    `;
+  }
+  return `
+    <h3>收店总结</h3>
+    <dl class="compact-stats">
+      <div><dt>当前现金</dt><dd>${app.state.cash}</dd></div>
+      <div><dt>累计利润</dt><dd>${app.state.totalProfit} / ${app.state.targetTotalProfit}</dd></div>
+      <div><dt>信誉</dt><dd>${app.state.reputation}</dd></div>
+      <div><dt>牌库规模</dt><dd>${app.state.deckState.drawPile.length + app.state.deckState.hand.length + app.state.deckState.discardPile.length + app.state.deckState.exhaustPile.length}</dd></div>
+    </dl>
+    <div class="phase-actions">
+      <button type="button" data-action="finish-reward-phase" ${canFinishRewardPhase(app).ok ? '' : 'disabled'}>${app.state.currentDay >= app.state.maxDays ? '查看最终报告' : '进入下一天'}</button>
+    </div>
+    ${canFinishRewardPhase(app).ok ? '' : `<p class="disabled-reason">${escapeHtml(canFinishRewardPhase(app).reason ?? '还不能收店')}</p>`}
   `;
 }
 
 export function renderRewards(app: AppRuntime): string {
   if (app.state.phase !== RunPhase.DayReward) return '';
-  const finish = canFinishRewardPhase(app);
+  const step = getWizardStep(app);
   return `
-    <section class="panel rewards-panel" aria-label="收店奖励">
-      <h2>收店奖励</h2>
-      <p class="hint-text">维护奖励可多领；免费构筑和爆单奖励各选 1 个；付费商店可买多个。</p>
-      ${renderMaintenance(app)}
-      ${renderFreeBuild(app)}
-      ${renderPaidShop(app)}
-      ${renderBonus(app)}
-      <div class="reward-footer">
-        <button type="button" data-action="finish-reward-phase" ${finish.ok ? '' : 'disabled'}>结束收店 / 进入下一天</button>
-        ${finish.ok ? '' : `<p class="disabled-reason">${escapeHtml(finish.reason ?? '还不能结束收店')}</p>`}
-      </div>
+    <section class="panel rewards-panel art-frame art-frame-modal" aria-label="收店奖励向导">
+      <div class="section-title"><h2>收店奖励向导</h2><span>第 ${app.state.currentDay} 天</span></div>
+      ${renderStepRail(step)}
+      ${renderCurrentStep(app, step)}
     </section>
   `;
 }

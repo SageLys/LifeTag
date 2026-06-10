@@ -15,6 +15,7 @@ import {
   skipBonus,
   useBaseAction,
 } from '../core/actions';
+import { RunPhase } from '../core/constants';
 import {
   applyDebugSeed,
   loadDebugScenario,
@@ -24,7 +25,7 @@ import {
   toggleDebugPanel,
   type DebugCopyTarget,
 } from '../core/debugActions';
-import { advancePhase, returnToProcess } from '../core/dayFlow';
+import { advancePhase, returnToProcess, skipSaleAndResolveDay } from '../core/dayFlow';
 import type { AppRuntime } from '../core/types';
 import { renderApp } from './render';
 import { closeModal, showDealResult } from './uiState';
@@ -42,17 +43,43 @@ export function bindEvents(app: AppRuntime): void {
     }
 
     if (target.id === 'advance-phase' || target.id === 'start-new-run') {
+      if (target instanceof HTMLButtonElement && target.dataset.confirmNoPurchase === 'true' && app.state.dayState.boughtProductCount === 0) {
+        const confirmed = window.confirm('今天还没有进货。确定直接去看订单吗？');
+        if (!confirmed) {
+          return;
+        }
+      }
       advancePhase(app);
       renderApp(app);
+      return;
     }
 
     if (target.id === 'return-to-process') {
       returnToProcess(app);
       renderApp(app);
+      return;
     }
 
     if (target instanceof HTMLButtonElement && target.dataset.action === 'toggle-debug') {
       toggleDebugPanel(app);
+      renderApp(app);
+      return;
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'toggle-help') {
+      window.alert('核心循环：看新闻 → 进货 → 看订单 → 抽牌 → 加工 → 出售 → 日结 → 收店。利润是目标，现金和信誉是底线。');
+      return;
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'reward-wizard-next') {
+      const nextStep = Math.max(2, Math.min(6, Number(target.dataset.nextStep ?? 6)));
+      app.state.dayState.phaseFlags[`rewardWizardStep${nextStep}`] = true;
+      renderApp(app);
+      return;
+    }
+
+    if (target instanceof HTMLButtonElement && target.dataset.action === 'skip-sale-to-resolve') {
+      skipSaleAndResolveDay(app);
       renderApp(app);
       return;
     }
@@ -106,7 +133,7 @@ export function bindEvents(app: AppRuntime): void {
     }
 
     if (target instanceof HTMLButtonElement && target.dataset.action === 'select-customer-order') {
-      if (!target.disabled) {
+      if (!target.disabled && app.state.phase !== RunPhase.DayCustomer) {
         selectCustomerOrder(app, target.dataset.customerOrderId ?? '');
         renderApp(app);
       }
@@ -132,6 +159,9 @@ export function bindEvents(app: AppRuntime): void {
         const result = confirmSell(app);
         if (result.ok && result.dealResult) {
           showDealResult(result.dealResult);
+          if (app.state.phase === RunPhase.DaySell) {
+            advancePhase(app);
+          }
         }
         renderApp(app);
       }
@@ -249,7 +279,7 @@ export function bindEvents(app: AppRuntime): void {
     }
 
     const customerCard = target.closest<HTMLElement>('[data-customer-order-id]');
-    if (customerCard) {
+    if (customerCard && app.state.phase !== RunPhase.DayCustomer) {
       selectCustomerOrder(app, customerCard.dataset.customerOrderId ?? '');
       renderApp(app);
     }

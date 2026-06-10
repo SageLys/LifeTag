@@ -50,7 +50,7 @@ export function formatDarkRiskHint(app: AppRuntime, product: ProductInstance): s
 
   const parts = [
     ...fullRevealedNames.map((name) => `已揭示：${name}`),
-    ...[...new Set(revealedCategories)].map((category) => `可能存在${DARK_RISK_CATEGORY_LABELS[category] ?? category}类风险`),
+    ...[...new Set(revealedCategories)].map((category) => `可能存在${DARK_RISK_CATEGORY_LABELS[category] ?? category}类暗风险`),
   ];
 
   if (parts.length === 0) {

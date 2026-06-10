@@ -1,10 +1,26 @@
 import type { AppRuntime } from '../core/types';
 import { renderDebug } from './renderDebug';
-import { renderInfoPanels } from './renderInfoPanels';
 import { renderModal } from './renderModal';
 import { renderPhaseGuide } from './renderPhaseGuide';
 import { renderMainStageContent } from './renderStageContent';
 import { renderTopBar } from './renderTopBar';
+
+function renderHeaderChrome(): string {
+  return `
+    <header class="header-chrome">
+      <div class="logo-stamp" aria-hidden="true"></div>
+      <div class="title-block">
+        <h1>人生标签交易所：<span>牛马肉铺</span></h1>
+        <p>有人贴标签，有人被明码标价。今天你卖的，是肉，还是人生？</p>
+      </div>
+      <div class="hanging-sign" aria-hidden="true">
+        <span>不同出处</span>
+        <strong>只看标签</strong>
+      </div>
+      <div class="hook-chain" aria-hidden="true"></div>
+    </header>
+  `;
+}
 
 export function renderApp(app: AppRuntime): void {
   const root = document.querySelector<HTMLDivElement>('#app');
@@ -13,24 +29,11 @@ export function renderApp(app: AppRuntime): void {
   }
 
   root.innerHTML = `
-    <main class="app-shell" aria-label="AppShell">
-      <header class="app-header">
-        <div>
-          <p class="eyebrow">文字试玩 demo</p>
-          <h1>人生标签交易所：牛马肉铺</h1>
-          <p class="stage-label">8 天经营闭环：进货、接单、加工、出售、收店。</p>
-        </div>
-        <span class="status-pill">试玩中</span>
-      </header>
-
+    <main class="app-shell" aria-label="人生标签交易所：牛马肉铺">
+      ${renderHeaderChrome()}
       ${renderTopBar(app)}
       ${renderPhaseGuide(app)}
-
-      <div class="main-stage-grid">
-        ${renderMainStageContent(app)}
-      </div>
-
-      ${renderInfoPanels(app)}
+      ${renderMainStageContent(app)}
       ${renderModal()}
       ${renderDebug(app)}
     </main>

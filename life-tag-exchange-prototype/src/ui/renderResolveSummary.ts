@@ -35,26 +35,38 @@ export function renderResolveSummary(app: AppRuntime): string {
   const reputationDelta = todayDeals.reduce((total, deal) => total + deal.reputationDelta, 0);
   const unsoldInventory = app.state.inventory.filter((product) => !product.flags.sold && product.status === 'inventory').length;
   const maxAccidentLevel = getMaxLevel(todayAccidents.map((accident) => accident.level));
+  const bestDeal = todayDeals.reduce((best, deal) => (!best || deal.singleProfit > best.singleProfit ? deal : best), todayDeals[0] ?? null);
 
   return `
-    <section class="panel resolve-summary" aria-label="日结摘要">
-      <h2>日结摘要</h2>
-      ${app.state.dayState.soldProductCount === 0 ? '<p class="warning-text">今日没有出售商品，可能难以达成累计利润目标。</p>' : ''}
+    <section class="panel resolve-summary art-frame art-frame-ledger" aria-label="今日经营结算">
+      <div class="section-title"><h2>今日经营结算</h2><span>第 ${app.state.currentDay} 天</span></div>
+      ${app.state.dayState.soldProductCount === 0 ? '<p class="warning-text">今天没有出售商品，利润目标会更难追。</p>' : ''}
       <dl class="compact-stats">
-        ${renderStat('今日售出数量', app.state.dayState.soldProductCount)}
-        ${renderStat('今日成交总收入', income)}
-        ${renderStat('今日事故数量', todayAccidents.length)}
-        ${renderStat('今日最大事故', maxAccidentLevel)}
-        ${renderStat('今日现金变化', formatSigned(cashDelta))}
-        ${renderStat('今日累计利润增加', `+${totalProfitGain}`)}
-        ${renderStat('今日信誉变化', formatSigned(reputationDelta))}
-        ${renderStat('当前现金', app.state.cash)}
+        ${renderStat('今日成交单数', app.state.dayState.soldProductCount)}
+        ${renderStat('今日收入', income)}
+        ${renderStat('今日利润', `+${totalProfitGain}`)}
+        ${renderStat('事故情况', `${todayAccidents.length} 起 / 最高 ${maxAccidentLevel}`)}
+        ${renderStat('信誉变化', formatSigned(reputationDelta))}
+        ${renderStat('现金变化', formatSigned(cashDelta))}
+        ${renderStat('剩余库存', unsoldInventory)}
+        ${renderStat('期末现金', app.state.cash)}
         ${renderStat('累计利润 / 目标', `${app.state.totalProfit} / ${app.state.targetTotalProfit}`)}
         ${renderStat('当前信誉', app.state.reputation)}
-        ${renderStat('未售库存数量', unsoldInventory)}
       </dl>
+      <div class="ledger-table">
+        <h3>今日售出清单</h3>
+        <table>
+          <thead><tr><th>商品</th><th>买家</th><th>成交价</th><th>利润</th></tr></thead>
+          <tbody>
+            ${todayDeals.length > 0 ? todayDeals.map((deal) => `
+              <tr><td>${escapeHtml(deal.productDisplayName)}</td><td>${escapeHtml(deal.customerDisplayName)}</td><td>${deal.finalPrice}</td><td>${formatSigned(deal.singleProfit)}</td></tr>
+            `).join('') : '<tr><td colspan="4">暂无成交</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+      ${bestDeal ? `<p class="hint-text">最佳成交单：${escapeHtml(bestDeal.productDisplayName)} → ${escapeHtml(bestDeal.customerDisplayName)}，利润 ${formatSigned(bestDeal.singleProfit)}。</p>` : ''}
       <div class="phase-actions">
-        <button id="advance-phase" type="button">进入收店奖励</button>
+        <button id="advance-phase" type="button">收店</button>
       </div>
     </section>
   `;

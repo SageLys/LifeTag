@@ -1,10 +1,11 @@
-import { FailReason, ProductStatus, RunPhase, RunResult } from './constants';
+﻿import { FailReason, ProductStatus, RunPhase, RunResult } from './constants';
 import { generateCustomerOrders } from './customerGenerator';
 import { discardHand, drawCards } from './deckSystem';
 import { createNewGame } from './gameState';
 import { generateMarketEvents } from './marketGenerator';
 import { generateProductCandidates } from './productGenerator';
 import { generateRunReport } from './runReport';
+import { refreshDealPreviewIfPossible } from './rules_deal';
 import { ensureRewardState } from './rules_rewards';
 import { createRng } from './rng';
 import type { AppRuntime, RunState } from './types';
@@ -268,7 +269,12 @@ export function advancePhase(app: AppRuntime): void {
 
   const previousPhase = state.phase;
   syncPhase(state, nextPhase);
-  clearPhaseSelections(state);
+  if (!(previousPhase === RunPhase.DayProcess && nextPhase === RunPhase.DaySell)) {
+    clearPhaseSelections(state);
+  }
+  if (previousPhase === RunPhase.DayProcess && nextPhase === RunPhase.DaySell) {
+    refreshDealPreviewIfPossible(app);
+  }
   addRunLog(state, `阶段切换：${previousPhase} → ${nextPhase}。`);
   ensurePhaseContent(app);
 }
@@ -282,8 +288,20 @@ export function returnToProcess(app: AppRuntime): void {
   }
 
   syncPhase(state, RunPhase.DayProcess);
-  clearPhaseSelections(state);
   addRunLog(state, '从 DAY_SELL 返回 DAY_PROCESS。');
+}
+
+export function skipSaleAndResolveDay(app: AppRuntime): void {
+  const { state } = app;
+
+  if (state.phase !== RunPhase.DayProcess) {
+    addRunLog(state, `非法日结：${state.phase} 不能直接进入 DAY_RESOLVE。`);
+    return;
+  }
+
+  clearPhaseSelections(state);
+  syncPhase(state, RunPhase.DayResolve);
+  addRunLog(state, '放弃本轮出售，直接进入日结。');
 }
 
 export function checkRunEndConditions(app?: AppRuntime): boolean {

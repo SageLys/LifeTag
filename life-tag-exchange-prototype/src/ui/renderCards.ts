@@ -86,9 +86,38 @@ export function formatEffect(effect: Effect, app: AppRuntime): string {
 
 function getMoveHint(cardDef: CardDef, card: CardInstance): string {
   if (cardDef.exhaustAfterUse || cardDef.consumeAfterUse || (card.temporary && !cardDef.discardAfterUse)) {
-    return '使用后进入消耗堆';
+    return '使用后进消耗堆';
   }
-  return '使用后进入弃牌堆';
+  return '使用后进弃牌堆';
+}
+
+function formatCardType(type: string): string {
+  switch (type) {
+    case 'tag_tool':
+      return '标签工具';
+    case 'operation':
+      return '经营牌';
+    default:
+      return '未知类型';
+  }
+}
+
+function formatTargetType(targetType: string): string {
+  switch (targetType) {
+    case 'selected_product':
+    case 'product':
+      return '当前商品';
+    case 'selected_deal':
+      return '当前交易';
+    case 'selected_customer':
+      return '当前顾客';
+    case 'player':
+      return '玩家';
+    case 'none':
+      return '无需目标';
+    default:
+      return '当前商品';
+  }
 }
 
 export function getCardDisplayInfo(app: AppRuntime, card: CardInstance): {
@@ -120,48 +149,18 @@ export function getCardDisplayInfo(app: AppRuntime, card: CardInstance): {
   };
 }
 
-function formatCardType(type: string): string {
-  switch (type) {
-    case 'tag_tool':
-      return '包装牌';
-    case 'operation':
-      return '经营牌';
-    default:
-      return '未知类型';
-  }
-}
-
-function formatTargetType(targetType: string): string {
-  switch (targetType) {
-    case 'selected_product':
-    case 'product':
-      return '当前商品';
-    case 'selected_deal':
-      return '当前交易';
-    case 'selected_customer':
-      return '当前顾客';
-    case 'player':
-      return '玩家';
-    case 'none':
-      return '无需目标';
-    default:
-      return '当前商品';
-  }
-}
-
 export function renderCardInfo(app: AppRuntime, card: CardInstance, options: { interactive?: boolean } = {}): string {
   const info = getCardDisplayInfo(app, card);
   const canPlay = options.interactive ? canPlayCard(app, card.id) : null;
 
   return `
-    <article class="item-card hand-card">
+    <article class="item-card hand-card art-frame art-frame-hand-card">
+      <div class="card-art card-art-${Math.abs(card.id.length % 4)}" aria-hidden="true"></div>
       <h3>${escapeHtml(info.name)}</h3>
       <dl class="item-stats">
         <div><dt>类型</dt><dd>${escapeHtml(info.type)}</dd></div>
-        <div><dt>AP 成本</dt><dd>${info.actionPointCost}</dd></div>
-        <div><dt>现金成本</dt><dd>${info.cashCost}</dd></div>
+        <div><dt>费用</dt><dd class="number">${info.actionPointCost} AP${info.cashCost > 0 ? ` / ${info.cashCost} 现金` : ''}</dd></div>
         <div><dt>目标</dt><dd>${escapeHtml(info.targetType)}</dd></div>
-        <div><dt>升级</dt><dd>${escapeHtml(info.upgradeText)}</dd></div>
         <div><dt>去向</dt><dd>${escapeHtml(info.moveHint)}</dd></div>
       </dl>
       <p>${escapeHtml(info.effectText)}</p>
@@ -173,8 +172,8 @@ export function renderCardInfo(app: AppRuntime, card: CardInstance, options: { i
               data-action="play-card"
               data-card-instance-id="${escapeHtml(card.id)}"
               ${canPlay?.ok ? '' : 'disabled'}
-            >使用</button>
-            ${canPlay?.ok ? '' : `<p class="disabled-reason">${escapeHtml(canPlay?.reason ?? '不能使用该卡牌。')}</p>`}
+            >打出</button>
+            ${canPlay?.ok ? '' : `<p class="disabled-reason">${escapeHtml(canPlay?.reason ?? '不能使用这张牌。')}</p>`}
           `
           : ''
       }
