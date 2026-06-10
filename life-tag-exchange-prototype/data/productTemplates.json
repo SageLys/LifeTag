@@ -28,7 +28,7 @@
     "displayName": "外地加班肉",
     "baseCost": 25,
     "basePrice": 40,
-    "baseRisk": 10,
+    "baseRisk": 8,
     "hiddenTagCount": 3,
     "visibleTagIds": [
       "tag_outsider",
@@ -51,7 +51,7 @@
     "displayName": "35+经验肉",
     "baseCost": 20,
     "basePrice": 45,
-    "baseRisk": 10,
+    "baseRisk": 8,
     "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_age_35_plus",
@@ -74,7 +74,7 @@
     "displayName": "海归体面肉",
     "baseCost": 45,
     "basePrice": 65,
-    "baseRisk": 10,
+    "baseRisk": 8,
     "hiddenTagCount": 3,
     "visibleTagIds": [
       "tag_oversea_returnee",
@@ -122,7 +122,7 @@
     "displayName": "抽象发疯肉",
     "baseCost": 25,
     "basePrice": 45,
-    "baseRisk": 20,
+    "baseRisk": 10,
     "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_absurd",
@@ -146,7 +146,7 @@
     "displayName": "水货包装肉",
     "baseCost": 18,
     "basePrice": 35,
-    "baseRisk": 25,
+    "baseRisk": 20,
     "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_fake_quality",
@@ -170,7 +170,7 @@
     "displayName": "黑箱低价肉",
     "baseCost": 15,
     "basePrice": 30,
-    "baseRisk": 15,
+    "baseRisk": 18,
     "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_low_salary_acceptance"
@@ -201,7 +201,7 @@
     "displayName": "小镇做题家肉",
     "baseCost": 35,
     "basePrice": 55,
-    "baseRisk": 10,
+    "baseRisk": 8,
     "hiddenTagCount": 3,
     "visibleTagIds": [
       "tag_small_town_grinder",
@@ -224,7 +224,7 @@
     "displayName": "维权意识肉",
     "baseCost": 15,
     "basePrice": 35,
-    "baseRisk": 20,
+    "baseRisk": 12,
     "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_rights_awareness",
@@ -248,7 +248,7 @@
     "displayName": "空心体面肉",
     "baseCost": 30,
     "basePrice": 50,
-    "baseRisk": 20,
+    "baseRisk": 12,
     "hiddenTagCount": 3,
     "visibleTagIds": [
       "tag_empty_persona",
@@ -272,7 +272,7 @@
     "displayName": "争议流量肉",
     "baseCost": 30,
     "basePrice": 55,
-    "baseRisk": 25,
+    "baseRisk": 12,
     "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_controversial",
@@ -319,7 +319,7 @@
     "displayName": "无聊稳定肉",
     "baseCost": 20,
     "basePrice": 40,
-    "baseRisk": 0,
+    "baseRisk": 3,
     "hiddenTagCount": 4,
     "visibleTagIds": [
       "tag_boring",
@@ -342,7 +342,7 @@
     "displayName": "反骨玻璃心肉",
     "baseCost": 20,
     "basePrice": 40,
-    "baseRisk": 25,
+    "baseRisk": 12,
     "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_rebellious",
@@ -366,7 +366,7 @@
     "displayName": "加班抗压肉",
     "baseCost": 35,
     "basePrice": 50,
-    "baseRisk": 5,
+    "baseRisk": 6,
     "hiddenTagCount": 3,
     "visibleTagIds": [
       "tag_overtime",

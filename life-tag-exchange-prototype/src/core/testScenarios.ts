@@ -392,6 +392,170 @@ function scenarioRewardBonusTrigger(app: AppRuntime, scenario: TestScenario): Te
   return makeResult(app, scenario);
 }
 
+// ============================================================
+// v2 MCN Debug 测试场景（Task #8）
+// ============================================================
+
+/**
+ * 场景 A：MCN 高适配安全单
+ * 商品：抽象发疯肉（tag_absurd + tag_crazy，无隐藏标签，无暗风险）
+ * 顾客：短视频 MCN（riskTolerance=85）
+ * 定价：normal
+ * 预期：风险值较低（仅商品 baseRisk=10 + 定价 0），不触发爆雷
+ * 验收：riskBreakdown 中无 customer_taboo 项；flow 标签不超过 2 个，无 flow_overload
+ */
+function scenarioMcnSafeDeal(app: AppRuntime, scenario: TestScenario): TestScenarioResult {
+  resetRun(app, 13201);
+  syncPhase(app, RunPhase.DaySell);
+
+  const mcnTemplate = app.configs.productTemplates.find((t) => t.id === 'product_abstract_crazy_meat') ?? firstTemplate(app);
+  const product = createProduct(app, {
+    template: mcnTemplate,
+    displayName: 'Debug MCN 安全单（抽象发疯肉）',
+    baseRisk: 10,
+    cost: 25,
+    basePrice: 45,
+    visibleTagIds: ['tag_absurd', 'tag_crazy'],
+    hiddenTagIds: [],
+    darkRiskIds: [],
+  });
+
+  const mcnCustomer = firstCustomer(app, (c) => c.id === 'customer_short_video_mcn');
+  const order = createOrder(app, {
+    customer: mcnCustomer,
+    displayName: 'Debug 短视频 MCN（安全单）',
+    budget: 250,
+    riskTolerance: 85,
+    maxRisk: 85,
+    tabooTagIds: ['tag_boring', 'tag_stable', 'tag_decent'],
+    darkRiskSensitivity: ['platform'],
+  });
+
+  selectDeal(app, product, order, 'pricing_normal');
+  return makeResult(app, scenario, [product], [order]);
+}
+
+/**
+ * 场景 B：MCN 流量过载
+ * 商品：带 4 个 flow 标签（tag_crazy / tag_absurd / tag_controversial / tag_rebellious）
+ * 顾客：短视频 MCN
+ * 定价：normal
+ * 预期：触发 flowOverloadRisk（4 个 flow 标签 → riskAdd=15）
+ * 验收：riskBreakdown 中有 flow_overload 项，value = 15
+ */
+function scenarioMcnFlowOverload(app: AppRuntime, scenario: TestScenario): TestScenarioResult {
+  resetRun(app, 13202);
+  syncPhase(app, RunPhase.DaySell);
+
+  const baseTemplate = app.configs.productTemplates.find((t) => t.id === 'product_controversial_flow_meat') ?? firstTemplate(app);
+  const product = createProduct(app, {
+    template: baseTemplate,
+    displayName: 'Debug MCN 流量过载商品（4 flow 标签）',
+    baseRisk: 12,
+    cost: 30,
+    basePrice: 55,
+    // 4 个 flow 标签 → 触发 flowOverloadRisk riskAdd=15
+    visibleTagIds: ['tag_controversial', 'tag_rebellious'],
+    appliedTagIds: ['tag_crazy', 'tag_absurd'],
+    hiddenTagIds: [],
+    darkRiskIds: [],
+  });
+
+  const mcnCustomer = firstCustomer(app, (c) => c.id === 'customer_short_video_mcn');
+  const order = createOrder(app, {
+    customer: mcnCustomer,
+    displayName: 'Debug 短视频 MCN（流量过载）',
+    budget: 250,
+    riskTolerance: 85,
+    maxRisk: 85,
+    tabooTagIds: ['tag_boring', 'tag_stable', 'tag_decent'],
+    darkRiskSensitivity: ['platform'],
+  });
+
+  selectDeal(app, product, order, 'pricing_normal');
+  return makeResult(app, scenario, [product], [order]);
+}
+
+/**
+ * 场景 C：MCN + 平台暗风险 + 高价卖
+ * 商品：争议流量肉（tag_controversial + tag_rebellious），附加平台限流暗风险（dark_platform_shadowban）
+ * 顾客：短视频 MCN（darkRiskSensitivity = ['platform']）
+ * 定价：high（riskDelta=+15）
+ * 预期：暗风险全额计入（actualRiskDefault=25），高价 +15，总风险较高
+ * 验收：dark_risk breakdown 显示全额（非 30% 折扣）；pricing_mode breakdown = +15
+ */
+function scenarioMcnDarkRiskHighPrice(app: AppRuntime, scenario: TestScenario): TestScenarioResult {
+  resetRun(app, 13203);
+  syncPhase(app, RunPhase.DaySell);
+
+  const baseTemplate = app.configs.productTemplates.find((t) => t.id === 'product_controversial_flow_meat') ?? firstTemplate(app);
+  const product = createProduct(app, {
+    template: baseTemplate,
+    displayName: 'Debug MCN 平台暗风险 + 高价',
+    baseRisk: 12,
+    cost: 30,
+    basePrice: 55,
+    visibleTagIds: ['tag_controversial', 'tag_rebellious'],
+    hiddenTagIds: [],
+    darkRiskIds: ['dark_platform_shadowban'],
+    revealedDarkRiskIds: ['dark_platform_shadowban'],
+    darkRiskRevealLevels: { dark_platform_shadowban: DarkRiskRevealLevel.Revealed },
+  });
+
+  const mcnCustomer = firstCustomer(app, (c) => c.id === 'customer_short_video_mcn');
+  const order = createOrder(app, {
+    customer: mcnCustomer,
+    displayName: 'Debug 短视频 MCN（平台暗风险）',
+    budget: 350,
+    riskTolerance: 85,
+    maxRisk: 85,
+    tabooTagIds: ['tag_boring', 'tag_stable', 'tag_decent'],
+    darkRiskSensitivity: ['platform'],
+  });
+
+  selectDeal(app, product, order, 'pricing_high');
+  return makeResult(app, scenario, [product], [order]);
+}
+
+/**
+ * 场景 D：MCN 流派标签错卖给家长委员会
+ * 商品：抽象发疯肉（tag_absurd + tag_crazy）
+ * 顾客：家长委员会（tabooTagIds 含 tag_crazy，riskTolerance=30）
+ * 定价：normal
+ * 预期：tag_crazy 命中 tabooTagRiskBonus（家长委员会 tag_crazy = 30），风险超出容忍值
+ * 验收：riskBreakdown 中 customer_taboo 项 value=30；最终风险 > 30（顾客容忍上限）
+ */
+function scenarioWrongCustomerParent(app: AppRuntime, scenario: TestScenario): TestScenarioResult {
+  resetRun(app, 13204);
+  syncPhase(app, RunPhase.DaySell);
+
+  const mcnTemplate = app.configs.productTemplates.find((t) => t.id === 'product_abstract_crazy_meat') ?? firstTemplate(app);
+  const product = createProduct(app, {
+    template: mcnTemplate,
+    displayName: 'Debug 抽象发疯肉（错卖给家长）',
+    baseRisk: 10,
+    cost: 25,
+    basePrice: 45,
+    visibleTagIds: ['tag_absurd', 'tag_crazy'],
+    hiddenTagIds: [],
+    darkRiskIds: [],
+  });
+
+  const parentCustomer = firstCustomer(app, (c) => c.id === 'customer_parent_committee');
+  const order = createOrder(app, {
+    customer: parentCustomer,
+    displayName: 'Debug 家长委员会（错误接单）',
+    budget: 260,
+    riskTolerance: 30,
+    maxRisk: 30,
+    tabooTagIds: ['tag_fake_quality', 'tag_rebellious', 'tag_controversial', 'tag_crazy'],
+    darkRiskSensitivity: ['persona', 'career_background'],
+  });
+
+  selectDeal(app, product, order, 'pricing_normal');
+  return makeResult(app, scenario, [product], [order]);
+}
+
 const SCENARIO_DATA: Array<Omit<TestScenario, 'setup'> & { setupName: string }> = [
   {
     id: 'SCENARIO_A_BOOT_SMOKE',
@@ -546,6 +710,63 @@ const SCENARIO_DATA: Array<Omit<TestScenario, 'setup'> & { setupName: string }> 
     expected: ['bonusUnlocked = true', '爆单奖励区域显示 3 个选项。'],
     manualSteps: ['查看爆单奖励区域，选择一个或跳过。'],
   },
+  // ============================================================
+  // v2 MCN Debug 场景（Task #8）
+  // ============================================================
+  {
+    id: 'MCN_A_SAFE_DEAL',
+    displayName: '[MCN-A] 高适配安全单',
+    description: '商品带 2 个 flow 标签卖给 MCN，无雷区命中，无暗风险，normal 定价。预期风险低，无 flow_overload，无 customer_taboo。',
+    targetPhase: RunPhase.DaySell,
+    setupName: 'mcnSafeDeal',
+    expected: [
+      'riskBreakdown 无 customer_taboo 项',
+      'riskBreakdown 无 flow_overload 项（flow 标签 ≤ 2）',
+      '最终风险 ≈ 商品 baseRisk(10) + 定价(0) = 10',
+      '风险远低于 MCN riskTolerance(85)',
+    ],
+    manualSteps: ['查看 DealPreview 风险 breakdown，确认只有商品来源风险和定价两项。'],
+  },
+  {
+    id: 'MCN_B_FLOW_OVERLOAD',
+    displayName: '[MCN-B] 流量过载（4 flow 标签）',
+    description: '商品带 4 个 flow 标签（tag_crazy/tag_absurd/tag_controversial/tag_rebellious）卖给 MCN。预期触发 flowOverloadRisk riskAdd=15。',
+    targetPhase: RunPhase.DaySell,
+    setupName: 'mcnFlowOverload',
+    expected: [
+      'riskBreakdown 含 flow_overload 项，value = 15',
+      '标签说明为"流量标签过载（4 个流量标签）：+15"',
+      '最终风险 ≈ 12 + 0 + 15 = 27',
+    ],
+    manualSteps: ['查看 DealPreview 风险 breakdown，确认 flow_overload 项存在且数值为 15。'],
+  },
+  {
+    id: 'MCN_C_DARK_RISK_HIGH_PRICE',
+    displayName: '[MCN-C] 平台暗风险 + 高价卖',
+    description: '商品含已揭示平台限流暗风险，卖给 darkRiskSensitivity=["platform"] 的 MCN，高价定价 +15。预期暗风险全额 25 计入（非 30% 折扣）。',
+    targetPhase: RunPhase.DaySell,
+    setupName: 'mcnDarkRiskHighPrice',
+    expected: [
+      'riskBreakdown 含 dark_risk 项，value = 25（全额，无"非敏感顾客"标注）',
+      'riskBreakdown 含 pricing_mode 项，value = 15（高价卖）',
+      '最终风险 ≈ 12 + 25 + 15 = 52',
+      '仍低于 MCN riskTolerance(85)，不触发爆雷',
+    ],
+    manualSteps: ['查看 DealPreview 风险 breakdown，确认暗风险全额计入，高价加 15。'],
+  },
+  {
+    id: 'MCN_D_WRONG_CUSTOMER_PARENT',
+    displayName: '[MCN-D] MCN 标签错卖家长委员会',
+    description: '抽象发疯肉（tag_absurd + tag_crazy）错卖给家长委员会（taboo: tag_crazy +30）。预期风险严重超出家长容忍值（30）。',
+    targetPhase: RunPhase.DaySell,
+    setupName: 'wrongCustomerParent',
+    expected: [
+      'riskBreakdown 含 customer_taboo 项（tag_crazy），value = 30',
+      '最终风险 ≈ 10 + 30 + 0 = 40，超出家长委员会 riskTolerance(30)',
+      '确认出售后应触发事故',
+    ],
+    manualSteps: ['查看 DealPreview 风险 breakdown，确认雷区 [会发疯] +30 项。点击确认出售后查看事故。'],
+  },
 ];
 
 const SETUP_BY_NAME: Record<string, (app: AppRuntime, scenario: TestScenario) => TestScenarioResult> = {
@@ -566,6 +787,11 @@ const SETUP_BY_NAME: Record<string, (app: AppRuntime, scenario: TestScenario) =>
   passiveInsuranceTrigger: scenarioPassiveInsuranceTrigger,
   supplySourceGeneration: scenarioSupplySourceGeneration,
   rewardBonusTrigger: scenarioRewardBonusTrigger,
+  // v2 MCN 场景
+  mcnSafeDeal: scenarioMcnSafeDeal,
+  mcnFlowOverload: scenarioMcnFlowOverload,
+  mcnDarkRiskHighPrice: scenarioMcnDarkRiskHighPrice,
+  wrongCustomerParent: scenarioWrongCustomerParent,
 };
 
 export function getTestScenarios(): TestScenario[] {

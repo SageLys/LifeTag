@@ -5,6 +5,9 @@
     "category": "career_background",
     "baseRisk": 15,
     "revealRisk": 35,
+    "riskMin": 10,
+    "riskMax": 35,
+    "actualRiskDefault": 25,
     "accidentWeight": 25,
     "relatedTagIds": [
       "tag_elite_school",
@@ -21,6 +24,9 @@
     "category": "career_background",
     "baseRisk": 10,
     "revealRisk": 30,
+    "riskMin": 5,
+    "riskMax": 30,
+    "actualRiskDefault": 20,
     "accidentWeight": 20,
     "relatedTagIds": [
       "tag_young",
@@ -38,6 +44,9 @@
     "category": "career_background",
     "baseRisk": 15,
     "revealRisk": 40,
+    "riskMin": 10,
+    "riskMax": 40,
+    "actualRiskDefault": 30,
     "accidentWeight": 30,
     "relatedTagIds": [
       "tag_low_salary_acceptance",
@@ -55,6 +64,9 @@
     "category": "persona",
     "baseRisk": 15,
     "revealRisk": 40,
+    "riskMin": 10,
+    "riskMax": 40,
+    "actualRiskDefault": 30,
     "accidentWeight": 30,
     "relatedTagIds": [
       "tag_decent",
@@ -72,6 +84,9 @@
     "category": "persona",
     "baseRisk": 10,
     "revealRisk": 35,
+    "riskMin": 5,
+    "riskMax": 35,
+    "actualRiskDefault": 25,
     "accidentWeight": 25,
     "relatedTagIds": [
       "tag_oversea_returnee",
@@ -88,6 +103,9 @@
     "category": "persona",
     "baseRisk": 10,
     "revealRisk": 30,
+    "riskMin": 5,
+    "riskMax": 30,
+    "actualRiskDefault": 20,
     "accidentWeight": 20,
     "relatedTagIds": [
       "tag_emotionally_stable",
@@ -105,6 +123,9 @@
     "category": "platform",
     "baseRisk": 10,
     "revealRisk": 35,
+    "riskMin": 10,
+    "riskMax": 35,
+    "actualRiskDefault": 25,
     "accidentWeight": 25,
     "relatedTagIds": [
       "tag_absurd",
@@ -121,6 +142,9 @@
     "category": "platform",
     "baseRisk": 15,
     "revealRisk": 45,
+    "riskMin": 15,
+    "riskMax": 45,
+    "actualRiskDefault": 35,
     "accidentWeight": 35,
     "relatedTagIds": [
       "tag_empty_persona",
@@ -137,6 +161,9 @@
     "category": "platform",
     "baseRisk": 10,
     "revealRisk": 40,
+    "riskMin": 10,
+    "riskMax": 40,
+    "actualRiskDefault": 30,
     "accidentWeight": 30,
     "relatedTagIds": [
       "tag_rebellious",

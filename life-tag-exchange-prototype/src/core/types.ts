@@ -134,6 +134,12 @@ export interface CustomerDef {
   preferredPricingModeIds: string[];
   budget?: number;
   customerType?: string;
+  /** v2: 偏好标签各自的价格加成（覆盖通用 priceBonus） */
+  preferredTagPriceBonus?: Record<string, number>;
+  /** v2: 雷区标签各自的风险惩罚（覆盖通用 tabooRiskBonus） */
+  tabooTagRiskBonus?: Record<string, number>;
+  /** v2: 暗风险敏感类型——命中时全额计入，未命中时计入 30% */
+  darkRiskSensitivity?: string[];
 }
 
 export interface MarketEventDef {

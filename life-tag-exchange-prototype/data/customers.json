@@ -10,12 +10,25 @@
       "tag_resilient",
       "tag_small_town_grinder"
     ],
+    "preferredTagPriceBonus": {
+      "tag_young": 20,
+      "tag_elite_school": 25,
+      "tag_overtime": 20,
+      "tag_resilient": 15,
+      "tag_small_town_grinder": 20
+    },
     "tabooTagIds": [
       "tag_crazy",
       "tag_rights_awareness",
       "tag_fake_quality",
       "tag_job_hopping_risk"
     ],
+    "tabooTagRiskBonus": {
+      "tag_crazy": 30,
+      "tag_rights_awareness": 25,
+      "tag_fake_quality": 30,
+      "tag_job_hopping_risk": 20
+    },
     "riskTolerance": 40,
     "priceSensitivity": 50,
     "preferredPricingModeIds": [
@@ -23,7 +36,8 @@
       "pricing_high"
     ],
     "budget": 250,
-    "customerType": "career"
+    "customerType": "career",
+    "darkRiskSensitivity": ["career_background"]
   },
   {
     "id": "customer_startup_boss",
@@ -35,11 +49,22 @@
       "tag_resilient",
       "tag_experienced"
     ],
+    "preferredTagPriceBonus": {
+      "tag_overtime": 20,
+      "tag_low_salary_acceptance": 25,
+      "tag_resilient": 15,
+      "tag_experienced": 20
+    },
     "tabooTagIds": [
       "tag_rights_awareness",
       "tag_fragile_heart",
       "tag_job_hopping_risk"
     ],
+    "tabooTagRiskBonus": {
+      "tag_rights_awareness": 30,
+      "tag_fragile_heart": 20,
+      "tag_job_hopping_risk": 25
+    },
     "riskTolerance": 55,
     "priceSensitivity": 70,
     "preferredPricingModeIds": [
@@ -47,7 +72,8 @@
       "pricing_normal"
     ],
     "budget": 220,
-    "customerType": "career"
+    "customerType": "career",
+    "darkRiskSensitivity": ["career_background"]
   },
   {
     "id": "customer_matchmaker",
@@ -60,12 +86,25 @@
       "tag_oversea_returnee",
       "tag_social_savvy"
     ],
+    "preferredTagPriceBonus": {
+      "tag_stable": 20,
+      "tag_decent": 25,
+      "tag_emotionally_stable": 25,
+      "tag_oversea_returnee": 30,
+      "tag_social_savvy": 20
+    },
     "tabooTagIds": [
       "tag_crazy",
       "tag_absurd",
       "tag_empty_persona",
       "tag_fragile_heart"
     ],
+    "tabooTagRiskBonus": {
+      "tag_crazy": 30,
+      "tag_absurd": 25,
+      "tag_empty_persona": 25,
+      "tag_fragile_heart": 20
+    },
     "riskTolerance": 35,
     "priceSensitivity": 45,
     "preferredPricingModeIds": [
@@ -73,7 +112,8 @@
       "pricing_high"
     ],
     "budget": 230,
-    "customerType": "family"
+    "customerType": "family",
+    "darkRiskSensitivity": ["persona"]
   },
   {
     "id": "customer_parent_committee",
@@ -86,44 +126,73 @@
       "tag_social_savvy",
       "tag_small_town_grinder"
     ],
+    "preferredTagPriceBonus": {
+      "tag_stable": 20,
+      "tag_decent": 25,
+      "tag_emotionally_stable": 20,
+      "tag_social_savvy": 20,
+      "tag_small_town_grinder": 15
+    },
     "tabooTagIds": [
       "tag_fake_quality",
       "tag_rebellious",
       "tag_controversial",
       "tag_crazy"
     ],
+    "tabooTagRiskBonus": {
+      "tag_fake_quality": 30,
+      "tag_rebellious": 25,
+      "tag_controversial": 25,
+      "tag_crazy": 30
+    },
     "riskTolerance": 30,
     "priceSensitivity": 40,
     "preferredPricingModeIds": [
       "pricing_normal"
     ],
     "budget": 260,
-    "customerType": "family"
+    "customerType": "family",
+    "darkRiskSensitivity": ["persona", "career_background"]
   },
   {
     "id": "customer_short_video_mcn",
     "displayName": "短视频 MCN",
-    "description": "追求流量和争议，但害怕平台事故。",
+    "description": "追求流量和争议，核心标签价值高，主要风险来自平台事故和流量过载。",
     "preferredTagIds": [
-      "tag_absurd",
       "tag_crazy",
+      "tag_absurd",
       "tag_controversial",
       "tag_rebellious",
+      "tag_fragile_heart",
       "tag_empty_persona"
     ],
+    "preferredTagPriceBonus": {
+      "tag_crazy": 35,
+      "tag_absurd": 30,
+      "tag_controversial": 35,
+      "tag_rebellious": 25,
+      "tag_fragile_heart": 20,
+      "tag_empty_persona": 20
+    },
     "tabooTagIds": [
       "tag_boring",
       "tag_stable",
-      "tag_emotionally_stable"
+      "tag_decent"
     ],
-    "riskTolerance": 65,
+    "tabooTagRiskBonus": {
+      "tag_boring": 35,
+      "tag_stable": 10,
+      "tag_decent": 10
+    },
+    "riskTolerance": 85,
     "priceSensitivity": 55,
     "preferredPricingModeIds": [
       "pricing_normal",
       "pricing_blind_box"
     ],
     "budget": 250,
-    "customerType": "mcn"
+    "customerType": "mcn",
+    "darkRiskSensitivity": ["platform"]
   },
   {
     "id": "customer_matchmaking_agency",
@@ -136,12 +205,25 @@
       "tag_oversea_returnee",
       "tag_social_savvy"
     ],
+    "preferredTagPriceBonus": {
+      "tag_stable": 20,
+      "tag_decent": 25,
+      "tag_emotionally_stable": 25,
+      "tag_oversea_returnee": 30,
+      "tag_social_savvy": 20
+    },
     "tabooTagIds": [
       "tag_crazy",
       "tag_absurd",
       "tag_empty_persona",
       "tag_fragile_heart"
     ],
+    "tabooTagRiskBonus": {
+      "tag_crazy": 30,
+      "tag_absurd": 25,
+      "tag_empty_persona": 25,
+      "tag_fragile_heart": 20
+    },
     "riskTolerance": 35,
     "priceSensitivity": 45,
     "preferredPricingModeIds": [
@@ -150,6 +232,7 @@
     ],
     "budget": 230,
     "customerType": "family",
-    "aliasOf": "customer_matchmaker"
+    "aliasOf": "customer_matchmaker",
+    "darkRiskSensitivity": ["persona"]
   }
 ]

@@ -125,20 +125,26 @@
         "params": {
           "stat": "risk",
           "op": "add",
-          "value": 20,
-          "duration": "until_product_sold"
+          "value": 10,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "customer_type_is",
+            "params": {
+              "customerType": "family"
+            }
+          }
         },
-        "displayText": "爆雷 +20"
+        "displayText": "卖给相亲/家庭类顾客时爆雷 +10（因顾客雷区）"
       }
     ],
-    "effectText": "添加 [会发疯]；卖给 MCN 时售价 +40；爆雷 +20",
+    "effectText": "添加 [会发疯]；卖给 MCN 时售价 +40；卖给相亲/家庭类顾客时爆雷 +10",
     "type": "tag_tool",
     "archetype": "mcn",
     "actionPointCost": 1,
     "cashCost": 0,
     "targetType": "product",
     "upgradedCardId": "card_crazy_persona_plus",
-    "description": "把商品包装成会发疯的人格商品。卖给 MCN 时高收益高风险。"
+    "description": "把商品包装成会发疯的人格商品。卖给 MCN 时高收益；卖给家庭类顾客时有雷区风险。"
   },
   {
     "id": "card_elite_endorsement",
@@ -810,10 +816,16 @@
         "params": {
           "stat": "risk",
           "op": "add",
-          "value": 20,
-          "duration": "until_product_sold"
+          "value": 10,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "customer_type_is",
+            "params": {
+              "customerType": "family"
+            }
+          }
         },
-        "displayText": "爆雷 +20"
+        "displayText": "卖给相亲/家庭类顾客时爆雷 +10（因顾客雷区）"
       },
       {
         "type": "modify_accident_result",
@@ -829,7 +841,7 @@
     ],
     "cardType": "tag_tool",
     "cost": 1,
-    "effectText": "添加 [会发疯]；卖给 MCN 时售价 +55；爆雷 +20；若发生小事故，信誉损失 -5"
+    "effectText": "添加 [会发疯]；卖给 MCN 时售价 +55；卖给相亲/家庭类顾客时爆雷 +10；若发生小事故，信誉损失 -5"
   },
   {
     "id": "card_background_check_plus",
@@ -1184,7 +1196,7 @@
     "actionPointCost": 1,
     "cashCost": 0,
     "targetType": "product",
-    "description": "给商品添加 [争议感]，卖给 MCN 时收益高但风险高。",
+    "description": "给商品添加 [争议感]，卖给 MCN 时收益高；卖给相亲/家庭类顾客时有雷区风险。",
     "effects": [
       {
         "type": "add_applied_tag_to_product",
@@ -1214,15 +1226,21 @@
         "params": {
           "stat": "risk",
           "op": "add",
-          "value": 20,
-          "duration": "until_product_sold"
+          "value": 10,
+          "duration": "until_product_sold",
+          "condition": {
+            "type": "customer_type_is",
+            "params": {
+              "customerType": "family"
+            }
+          }
         },
-        "displayText": "爆雷 +20"
+        "displayText": "卖给相亲/家庭类顾客时爆雷 +10（因顾客雷区）"
       }
     ],
     "cardType": "tag_tool",
     "cost": 1,
-    "effectText": "添加 [争议感]；卖给 MCN 时售价 +40；爆雷 +20"
+    "effectText": "添加 [争议感]；卖给 MCN 时售价 +40；卖给相亲/家庭类顾客时爆雷 +10"
   },
   {
     "id": "card_platform_hedge_plus",

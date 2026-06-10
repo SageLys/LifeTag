@@ -20,7 +20,7 @@
     "displayName": "高价卖",
     "mode": "high",
     "priceMultiplier": 1.3,
-    "riskDelta": 10,
+    "riskDelta": 15,
     "successDelta": -10
   },
   {
@@ -28,7 +28,7 @@
     "displayName": "盲盒价",
     "mode": "blind_box",
     "priceMultiplier": 1.45,
-    "riskDelta": 15,
+    "riskDelta": 20,
     "successDelta": 5
   }
 ]

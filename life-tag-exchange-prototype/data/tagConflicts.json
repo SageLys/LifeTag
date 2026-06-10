@@ -117,7 +117,7 @@
     "tagB": "tag_absurd",
     "relationType": "support",
     "priceDelta": 20,
-    "riskDelta": 10
+    "riskDelta": 0
   },
   {
     "id": "support_controversial_rebellious",
@@ -125,6 +125,6 @@
     "tagB": "tag_rebellious",
     "relationType": "support",
     "priceDelta": 20,
-    "riskDelta": 15
+    "riskDelta": 5
   }
 ]

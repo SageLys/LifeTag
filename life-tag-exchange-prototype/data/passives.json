@@ -285,5 +285,65 @@
         "displayText": "家长委员会 + 人设暗风险：爆雷 -15"
       }
     ]
+  },
+  {
+    "id": "passive_platform_pr_contact",
+    "displayName": "平台公关熟人",
+    "archetype": "mcn",
+    "description": "平台类暗风险命中时，爆雷 -10。",
+    "effectText": "平台类暗风险（限流/反噬/旧料）命中时，爆雷 -10。",
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": -10,
+          "condition": {
+            "type": "dark_risk_category_is",
+            "params": {
+              "category": "platform"
+            }
+          }
+        },
+        "displayText": "平台暗风险：爆雷 -10"
+      }
+    ]
+  },
+  {
+    "id": "passive_collapse_contingency",
+    "displayName": "塌房预案",
+    "archetype": "mcn",
+    "description": "每次卖给短视频 MCN 时，若最终风险 >= 60，爆雷 -15。每回合最多触发 1 次。",
+    "effectText": "卖给 MCN 且最终爆雷 >= 60 时，爆雷 -15（每回合最多 1 次）。",
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": -15,
+          "scope": "once_per_day",
+          "condition": {
+            "type": "all",
+            "conditions": [
+              {
+                "type": "customer_type_is",
+                "params": {
+                  "customerType": "mcn"
+                }
+              },
+              {
+                "type": "known_risk_gte",
+                "params": {
+                  "value": 60
+                }
+              }
+            ]
+          }
+        },
+        "displayText": "MCN 且爆雷 >= 60：爆雷 -15（每日限 1 次）"
+      }
+    ]
   }
 ]

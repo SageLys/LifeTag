@@ -5,35 +5,43 @@
     "category": "age / career",
     "baseValue": 15,
     "riskValue": 0,
+    "baseRisk": 0,
     "isNegative": false,
-    "isWashable": false
+    "isWashable": false,
+    "riskTraits": ["career_asset"]
   },
   {
     "id": "tag_elite_school",
     "displayName": "名校",
     "category": "education / status",
     "baseValue": 20,
-    "riskValue": 5,
+    "riskValue": 0,
+    "baseRisk": 0,
     "isNegative": false,
-    "isWashable": false
+    "isWashable": false,
+    "riskTraits": ["credential"]
   },
   {
     "id": "tag_overtime",
     "displayName": "能加班",
     "category": "career / labor",
     "baseValue": 20,
-    "riskValue": 5,
+    "riskValue": 0,
+    "baseRisk": 0,
     "isNegative": false,
-    "isWashable": true
+    "isWashable": true,
+    "riskTraits": ["labor_intensity"]
   },
   {
     "id": "tag_low_salary_acceptance",
     "displayName": "低薪接受",
     "category": "career / labor",
     "baseValue": 15,
-    "riskValue": 10,
+    "riskValue": 0,
+    "baseRisk": 0,
     "isNegative": false,
-    "isWashable": true
+    "isWashable": true,
+    "riskTraits": ["labor_compliance"]
   },
   {
     "id": "tag_stable",
@@ -41,116 +49,142 @@
     "category": "family / personality",
     "baseValue": 15,
     "riskValue": 0,
+    "baseRisk": 0,
     "isNegative": false,
-    "isWashable": false
+    "isWashable": false,
+    "riskTraits": ["stability"]
   },
   {
     "id": "tag_decent",
     "displayName": "体面",
     "category": "family / status",
     "baseValue": 20,
-    "riskValue": 5,
+    "riskValue": 0,
+    "baseRisk": 0,
     "isNegative": false,
-    "isWashable": true
+    "isWashable": true,
+    "riskTraits": ["persona"]
   },
   {
     "id": "tag_crazy",
     "displayName": "会发疯",
-    "category": "flow / negative",
+    "category": "flow / volatile",
     "baseValue": 25,
-    "riskValue": 25,
-    "isNegative": true,
-    "isWashable": true
+    "riskValue": 0,
+    "baseRisk": 0,
+    "isNegative": false,
+    "isWashable": true,
+    "riskTraits": ["flow", "volatile"]
   },
   {
     "id": "tag_absurd",
     "displayName": "抽象",
-    "category": "flow / negative",
+    "category": "flow / volatile",
     "baseValue": 20,
-    "riskValue": 20,
-    "isNegative": true,
-    "isWashable": true
+    "riskValue": 0,
+    "baseRisk": 0,
+    "isNegative": false,
+    "isWashable": true,
+    "riskTraits": ["flow", "volatile"]
   },
   {
     "id": "tag_fake_quality",
     "displayName": "水货",
     "category": "fraud / negative",
     "baseValue": -10,
-    "riskValue": 30,
+    "riskValue": 0,
+    "baseRisk": 0,
     "isNegative": true,
-    "isWashable": true
+    "isWashable": true,
+    "riskTraits": ["fraud"]
   },
   {
     "id": "tag_rights_awareness",
     "displayName": "维权意识强",
     "category": "labor / negative",
     "baseValue": -5,
-    "riskValue": 25,
+    "riskValue": 0,
+    "baseRisk": 0,
     "isNegative": true,
-    "isWashable": true
+    "isWashable": true,
+    "riskTraits": ["labor_conflict"]
   },
   {
     "id": "tag_empty_persona",
     "displayName": "空心人设",
-    "category": "persona / negative",
+    "category": "persona / flow",
     "baseValue": 5,
-    "riskValue": 25,
-    "isNegative": true,
-    "isWashable": true
+    "riskValue": 0,
+    "baseRisk": 0,
+    "isNegative": false,
+    "isWashable": true,
+    "riskTraits": ["persona", "fragile_persona", "flow_material"]
   },
   {
     "id": "tag_age_35_plus",
     "displayName": "35+",
     "category": "age / career",
     "baseValue": 5,
-    "riskValue": 15,
-    "isNegative": true,
-    "isWashable": false
+    "riskValue": 0,
+    "baseRisk": 0,
+    "isNegative": false,
+    "isWashable": false,
+    "riskTraits": ["career_age"]
   },
   {
     "id": "tag_outsider",
     "displayName": "外地人",
     "category": "background / career",
     "baseValue": 10,
-    "riskValue": 5,
+    "riskValue": 0,
+    "baseRisk": 0,
     "isNegative": false,
-    "isWashable": false
+    "isWashable": false,
+    "riskTraits": ["background"]
   },
   {
     "id": "tag_resilient",
     "displayName": "抗压",
     "category": "career / personality",
     "baseValue": 20,
-    "riskValue": 5,
+    "riskValue": 0,
+    "baseRisk": 0,
     "isNegative": false,
-    "isWashable": true
+    "isWashable": true,
+    "riskTraits": ["support"]
   },
   {
     "id": "tag_small_town_grinder",
     "displayName": "小镇做题家",
     "category": "education / career",
     "baseValue": 20,
-    "riskValue": 10,
+    "riskValue": 0,
+    "baseRisk": 0,
     "isNegative": false,
-    "isWashable": false
+    "isWashable": false,
+    "riskTraits": ["credential", "support"]
   },
   {
     "id": "tag_experienced",
     "displayName": "经验丰富",
     "category": "career / skill",
     "baseValue": 20,
-    "riskValue": 10,
+    "riskValue": 0,
+    "baseRisk": 0,
     "isNegative": false,
-    "isWashable": false
+    "isWashable": false,
+    "riskTraits": ["career_skill"]
   },
   {
     "id": "tag_oversea_returnee",
     "displayName": "海归",
     "category": "status / family",
     "baseValue": 25,
-    "riskValue": 10,
+    "riskValue": 0,
+    "baseRisk": 0,
     "isNegative": false,
-    "isWashable": false
+    "isWashable": false,
+    "riskTraits": ["status", "credential"]
   },
   {
     "id": "tag_emotionally_stable",
@@ -158,61 +192,75 @@
     "category": "family / personality",
     "baseValue": 20,
     "riskValue": 0,
+    "baseRisk": 0,
     "isNegative": false,
-    "isWashable": true
+    "isWashable": true,
+    "riskTraits": ["stability"]
   },
   {
     "id": "tag_social_savvy",
     "displayName": "会来事",
     "category": "family / social",
     "baseValue": 15,
-    "riskValue": 5,
+    "riskValue": 0,
+    "baseRisk": 0,
     "isNegative": false,
-    "isWashable": true
+    "isWashable": true,
+    "riskTraits": ["social"]
   },
   {
     "id": "tag_controversial",
     "displayName": "争议感",
-    "category": "flow / negative",
+    "category": "flow / volatile",
     "baseValue": 25,
-    "riskValue": 25,
-    "isNegative": true,
-    "isWashable": true
+    "riskValue": 0,
+    "baseRisk": 0,
+    "isNegative": false,
+    "isWashable": true,
+    "riskTraits": ["flow", "volatile"]
   },
   {
     "id": "tag_rebellious",
     "displayName": "反骨",
-    "category": "flow / labor / negative",
+    "category": "flow / labor",
     "baseValue": 15,
-    "riskValue": 25,
-    "isNegative": true,
-    "isWashable": true
+    "riskValue": 0,
+    "baseRisk": 0,
+    "isNegative": false,
+    "isWashable": true,
+    "riskTraits": ["flow", "labor_conflict", "volatile"]
   },
   {
     "id": "tag_fragile_heart",
     "displayName": "玻璃心",
-    "category": "persona / negative",
+    "category": "persona / flow",
     "baseValue": 5,
-    "riskValue": 20,
-    "isNegative": true,
-    "isWashable": true
+    "riskValue": 0,
+    "baseRisk": 0,
+    "isNegative": false,
+    "isWashable": true,
+    "riskTraits": ["persona", "volatile"]
   },
   {
     "id": "tag_job_hopping_risk",
     "displayName": "跳槽风险高",
     "category": "career / negative",
     "baseValue": -5,
-    "riskValue": 25,
+    "riskValue": 0,
+    "baseRisk": 0,
     "isNegative": true,
-    "isWashable": true
+    "isWashable": true,
+    "riskTraits": ["career_instability"]
   },
   {
     "id": "tag_boring",
     "displayName": "无聊",
-    "category": "flow / negative",
+    "category": "flow / low_flow",
     "baseValue": -5,
-    "riskValue": 5,
+    "riskValue": 0,
+    "baseRisk": 0,
     "isNegative": true,
-    "isWashable": true
+    "isWashable": true,
+    "riskTraits": ["low_flow"]
   }
 ]

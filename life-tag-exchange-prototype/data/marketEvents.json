@@ -43,7 +43,7 @@
   {
     "id": "market_crazy_literature_hot",
     "displayName": "发疯文学走红",
-    "newsText": "流量端追捧会发疯和抽象标签。",
+    "newsText": "流量端追捧发疯和抽象标签，MCN 加价，但流量过载风险更高。",
     "durationDays": 1,
     "conditions": [],
     "modifiers": [
@@ -58,16 +58,6 @@
         "displayText": "[会发疯] 售价 +20"
       },
       {
-        "id": "mod_crazy_hot_crazy_risk",
-        "stat": "risk",
-        "op": "add",
-        "value": 10,
-        "targetId": "tag_crazy",
-        "sourceType": "market_event",
-        "sourceId": "market_crazy_literature_hot",
-        "displayText": "[会发疯] 爆雷 +10"
-      },
-      {
         "id": "mod_crazy_hot_absurd_price",
         "stat": "price",
         "op": "add",
@@ -76,16 +66,6 @@
         "sourceType": "market_event",
         "sourceId": "market_crazy_literature_hot",
         "displayText": "[抽象] 售价 +20"
-      },
-      {
-        "id": "mod_crazy_hot_absurd_risk",
-        "stat": "risk",
-        "op": "add",
-        "value": 10,
-        "targetId": "tag_absurd",
-        "sourceType": "market_event",
-        "sourceId": "market_crazy_literature_hot",
-        "displayText": "[抽象] 爆雷 +10"
       },
       {
         "id": "mod_crazy_hot_boring_price",
@@ -99,7 +79,7 @@
       }
     ],
     "effects": [],
-    "effectText": "[会发疯]、[抽象] 售价 +20、爆雷 +10；[无聊] 售价 -10。"
+    "effectText": "[会发疯]、[抽象] 售价 +20；[无聊] 售价 -10。（流量过载风险加重由 flowOverloadRisk 规则处理）"
   },
   {
     "id": "market_spring_matchmaking_season",
@@ -142,15 +122,19 @@
         "id": "mod_matchmaking_crazy_risk",
         "stat": "risk",
         "op": "add",
-        "value": 10,
+        "value": 15,
         "targetId": "tag_crazy",
         "sourceType": "market_event",
         "sourceId": "market_spring_matchmaking_season",
-        "displayText": "[会发疯] 爆雷 +10"
+        "condition": {
+          "type": "customer_type_is",
+          "params": { "customerType": "family" }
+        },
+        "displayText": "[会发疯] 卖给相亲/家庭顾客时爆雷 +15"
       }
     ],
     "effects": [],
-    "effectText": "[稳定]、[体面] 售价 +15；[情绪稳定] 售价 +20；[会发疯] 爆雷 +10。"
+    "effectText": "[稳定]、[体面] 售价 +15；[情绪稳定] 售价 +20；[会发疯] 卖给家庭类顾客时爆雷 +15。"
   },
   {
     "id": "market_elite_fake_scandal",
@@ -237,43 +221,40 @@
   {
     "id": "market_platform_persona_crackdown",
     "displayName": "平台整治虚假人设",
-    "newsText": "空心人设与争议包装风险提高。",
+    "newsText": "平台严打内容水分，MCN 流派风险明显提高。",
     "durationDays": 1,
     "conditions": [],
     "modifiers": [
       {
-        "id": "mod_platform_empty_persona_risk",
+        "id": "mod_platform_persona_crackdown_mcn_risk",
         "stat": "risk",
         "op": "add",
-        "value": 25,
+        "value": 15,
+        "sourceType": "market_event",
+        "sourceId": "market_platform_persona_crackdown",
+        "condition": {
+          "type": "customer_type_is",
+          "params": { "customerType": "mcn" }
+        },
+        "displayText": "卖给短视频 MCN 时爆雷 +15（平台严打）"
+      },
+      {
+        "id": "mod_platform_empty_persona_risk_non_mcn",
+        "stat": "risk",
+        "op": "add",
+        "value": 15,
         "targetId": "tag_empty_persona",
         "sourceType": "market_event",
         "sourceId": "market_platform_persona_crackdown",
-        "displayText": "[空心人设] 爆雷 +25"
-      },
-      {
-        "id": "mod_platform_controversial_risk",
-        "stat": "risk",
-        "op": "add",
-        "value": 20,
-        "targetId": "tag_controversial",
-        "sourceType": "market_event",
-        "sourceId": "market_platform_persona_crackdown",
-        "displayText": "[争议感] 爆雷 +20"
-      },
-      {
-        "id": "mod_platform_crazy_risk",
-        "stat": "risk",
-        "op": "add",
-        "value": 10,
-        "targetId": "tag_crazy",
-        "sourceType": "market_event",
-        "sourceId": "market_platform_persona_crackdown",
-        "displayText": "[会发疯] 爆雷 +10"
+        "condition": {
+          "type": "customer_type_is",
+          "params": { "customerType": "family" }
+        },
+        "displayText": "[空心人设] 卖给相亲/家庭顾客时爆雷 +15"
       }
     ],
     "effects": [],
-    "effectText": "[空心人设] 爆雷 +25；[争议感] 爆雷 +20；[会发疯] 爆雷 +10。"
+    "effectText": "平台严打：卖给 MCN 时爆雷 +15；[空心人设] 卖给相亲/家庭类顾客时爆雷 +15。"
   },
   {
     "id": "market_parent_decency_panic",
@@ -503,7 +484,7 @@
   {
     "id": "market_controversy_carnival",
     "displayName": "争议流量狂欢",
-    "newsText": "争议、反骨、抽象带来更高价格和风险。",
+    "newsText": "争议、反骨、抽象带来更高价格，高价卖时风险更大。",
     "durationDays": 1,
     "conditions": [],
     "modifiers": [
@@ -518,14 +499,32 @@
         "displayText": "[争议感] 售价 +25"
       },
       {
-        "id": "mod_controversy_controversial_risk",
+        "id": "mod_controversy_controversial_risk_high_price",
+        "stat": "risk",
+        "op": "add",
+        "value": 15,
+        "targetId": "tag_controversial",
+        "sourceType": "market_event",
+        "sourceId": "market_controversy_carnival",
+        "condition": {
+          "type": "pricing_mode_is",
+          "params": { "pricingModeId": "pricing_high" }
+        },
+        "displayText": "[争议感] 高价卖时爆雷 +15"
+      },
+      {
+        "id": "mod_controversy_controversial_risk_blind_box",
         "stat": "risk",
         "op": "add",
         "value": 20,
         "targetId": "tag_controversial",
         "sourceType": "market_event",
         "sourceId": "market_controversy_carnival",
-        "displayText": "[争议感] 爆雷 +20"
+        "condition": {
+          "type": "pricing_mode_is",
+          "params": { "pricingModeId": "pricing_blind_box" }
+        },
+        "displayText": "[争议感] 盲盒价时爆雷 +20"
       },
       {
         "id": "mod_controversy_rebellious_price",
@@ -538,16 +537,6 @@
         "displayText": "[反骨] 售价 +15"
       },
       {
-        "id": "mod_controversy_rebellious_risk",
-        "stat": "risk",
-        "op": "add",
-        "value": 10,
-        "targetId": "tag_rebellious",
-        "sourceType": "market_event",
-        "sourceId": "market_controversy_carnival",
-        "displayText": "[反骨] 爆雷 +10"
-      },
-      {
         "id": "mod_controversy_absurd_price",
         "stat": "price",
         "op": "add",
@@ -556,19 +545,44 @@
         "sourceType": "market_event",
         "sourceId": "market_controversy_carnival",
         "displayText": "[抽象] 售价 +15"
-      },
-      {
-        "id": "mod_controversy_absurd_risk",
-        "stat": "risk",
-        "op": "add",
-        "value": 10,
-        "targetId": "tag_absurd",
-        "sourceType": "market_event",
-        "sourceId": "market_controversy_carnival",
-        "displayText": "[抽象] 爆雷 +10"
       }
     ],
     "effects": [],
-    "effectText": "[争议感] 售价 +25、爆雷 +20；[反骨] 售价 +15、爆雷 +10；[抽象] 售价 +15、爆雷 +10。"
+    "effectText": "[争议感] 售价 +25，高价卖时爆雷 +15，盲盒价时爆雷 +20；[反骨] 售价 +15；[抽象] 售价 +15。"
+  },
+  {
+    "id": "market_platform_boring_penalty",
+    "displayName": "流量审美疲劳",
+    "newsText": "平台受众对无聊内容越来越不感兴趣，MCN 的无聊商品风险激增。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [
+      {
+        "id": "mod_boring_mcn_risk",
+        "stat": "risk",
+        "op": "add",
+        "value": 20,
+        "targetId": "tag_boring",
+        "sourceType": "market_event",
+        "sourceId": "market_platform_boring_penalty",
+        "condition": {
+          "type": "customer_type_is",
+          "params": { "customerType": "mcn" }
+        },
+        "displayText": "[无聊] 卖给 MCN 时爆雷 +20"
+      },
+      {
+        "id": "mod_boring_price_down",
+        "stat": "price",
+        "op": "add",
+        "value": -10,
+        "targetId": "tag_boring",
+        "sourceType": "market_event",
+        "sourceId": "market_platform_boring_penalty",
+        "displayText": "[无聊] 售价 -10"
+      }
+    ],
+    "effects": [],
+    "effectText": "[无聊] 卖给 MCN 时爆雷 +20；[无聊] 售价 -10。"
   }
 ]
