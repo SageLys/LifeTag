@@ -392,6 +392,84 @@ function scenarioRewardBonusTrigger(app: AppRuntime, scenario: TestScenario): Te
   return makeResult(app, scenario);
 }
 
+function scenarioV3SameProductMcn(app: AppRuntime, scenario: TestScenario): TestScenarioResult {
+  resetRun(app, 13301);
+  syncPhase(app, RunPhase.DaySell);
+  const template = firstTemplate(app, (item) => item.id === 'product_abstract_crazy_meat');
+  const product = createProduct(app, { template, visibleTagIds: ['tag_absurd', 'tag_crazy'], hiddenTagIds: [], darkRiskIds: [] });
+  const customer = firstCustomer(app, (item) => item.id === 'customer_short_video_mcn');
+  const order = createOrder(app, { customer, budget: 300, riskTolerance: customer.riskTolerance });
+  selectDeal(app, product, order, 'pricing_normal');
+  return makeResult(app, scenario, [product], [order]);
+}
+
+function scenarioV3SameProductParent(app: AppRuntime, scenario: TestScenario): TestScenarioResult {
+  resetRun(app, 13302);
+  syncPhase(app, RunPhase.DaySell);
+  const template = firstTemplate(app, (item) => item.id === 'product_abstract_crazy_meat');
+  const product = createProduct(app, { template, visibleTagIds: ['tag_absurd', 'tag_crazy'], hiddenTagIds: [], darkRiskIds: [] });
+  const customer = firstCustomer(app, (item) => item.id === 'customer_parent_committee');
+  const order = createOrder(app, { customer, budget: 300, riskTolerance: customer.riskTolerance });
+  selectDeal(app, product, order, 'pricing_normal');
+  return makeResult(app, scenario, [product], [order]);
+}
+
+function scenarioV3PlatformDarkRiskMcn(app: AppRuntime, scenario: TestScenario): TestScenarioResult {
+  resetRun(app, 13303);
+  syncPhase(app, RunPhase.DaySell);
+  const template = firstTemplate(app, (item) => item.id === 'product_controversial_flow_meat');
+  const product = createProduct(app, { template, darkRiskIds: ['dark_platform_shadowban'], hiddenTagIds: [], darkRiskRevealLevels: { dark_platform_shadowban: DarkRiskRevealLevel.Hidden } });
+  const customer = firstCustomer(app, (item) => item.id === 'customer_short_video_mcn');
+  const order = createOrder(app, { customer, budget: 300, riskTolerance: customer.riskTolerance });
+  selectDeal(app, product, order, 'pricing_normal');
+  return makeResult(app, scenario, [product], [order]);
+}
+
+function scenarioV3PlatformDarkRiskStartup(app: AppRuntime, scenario: TestScenario): TestScenarioResult {
+  resetRun(app, 13304);
+  syncPhase(app, RunPhase.DaySell);
+  const template = firstTemplate(app, (item) => item.id === 'product_controversial_flow_meat');
+  const product = createProduct(app, { template, darkRiskIds: ['dark_platform_shadowban'], hiddenTagIds: [], darkRiskRevealLevels: { dark_platform_shadowban: DarkRiskRevealLevel.Hidden } });
+  const customer = firstCustomer(app, (item) => item.id === 'customer_startup_boss');
+  const order = createOrder(app, { customer, budget: 300, riskTolerance: customer.riskTolerance });
+  selectDeal(app, product, order, 'pricing_normal');
+  return makeResult(app, scenario, [product], [order]);
+}
+
+function scenarioV3ConditionalCrazyCardMcn(app: AppRuntime, scenario: TestScenario): TestScenarioResult {
+  resetRun(app, 13305);
+  syncPhase(app, RunPhase.DaySell);
+  const template = firstTemplate(app, (item) => item.id === 'product_abstract_crazy_meat');
+  const product = createProduct(app, { template, visibleTagIds: ['tag_absurd'], appliedTagIds: ['tag_crazy'], hiddenTagIds: [], darkRiskIds: [] });
+  product.dealModifiers = [{ stat: 'risk', op: 'add', value: 50, sourceType: 'card', sourceId: 'card_crazy_persona', displayText: 'parent only risk', condition: { type: 'customer_is', params: { customerId: 'customer_parent_committee' } } }];
+  const customer = firstCustomer(app, (item) => item.id === 'customer_short_video_mcn');
+  const order = createOrder(app, { customer, budget: 300, riskTolerance: customer.riskTolerance });
+  selectDeal(app, product, order, 'pricing_normal');
+  return makeResult(app, scenario, [product], [order]);
+}
+
+function scenarioV3AppliedTagTool(app: AppRuntime, scenario: TestScenario): TestScenarioResult {
+  resetRun(app, 13306);
+  syncPhase(app, RunPhase.DaySell);
+  const template = firstTemplate(app, (item) => item.id === 'product_controversial_flow_meat');
+  const product = createProduct(app, { template, appliedTagIds: ['tag_controversial'], hiddenTagIds: [], darkRiskIds: [] });
+  const customer = firstCustomer(app, (item) => item.id === 'customer_parent_committee');
+  const order = createOrder(app, { customer, budget: 300, riskTolerance: customer.riskTolerance });
+  selectDeal(app, product, order, 'pricing_normal');
+  return makeResult(app, scenario, [product], [order]);
+}
+
+function scenarioV3OverToleranceParent(app: AppRuntime, scenario: TestScenario): TestScenarioResult {
+  resetRun(app, 13307);
+  syncPhase(app, RunPhase.DaySell);
+  const template = firstTemplate(app, (item) => item.id === 'product_stable_marriage_meat');
+  const product = createProduct(app, { template, baseRisk: 45, hiddenTagIds: [], darkRiskIds: [] });
+  const customer = firstCustomer(app, (item) => item.id === 'customer_parent_committee');
+  const order = createOrder(app, { customer, budget: 300, riskTolerance: 30, maxRisk: 30 });
+  selectDeal(app, product, order, 'pricing_normal');
+  return makeResult(app, scenario, [product], [order]);
+}
+
 // ============================================================
 // v2 MCN Debug 测试场景（Task #8）
 // ============================================================
@@ -710,6 +788,69 @@ const SCENARIO_DATA: Array<Omit<TestScenario, 'setup'> & { setupName: string }> 
     expected: ['bonusUnlocked = true', '爆单奖励区域显示 3 个选项。'],
     manualSteps: ['查看爆单奖励区域，选择一个或跳过。'],
   },
+  {
+    id: 'V3_SAME_PRODUCT_MCN',
+    displayName: '[V3] same product to MCN',
+    description: 'product_abstract_crazy_meat sold to MCN should have low risk versus family customers.',
+    targetPhase: RunPhase.DaySell,
+    setupName: 'v3SameProductMcn',
+    expected: ['riskMin/riskMax clearly lower than V3_SAME_PRODUCT_PARENT', 'customer_trait and customer_fit participate in breakdown'],
+    manualSteps: ['Compare deal_preview with V3_SAME_PRODUCT_PARENT.'],
+  },
+  {
+    id: 'V3_SAME_PRODUCT_PARENT',
+    displayName: '[V3] same product to parent committee',
+    description: 'Same abstract/crazy product sold to parent committee should be high risk.',
+    targetPhase: RunPhase.DaySell,
+    setupName: 'v3SameProductParent',
+    expected: ['riskMin/riskMax clearly higher than V3_SAME_PRODUCT_MCN', 'family traits and taboo risks appear'],
+    manualSteps: ['Compare deal_preview with V3_SAME_PRODUCT_MCN.'],
+  },
+  {
+    id: 'V3_PLATFORM_DARK_MCN',
+    displayName: '[V3] platform dark risk preview MCN',
+    description: 'Unrevealed platform dark risk should preview high for MCN.',
+    targetPhase: RunPhase.DaySell,
+    setupName: 'v3PlatformDarkRiskMcn',
+    expected: ['unknownRiskBreakdown dark_risk range is multiplied by MCN platform multiplier'],
+    manualSteps: ['Compare riskMax with V3_PLATFORM_DARK_STARTUP.'],
+  },
+  {
+    id: 'V3_PLATFORM_DARK_STARTUP',
+    displayName: '[V3] platform dark risk preview startup',
+    description: 'Same unrevealed platform dark risk should preview much lower for startup boss.',
+    targetPhase: RunPhase.DaySell,
+    setupName: 'v3PlatformDarkRiskStartup',
+    expected: ['riskMax lower than V3_PLATFORM_DARK_MCN for the same dark risk'],
+    manualSteps: ['Compare unknownRiskBreakdown with V3_PLATFORM_DARK_MCN.'],
+  },
+  {
+    id: 'V3_CONDITIONAL_CRAZY_CARD_MCN',
+    displayName: '[V3] conditional card modifier to MCN',
+    description: 'Parent-only risk modifier from card_crazy_persona must not affect MCN.',
+    targetPhase: RunPhase.DaySell,
+    setupName: 'v3ConditionalCrazyCardMcn',
+    expected: ['riskBreakdown has no parent-only card_crazy_persona risk item'],
+    manualSteps: ['Inspect deal_preview.riskBreakdown.'],
+  },
+  {
+    id: 'V3_APPLIED_TAG_TOOL',
+    displayName: '[V3] tag tool applied tag',
+    description: 'Controversy hook style product must contain appliedTagIds and trigger customer-specific risk.',
+    targetPhase: RunPhase.DaySell,
+    setupName: 'v3AppliedTagTool',
+    expected: ['selected_product.appliedTagIds includes tag_controversial', 'family risk or claim mismatch participates'],
+    manualSteps: ['Inspect selected_product and deal_preview.'],
+  },
+  {
+    id: 'V3_OVER_TOLERANCE_PARENT',
+    displayName: '[V3] over tolerance accident add',
+    description: 'finalRisk around 45 for parent committee should trigger overTolerance accident level +1.',
+    targetPhase: RunPhase.DaySell,
+    setupName: 'v3OverToleranceParent',
+    expected: ['confirm sell should include customer_over_tolerance_accident_add in accident chain'],
+    manualSteps: ['Confirm sell, then inspect last_deal.accidentLevelModifierBreakdown.'],
+  },
   // ============================================================
   // v2 MCN Debug 场景（Task #8）
   // ============================================================
@@ -787,6 +928,13 @@ const SETUP_BY_NAME: Record<string, (app: AppRuntime, scenario: TestScenario) =>
   passiveInsuranceTrigger: scenarioPassiveInsuranceTrigger,
   supplySourceGeneration: scenarioSupplySourceGeneration,
   rewardBonusTrigger: scenarioRewardBonusTrigger,
+  v3SameProductMcn: scenarioV3SameProductMcn,
+  v3SameProductParent: scenarioV3SameProductParent,
+  v3PlatformDarkRiskMcn: scenarioV3PlatformDarkRiskMcn,
+  v3PlatformDarkRiskStartup: scenarioV3PlatformDarkRiskStartup,
+  v3ConditionalCrazyCardMcn: scenarioV3ConditionalCrazyCardMcn,
+  v3AppliedTagTool: scenarioV3AppliedTagTool,
+  v3OverToleranceParent: scenarioV3OverToleranceParent,
   // v2 MCN 场景
   mcnSafeDeal: scenarioMcnSafeDeal,
   mcnFlowOverload: scenarioMcnFlowOverload,

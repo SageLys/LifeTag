@@ -1,5 +1,6 @@
 import { AccidentLevel } from './constants';
 import type { BreakdownItem, CalculationContext, GameConfig } from './types';
+import { evaluateCalculationCondition } from './rules_calculation_conditions';
 
 const FALLBACK_THRESHOLDS = {
   safeMax: 39,
@@ -82,6 +83,28 @@ function dealModifiers(context: CalculationContext) {
   ].filter((modifier) => !modifier.targetId || modifier.targetId === context.product.id);
 }
 
+function getKnownTagIds(context: CalculationContext): string[] {
+  return [
+    ...new Set(
+      [
+        ...context.product.visibleTagIds,
+        ...context.product.revealedHiddenTagIds,
+        ...context.product.appliedTagIds,
+        ...(context.mode === 'resolve' ? context.product.hiddenTagIds : []),
+      ].filter(Boolean),
+    ),
+  ];
+}
+
+function getCustomerRiskProfile(context: CalculationContext): { toleranceMargin?: number; overToleranceAccidentLevelAdd?: number } {
+  const customerDef = context.indexes.customersById.get(context.customerOrder.customerId) as
+    | (NonNullable<ReturnType<typeof context.indexes.customersById.get>> & {
+        customerRiskProfile?: { toleranceMargin?: number; overToleranceAccidentLevelAdd?: number };
+      })
+    | undefined;
+  return customerDef?.customerRiskProfile ?? {};
+}
+
 function modifierAccidentLevelMatches(modifier: ReturnType<typeof dealModifiers>[number], level: AccidentLevel): boolean {
   const condition = modifier.condition as { type?: string; accidentLevel?: AccidentLevel; params?: { accidentLevel?: AccidentLevel; accidentLevels?: AccidentLevel[] } } | undefined;
   if (!condition) return true;
@@ -147,6 +170,7 @@ export function getAccidentLevelLabel(level: AccidentLevel): string {
 export function applyAccidentLevelModifiers(
   context: CalculationContext,
   baseAccidentLevel: AccidentLevel,
+  finalRisk?: number,
 ): { finalAccidentLevel: AccidentLevel; accidentLevelModifierBreakdown: BreakdownItem[] } {
   const breakdown: BreakdownItem[] = [];
   let finalAccidentLevel = baseAccidentLevel;
@@ -177,6 +201,23 @@ export function applyAccidentLevelModifiers(
     breakdown.push(breakdownItem('pricing_clearance_accident_cap', `清仓卖：${getAccidentLevelLabel(before)} → ${getAccidentLevelLabel(finalAccidentLevel)}`, '最高中事故', 'pricing_mode', context.pricingMode.id));
   }
 
+  const profile = getCustomerRiskProfile(context);
+  const toleranceMargin = readNumber(profile.toleranceMargin, 0);
+  const overToleranceAdd = readNumber(profile.overToleranceAccidentLevelAdd, 0);
+  if (typeof finalRisk === 'number' && overToleranceAdd !== 0 && finalRisk > context.customerOrder.riskTolerance + toleranceMargin) {
+    const before = finalAccidentLevel;
+    finalAccidentLevel = shiftLevel(finalAccidentLevel, overToleranceAdd);
+    breakdown.push(
+      breakdownItem(
+        'customer_over_tolerance_accident_add',
+        `椤惧瀹瑰繊搴﹁秴闄愶細${getAccidentLevelLabel(before)} 鈫?${getAccidentLevelLabel(finalAccidentLevel)}`,
+        overToleranceAdd,
+        'customer_order',
+        context.customerOrder.id,
+      ),
+    );
+  }
+
   if (
     context.activePassives.some((passive) => passive.passiveId === 'passive_public_opinion_stoploss') &&
     !context.dayState.phaseFlags.passivePublicOpinionStoplossUsed &&
@@ -188,7 +229,8 @@ export function applyAccidentLevelModifiers(
     breakdown.push(breakdownItem('passive_public_opinion_stoploss', `舆论止损预案：${getAccidentLevelLabel(before)} → ${getAccidentLevelLabel(finalAccidentLevel)}`, -1, 'passive', 'passive_public_opinion_stoploss'));
   }
 
-  for (const modifier of dealModifiers(context).filter((item) => item.stat === 'accidentLevel' && modifierAccidentLevelMatches(item, finalAccidentLevel))) {
+  const knownTagIds = getKnownTagIds(context);
+  for (const modifier of dealModifiers(context).filter((item) => item.stat === 'accidentLevel' && evaluateCalculationCondition(item.condition, context, knownTagIds, item, finalAccidentLevel) && modifierAccidentLevelMatches(item, finalAccidentLevel))) {
     const before = finalAccidentLevel;
     if (modifier.op === 'add') finalAccidentLevel = shiftLevel(finalAccidentLevel, modifier.value);
     if ((modifier as typeof modifier & { min?: AccidentLevel }).min) finalAccidentLevel = minLevel(finalAccidentLevel, (modifier as typeof modifier & { min: AccidentLevel }).min);
@@ -266,7 +308,8 @@ export function calculateAccidentOutcome(
     context.runState.cash += 20;
   }
 
-  for (const modifier of dealModifiers(context).filter((item) => (item.stat === 'fine' || item.stat === 'refund' || item.stat === 'refundRate' || item.stat === 'reputationLoss' || item.stat === 'cash') && modifierAccidentLevelMatches(item, accidentLevel))) {
+  const knownTagIds = getKnownTagIds(context);
+  for (const modifier of dealModifiers(context).filter((item) => (item.stat === 'fine' || item.stat === 'refund' || item.stat === 'refundRate' || item.stat === 'reputationLoss' || item.stat === 'cash') && evaluateCalculationCondition(item.condition, context, knownTagIds, item, accidentLevel) && modifierAccidentLevelMatches(item, accidentLevel))) {
     if (modifier.stat === 'refundRate') {
       const before = refundRate;
       refundRate = Math.max(0, Math.min(1, modifier.op === 'multiply' ? refundRate * modifier.value : refundRate + modifier.value));

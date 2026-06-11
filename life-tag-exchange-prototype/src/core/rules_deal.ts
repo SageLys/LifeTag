@@ -176,7 +176,7 @@ export function resolveDeal(app: AppRuntime): DealResult {
   const finalPrice = priceResult.finalPrice;
   const finalRisk = riskResult.exactRisk ?? riskResult.riskMax;
   const baseAccidentLevel = getAccidentLevelByRisk(finalRisk, app.configs.gameConfig);
-  const { finalAccidentLevel, accidentLevelModifierBreakdown } = applyAccidentLevelModifiers(context, baseAccidentLevel);
+  const { finalAccidentLevel, accidentLevelModifierBreakdown } = applyAccidentLevelModifiers(context, baseAccidentLevel, finalRisk);
   const outcome = calculateAccidentOutcome(context, finalAccidentLevel, finalPrice);
   const cashDelta = finalPrice - outcome.refund - outcome.fine;
   const singleProfit = finalPrice - product.cost - outcome.refund - outcome.fine;

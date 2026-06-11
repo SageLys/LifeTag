@@ -188,5 +188,98 @@
   "basePackageRiskAdd": 8,
   "basePackagePreferenceBonus": 15,
   "basePackagePreferenceThreshold": 2,
-  "basePublicRelationRiskReduction": 25
+  "basePublicRelationRiskReduction": 25,
+  "riskModelV3": {
+    "enabled": true,
+    "sourceRiskLabel": "??????",
+    "unknownDarkRiskUseCustomerMultiplier": true,
+    "pricingRiskUseCustomerMultiplier": true,
+    "customerTraitRiskEnabled": true,
+    "claimMismatchRiskEnabled": true,
+    "customerFitReductionEnabled": true,
+    "overToleranceAccidentModifierEnabled": true,
+    "defaultDarkRiskCategoryMultiplier": 0.3,
+    "defaultPricingRiskMultiplier": 1,
+    "defaultTraitRiskBonus": 0,
+    "defaultFitRiskReduction": {
+      "enabled": true,
+      "minPreferredHits": 2,
+      "perHit": 3,
+      "max": 10
+    }
+  },
+  "claimMismatchRules": [
+    {
+      "id": "claim_elite_without_credential_support",
+      "appliedTagId": "tag_elite_school",
+      "requiresAnyTrueTagIds": [
+        "tag_elite_school",
+        "tag_small_town_grinder"
+      ],
+      "customerTypes": [
+        "career",
+        "family"
+      ],
+      "riskAdd": 25,
+      "displayText": "????????????"
+    },
+    {
+      "id": "claim_decent_with_empty_persona",
+      "appliedTagId": "tag_decent",
+      "conflictAnyTagIds": [
+        "tag_empty_persona",
+        "tag_crazy",
+        "tag_absurd"
+      ],
+      "customerTypes": [
+        "family"
+      ],
+      "riskAdd": 30,
+      "displayText": "???????????"
+    },
+    {
+      "id": "claim_emotionally_stable_with_fragile",
+      "appliedTagId": "tag_emotionally_stable",
+      "conflictAnyTagIds": [
+        "tag_fragile_heart",
+        "tag_crazy"
+      ],
+      "customerTypes": [
+        "family"
+      ],
+      "riskAdd": 28,
+      "displayText": "?????????????"
+    },
+    {
+      "id": "claim_low_salary_with_rights_awareness",
+      "appliedTagId": "tag_low_salary_acceptance",
+      "conflictAnyTagIds": [
+        "tag_rights_awareness",
+        "tag_rebellious"
+      ],
+      "customerTypes": [
+        "career"
+      ],
+      "riskAdd": 30,
+      "displayText": "?????????????"
+    },
+    {
+      "id": "claim_flow_package_to_family",
+      "appliedTagId": "tag_crazy",
+      "customerTypes": [
+        "family"
+      ],
+      "riskAdd": 35,
+      "displayText": "???????????????"
+    },
+    {
+      "id": "claim_controversy_to_family",
+      "appliedTagId": "tag_controversial",
+      "customerTypes": [
+        "family"
+      ],
+      "riskAdd": 25,
+      "displayText": "?????????????"
+    }
+  ]
 }

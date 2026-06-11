@@ -4,8 +4,8 @@
     "displayName": "年轻名校肉",
     "baseCost": 55,
     "basePrice": 90,
-    "baseRisk": 5,
-    "hiddenTagCount": 3,
+    "baseRisk": 3,
+    "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_young",
       "tag_elite_school"
@@ -19,7 +19,7 @@
       "dark_background_mismatch",
       "dark_fake_internship_gap"
     ],
-    "darkRiskChance": 0.35,
+    "darkRiskChance": 0.3,
     "weight": 100,
     "sourceHint": "大厂"
   },
@@ -28,8 +28,8 @@
     "displayName": "外地加班肉",
     "baseCost": 28,
     "basePrice": 58,
-    "baseRisk": 8,
-    "hiddenTagCount": 3,
+    "baseRisk": 4,
+    "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_outsider",
       "tag_overtime"
@@ -42,7 +42,7 @@
     "darkRiskPool": [
       "dark_trial_period_backfire"
     ],
-    "darkRiskChance": 0.25,
+    "darkRiskChance": 0.22,
     "weight": 100,
     "sourceHint": "大厂/创业"
   },
@@ -51,7 +51,7 @@
     "displayName": "35+经验肉",
     "baseCost": 25,
     "basePrice": 62,
-    "baseRisk": 8,
+    "baseRisk": 4,
     "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_age_35_plus",
@@ -74,8 +74,8 @@
     "displayName": "海归体面肉",
     "baseCost": 55,
     "basePrice": 95,
-    "baseRisk": 8,
-    "hiddenTagCount": 3,
+    "baseRisk": 5,
+    "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_oversea_returnee",
       "tag_decent"
@@ -89,7 +89,7 @@
       "dark_family_network_exposure",
       "dark_persona_collapse"
     ],
-    "darkRiskChance": 0.35,
+    "darkRiskChance": 0.32,
     "weight": 85,
     "sourceHint": "相亲"
   },
@@ -98,8 +98,8 @@
     "displayName": "稳定相亲肉",
     "baseCost": 38,
     "basePrice": 72,
-    "baseRisk": 5,
-    "hiddenTagCount": 3,
+    "baseRisk": 2,
+    "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_stable",
       "tag_emotionally_stable"
@@ -113,7 +113,7 @@
       "dark_persona_collapse",
       "dark_emotional_record_leak"
     ],
-    "darkRiskChance": 0.25,
+    "darkRiskChance": 0.22,
     "weight": 100,
     "sourceHint": "相亲"
   },
@@ -122,7 +122,7 @@
     "displayName": "抽象发疯肉",
     "baseCost": 28,
     "basePrice": 68,
-    "baseRisk": 12,
+    "baseRisk": 4,
     "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_absurd",
@@ -137,7 +137,7 @@
       "dark_platform_shadowban",
       "dark_fandom_backlash"
     ],
-    "darkRiskChance": 0.4,
+    "darkRiskChance": 0.35,
     "weight": 100,
     "sourceHint": "流量"
   },
@@ -146,7 +146,7 @@
     "displayName": "水货包装肉",
     "baseCost": 22,
     "basePrice": 65,
-    "baseRisk": 18,
+    "baseRisk": 8,
     "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_fake_quality",
@@ -161,7 +161,7 @@
       "dark_background_mismatch",
       "dark_family_network_exposure"
     ],
-    "darkRiskChance": 0.45,
+    "darkRiskChance": 0.42,
     "weight": 80,
     "sourceHint": "包装"
   },
@@ -170,8 +170,8 @@
     "displayName": "黑箱低价肉",
     "baseCost": 22,
     "basePrice": 82,
-    "baseRisk": 24,
-    "hiddenTagCount": 2,
+    "baseRisk": 14,
+    "hiddenTagCount": 3,
     "visibleTagIds": [
       "tag_low_salary_acceptance"
     ],
@@ -192,7 +192,7 @@
       "dark_fandom_backlash",
       "dark_old_content_archaeology"
     ],
-    "darkRiskChance": 0.6,
+    "darkRiskChance": 0.55,
     "weight": 75,
     "sourceHint": "黑箱"
   },
@@ -201,8 +201,8 @@
     "displayName": "小镇做题家肉",
     "baseCost": 38,
     "basePrice": 72,
-    "baseRisk": 8,
-    "hiddenTagCount": 3,
+    "baseRisk": 3,
+    "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_small_town_grinder",
       "tag_resilient"
@@ -215,7 +215,7 @@
     "darkRiskPool": [
       "dark_fake_internship_gap"
     ],
-    "darkRiskChance": 0.25,
+    "darkRiskChance": 0.24,
     "weight": 90,
     "sourceHint": "叙事"
   },
@@ -224,7 +224,7 @@
     "displayName": "维权意识肉",
     "baseCost": 24,
     "basePrice": 62,
-    "baseRisk": 14,
+    "baseRisk": 7,
     "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_rights_awareness",
@@ -248,8 +248,8 @@
     "displayName": "空心体面肉",
     "baseCost": 34,
     "basePrice": 70,
-    "baseRisk": 12,
-    "hiddenTagCount": 3,
+    "baseRisk": 6,
+    "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_empty_persona",
       "tag_decent"
@@ -263,7 +263,7 @@
       "dark_persona_collapse",
       "dark_family_network_exposure"
     ],
-    "darkRiskChance": 0.4,
+    "darkRiskChance": 0.36,
     "weight": 85,
     "sourceHint": "相亲"
   },
@@ -272,7 +272,7 @@
     "displayName": "争议流量肉",
     "baseCost": 34,
     "basePrice": 82,
-    "baseRisk": 14,
+    "baseRisk": 5,
     "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_controversial",
@@ -287,7 +287,7 @@
       "dark_fandom_backlash",
       "dark_old_content_archaeology"
     ],
-    "darkRiskChance": 0.45,
+    "darkRiskChance": 0.38,
     "weight": 90,
     "sourceHint": "流量"
   },
@@ -296,8 +296,8 @@
     "displayName": "会来事家庭肉",
     "baseCost": 36,
     "basePrice": 68,
-    "baseRisk": 5,
-    "hiddenTagCount": 3,
+    "baseRisk": 2,
+    "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_social_savvy",
       "tag_stable"
@@ -310,7 +310,7 @@
     "darkRiskPool": [
       "dark_family_network_exposure"
     ],
-    "darkRiskChance": 0.2,
+    "darkRiskChance": 0.18,
     "weight": 90,
     "sourceHint": "相亲"
   },
@@ -319,8 +319,8 @@
     "displayName": "无聊稳定肉",
     "baseCost": 24,
     "basePrice": 55,
-    "baseRisk": 3,
-    "hiddenTagCount": 4,
+    "baseRisk": 1,
+    "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_boring",
       "tag_stable"
@@ -333,7 +333,7 @@
     "darkRiskPool": [
       "dark_emotional_record_leak"
     ],
-    "darkRiskChance": 0.15,
+    "darkRiskChance": 0.12,
     "weight": 80,
     "sourceHint": "稳定"
   },
@@ -342,7 +342,7 @@
     "displayName": "反骨玻璃心肉",
     "baseCost": 24,
     "basePrice": 66,
-    "baseRisk": 14,
+    "baseRisk": 6,
     "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_rebellious",
@@ -357,7 +357,7 @@
       "dark_old_content_archaeology",
       "dark_fandom_backlash"
     ],
-    "darkRiskChance": 0.35,
+    "darkRiskChance": 0.34,
     "weight": 75,
     "sourceHint": "流量"
   },
@@ -366,8 +366,8 @@
     "displayName": "加班抗压肉",
     "baseCost": 36,
     "basePrice": 68,
-    "baseRisk": 6,
-    "hiddenTagCount": 3,
+    "baseRisk": 3,
+    "hiddenTagCount": 2,
     "visibleTagIds": [
       "tag_overtime",
       "tag_resilient"
@@ -380,7 +380,7 @@
     "darkRiskPool": [
       "dark_trial_period_backfire"
     ],
-    "darkRiskChance": 0.25,
+    "darkRiskChance": 0.22,
     "weight": 100,
     "sourceHint": "大厂"
   }

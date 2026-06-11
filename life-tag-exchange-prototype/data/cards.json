@@ -387,6 +387,27 @@
     "cost": 1,
     "effects": [
       {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_young"
+        },
+        "displayText": "?? tag_young"
+      },
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_small_town_grinder"
+        },
+        "displayText": "?? tag_small_town_grinder"
+      },
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_resilient"
+        },
+        "displayText": "?? tag_resilient"
+      },
+      {
         "type": "add_deal_modifier",
         "params": {
           "stat": "price",
@@ -408,6 +429,13 @@
     "cardType": "tag_tool",
     "cost": 1,
     "effects": [
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_emotionally_stable"
+        },
+        "displayText": "?? tag_emotionally_stable"
+      },
       {
         "type": "add_deal_modifier",
         "params": {
@@ -431,6 +459,13 @@
     "cost": 1,
     "effects": [
       {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_elite_school"
+        },
+        "displayText": "?? tag_elite_school"
+      },
+      {
         "type": "add_deal_modifier",
         "params": {
           "stat": "price",
@@ -452,6 +487,13 @@
     "cardType": "tag_tool",
     "cost": 1,
     "effects": [
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_overtime"
+        },
+        "displayText": "?? tag_overtime"
+      },
       {
         "type": "add_deal_modifier",
         "params": {
@@ -475,6 +517,20 @@
     "cost": 1,
     "effects": [
       {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_stable"
+        },
+        "displayText": "?? tag_stable"
+      },
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_social_savvy"
+        },
+        "displayText": "?? tag_social_savvy"
+      },
+      {
         "type": "add_deal_modifier",
         "params": {
           "stat": "price",
@@ -496,6 +552,13 @@
     "cardType": "tag_tool",
     "cost": 1,
     "effects": [
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_resilient"
+        },
+        "displayText": "?? tag_resilient"
+      },
       {
         "type": "add_deal_modifier",
         "params": {
@@ -519,6 +582,13 @@
     "cost": 1,
     "effects": [
       {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_controversial"
+        },
+        "displayText": "?? tag_controversial"
+      },
+      {
         "type": "add_deal_modifier",
         "params": {
           "stat": "price",
@@ -540,6 +610,13 @@
     "cardType": "tag_tool",
     "cost": 1,
     "effects": [
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_oversea_returnee"
+        },
+        "displayText": "?? tag_oversea_returnee"
+      },
       {
         "type": "add_deal_modifier",
         "params": {
@@ -563,6 +640,13 @@
     "cost": 1,
     "effects": [
       {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_social_savvy"
+        },
+        "displayText": "?? tag_social_savvy"
+      },
+      {
         "type": "add_deal_modifier",
         "params": {
           "stat": "price",
@@ -584,6 +668,13 @@
     "cardType": "tag_tool",
     "cost": 1,
     "effects": [
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_small_town_grinder"
+        },
+        "displayText": "?? tag_small_town_grinder"
+      },
       {
         "type": "add_deal_modifier",
         "params": {
@@ -607,6 +698,13 @@
     "cost": 1,
     "effects": [
       {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_boring"
+        },
+        "displayText": "?? tag_boring"
+      },
+      {
         "type": "add_deal_modifier",
         "params": {
           "stat": "price",
@@ -628,6 +726,13 @@
     "cardType": "tag_tool",
     "cost": 1,
     "effects": [
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_rebellious"
+        },
+        "displayText": "?? tag_rebellious"
+      },
       {
         "type": "add_deal_modifier",
         "params": {
@@ -651,6 +756,13 @@
     "cost": 1,
     "effects": [
       {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_low_salary_acceptance"
+        },
+        "displayText": "?? tag_low_salary_acceptance"
+      },
+      {
         "type": "add_deal_modifier",
         "params": {
           "stat": "price",
@@ -672,6 +784,20 @@
     "cardType": "tag_tool",
     "cost": 1,
     "effects": [
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_absurd"
+        },
+        "displayText": "?? tag_absurd"
+      },
+      {
+        "type": "add_applied_tag_to_product",
+        "params": {
+          "tagId": "tag_controversial"
+        },
+        "displayText": "?? tag_controversial"
+      },
       {
         "type": "add_deal_modifier",
         "params": {

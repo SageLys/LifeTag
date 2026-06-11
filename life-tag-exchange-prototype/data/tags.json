@@ -8,7 +8,10 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": false,
-    "riskTraits": ["career_asset"]
+    "riskTraits": [
+      "career_asset",
+      "age_young"
+    ]
   },
   {
     "id": "tag_elite_school",
@@ -19,7 +22,10 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": false,
-    "riskTraits": ["credential"]
+    "riskTraits": [
+      "credential",
+      "status_claim"
+    ]
   },
   {
     "id": "tag_overtime",
@@ -30,7 +36,10 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": true,
-    "riskTraits": ["labor_intensity"]
+    "riskTraits": [
+      "labor_intensity",
+      "career_asset"
+    ]
   },
   {
     "id": "tag_low_salary_acceptance",
@@ -41,7 +50,10 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": true,
-    "riskTraits": ["labor_compliance"]
+    "riskTraits": [
+      "labor_compliance",
+      "exploitation_claim"
+    ]
   },
   {
     "id": "tag_stable",
@@ -52,7 +64,11 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": false,
-    "riskTraits": ["stability"]
+    "riskTraits": [
+      "stability",
+      "family_asset",
+      "low_flow"
+    ]
   },
   {
     "id": "tag_decent",
@@ -63,7 +79,11 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": true,
-    "riskTraits": ["persona"]
+    "riskTraits": [
+      "persona",
+      "status_claim",
+      "family_asset"
+    ]
   },
   {
     "id": "tag_crazy",
@@ -74,7 +94,11 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": true,
-    "riskTraits": ["flow", "volatile"]
+    "riskTraits": [
+      "flow",
+      "volatile",
+      "family_unacceptable"
+    ]
   },
   {
     "id": "tag_absurd",
@@ -85,7 +109,11 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": true,
-    "riskTraits": ["flow", "volatile"]
+    "riskTraits": [
+      "flow",
+      "volatile",
+      "family_unacceptable"
+    ]
   },
   {
     "id": "tag_fake_quality",
@@ -96,7 +124,11 @@
     "baseRisk": 0,
     "isNegative": true,
     "isWashable": true,
-    "riskTraits": ["fraud"]
+    "riskTraits": [
+      "fraud",
+      "credential_gap",
+      "quality_defect"
+    ]
   },
   {
     "id": "tag_rights_awareness",
@@ -107,7 +139,10 @@
     "baseRisk": 0,
     "isNegative": true,
     "isWashable": true,
-    "riskTraits": ["labor_conflict"]
+    "riskTraits": [
+      "labor_conflict",
+      "career_taboo"
+    ]
   },
   {
     "id": "tag_empty_persona",
@@ -118,7 +153,11 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": true,
-    "riskTraits": ["persona", "fragile_persona", "flow_material"]
+    "riskTraits": [
+      "persona_fragile",
+      "fraud",
+      "flow_material"
+    ]
   },
   {
     "id": "tag_age_35_plus",
@@ -129,7 +168,10 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": false,
-    "riskTraits": ["career_age"]
+    "riskTraits": [
+      "career_age",
+      "career_disadvantage"
+    ]
   },
   {
     "id": "tag_outsider",
@@ -140,7 +182,10 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": false,
-    "riskTraits": ["background"]
+    "riskTraits": [
+      "background",
+      "career_cost_advantage"
+    ]
   },
   {
     "id": "tag_resilient",
@@ -151,7 +196,10 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": true,
-    "riskTraits": ["support"]
+    "riskTraits": [
+      "support",
+      "career_asset"
+    ]
   },
   {
     "id": "tag_small_town_grinder",
@@ -162,7 +210,11 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": false,
-    "riskTraits": ["credential", "support"]
+    "riskTraits": [
+      "credential_support",
+      "career_asset",
+      "family_asset"
+    ]
   },
   {
     "id": "tag_experienced",
@@ -173,7 +225,10 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": false,
-    "riskTraits": ["career_skill"]
+    "riskTraits": [
+      "career_skill",
+      "age_risk_buffer"
+    ]
   },
   {
     "id": "tag_oversea_returnee",
@@ -184,7 +239,11 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": false,
-    "riskTraits": ["status", "credential"]
+    "riskTraits": [
+      "status_claim",
+      "credential",
+      "family_asset"
+    ]
   },
   {
     "id": "tag_emotionally_stable",
@@ -195,7 +254,10 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": true,
-    "riskTraits": ["stability"]
+    "riskTraits": [
+      "stability",
+      "family_asset"
+    ]
   },
   {
     "id": "tag_social_savvy",
@@ -206,7 +268,10 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": true,
-    "riskTraits": ["social"]
+    "riskTraits": [
+      "social",
+      "family_asset"
+    ]
   },
   {
     "id": "tag_controversial",
@@ -217,7 +282,11 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": true,
-    "riskTraits": ["flow", "volatile"]
+    "riskTraits": [
+      "flow",
+      "volatile",
+      "public_opinion_risk"
+    ]
   },
   {
     "id": "tag_rebellious",
@@ -228,7 +297,11 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": true,
-    "riskTraits": ["flow", "labor_conflict", "volatile"]
+    "riskTraits": [
+      "flow",
+      "labor_conflict",
+      "volatile"
+    ]
   },
   {
     "id": "tag_fragile_heart",
@@ -239,7 +312,11 @@
     "baseRisk": 0,
     "isNegative": false,
     "isWashable": true,
-    "riskTraits": ["persona", "volatile"]
+    "riskTraits": [
+      "persona_fragile",
+      "volatile",
+      "career_instability"
+    ]
   },
   {
     "id": "tag_job_hopping_risk",
@@ -250,7 +327,10 @@
     "baseRisk": 0,
     "isNegative": true,
     "isWashable": true,
-    "riskTraits": ["career_instability"]
+    "riskTraits": [
+      "career_instability",
+      "contract_risk"
+    ]
   },
   {
     "id": "tag_boring",
@@ -261,6 +341,9 @@
     "baseRisk": 0,
     "isNegative": true,
     "isWashable": true,
-    "riskTraits": ["low_flow"]
+    "riskTraits": [
+      "low_flow",
+      "safe_family"
+    ]
   }
 ]

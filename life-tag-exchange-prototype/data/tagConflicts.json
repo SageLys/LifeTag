@@ -85,7 +85,7 @@
     "tagB": "tag_elite_school",
     "relationType": "support",
     "priceDelta": 15,
-    "riskDelta": 0
+    "riskDelta": -3
   },
   {
     "id": "support_overtime_resilient",
@@ -101,7 +101,7 @@
     "tagB": "tag_emotionally_stable",
     "relationType": "support",
     "priceDelta": 20,
-    "riskDelta": -5
+    "riskDelta": -6
   },
   {
     "id": "support_decent_social",
@@ -126,5 +126,37 @@
     "relationType": "support",
     "priceDelta": 20,
     "riskDelta": 5
+  },
+  {
+    "id": "conflict_decent_crazy",
+    "tagA": "tag_decent",
+    "tagB": "tag_crazy",
+    "relationType": "conflict",
+    "priceDelta": -15,
+    "riskDelta": 35
+  },
+  {
+    "id": "conflict_emotionally_stable_fragile",
+    "tagA": "tag_emotionally_stable",
+    "tagB": "tag_fragile_heart",
+    "relationType": "conflict",
+    "priceDelta": -10,
+    "riskDelta": 28
+  },
+  {
+    "id": "conflict_boring_controversial",
+    "tagA": "tag_boring",
+    "tagB": "tag_controversial",
+    "relationType": "conflict",
+    "priceDelta": -20,
+    "riskDelta": 12
+  },
+  {
+    "id": "support_fake_quality_empty_persona",
+    "tagA": "tag_fake_quality",
+    "tagB": "tag_empty_persona",
+    "relationType": "support",
+    "priceDelta": 0,
+    "riskDelta": 12
   }
 ]

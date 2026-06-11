@@ -12,6 +12,7 @@ import {
   getCustomerPreferenceBonus,
   getCustomerPreferredTagIds,
 } from './selectors';
+import { evaluateCalculationCondition } from './rules_calculation_conditions';
 
 function item(
   id: string,
@@ -204,6 +205,8 @@ function getMarketModifierLabel(marketEventDisplayName: string, modifier: Modifi
   return modifier.displayText ? `今日新闻 ${marketEventDisplayName}：${modifier.displayText}` : `今日新闻 ${marketEventDisplayName}`;
 }
 
+void conditionMatches;
+
 function applyMarketModifiers(
   context: CalculationContext,
   knownTagIds: string[],
@@ -219,7 +222,7 @@ function applyMarketModifiers(
   const multipliers: number[] = [];
 
   for (const modifier of marketEvent.modifiers) {
-    if (!conditionMatches(modifier, context, knownTagIds)) {
+    if (!evaluateCalculationCondition(modifier.condition, context, knownTagIds, modifier)) {
       const compatibleModifier = modifier as Modifier & { condition?: unknown };
       if (compatibleModifier.condition) {
         warnings.push(`市场新闻 ${marketEvent.displayName} 的复杂条件暂未支持。`);
@@ -292,7 +295,11 @@ function applySimplePriceModifiers(context: CalculationContext, breakdown: Break
   let add = 0;
   const multipliers: number[] = [];
 
+  const knownTagIds = getEffectivePriceTagIds(context);
   for (const modifier of priceModifiers) {
+    if (!evaluateCalculationCondition(modifier.condition, context, knownTagIds, modifier)) {
+      continue;
+    }
     if (modifier.stat === 'price' && modifier.op === 'add') {
       add += modifier.value;
       breakdown.push(item(modifier.id ?? `modifier_${breakdown.length}`, modifier.displayText ?? '价格修正', 'price', 'add', modifier.value, 'modifier', modifier.sourceId ?? modifier.id ?? 'unknown'));

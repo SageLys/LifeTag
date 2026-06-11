@@ -11,6 +11,7 @@ import type {
   TagDef,
   UnknownRiskBreakdownItem,
 } from './types';
+import { evaluateCalculationCondition, getCalculationCustomerType } from './rules_calculation_conditions';
 
 // ============================================================
 // v2 风险模型：标签本身不再累加风险
@@ -42,6 +43,40 @@ type FlowOverloadConfig = {
 };
 type CompatibleGameConfig = CalculationContext['configTables']['gameConfig'] & {
   flowOverloadRisk?: FlowOverloadConfig;
+  riskModelV3?: {
+    defaultDarkRiskCategoryMultiplier?: number;
+    defaultPricingRiskMultiplier?: number;
+    defaultTraitRiskBonus?: number;
+    defaultFitRiskReduction?: FitRiskReduction;
+  };
+  claimMismatchRules?: ClaimMismatchRule[];
+};
+
+type FitRiskReduction = {
+  enabled?: boolean;
+  minPreferredHits?: number;
+  perHit?: number;
+  max?: number;
+};
+
+type CustomerRiskProfile = {
+  riskTraitBonus?: Record<string, number>;
+  darkRiskCategoryMultiplier?: Record<string, number>;
+  pricingRiskMultiplier?: Record<string, number>;
+  fitRiskReduction?: FitRiskReduction;
+  toleranceMargin?: number;
+  overToleranceAccidentLevelAdd?: number;
+};
+
+type ClaimMismatchRule = {
+  id: string;
+  appliedTagId: string;
+  requiresAnyTrueTagIds?: string[];
+  conflictAnyTagIds?: string[];
+  customerTypes?: string[];
+  customerIds?: string[];
+  riskAdd: number;
+  displayText?: string;
 };
 
 const DEFAULT_TABOO_RISK_BONUS = 25;
@@ -87,6 +122,73 @@ function unknownItem(
 
 function readNumber(value: unknown, fallback: number): number {
   return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+}
+
+function getCustomerRiskProfile(context: CalculationContext): CustomerRiskProfile {
+  const customerDef = context.indexes.customersById.get(context.customerOrder.customerId) as
+    | (NonNullable<ReturnType<typeof context.indexes.customersById.get>> & { customerRiskProfile?: CustomerRiskProfile })
+    | undefined;
+  return customerDef?.customerRiskProfile ?? {};
+}
+
+function getRiskModelConfig(context: CalculationContext): CompatibleGameConfig['riskModelV3'] {
+  return (context.configTables.gameConfig as CompatibleGameConfig).riskModelV3 ?? {};
+}
+
+function getDarkRiskCategoryMultiplier(context: CalculationContext, category: string): number {
+  const profile = getCustomerRiskProfile(context);
+  return readNumber(
+    profile.darkRiskCategoryMultiplier?.[category],
+    readNumber(getRiskModelConfig(context)?.defaultDarkRiskCategoryMultiplier, 0.3),
+  );
+}
+
+function getPricingRiskMultiplier(context: CalculationContext): number {
+  const profile = getCustomerRiskProfile(context);
+  return readNumber(
+    profile.pricingRiskMultiplier?.[context.pricingMode.id],
+    readNumber(getRiskModelConfig(context)?.defaultPricingRiskMultiplier, 1),
+  );
+}
+
+function getTrueTagIds(product: ProductInstance, includeUnrevealedHidden: boolean): string[] {
+  return [
+    ...new Set(
+      [
+        ...product.visibleTagIds,
+        ...product.revealedHiddenTagIds,
+        ...(includeUnrevealedHidden ? product.hiddenTagIds : []),
+      ].filter(Boolean),
+    ),
+  ];
+}
+
+function getTagRiskTraits(tag: TagDef): string[] {
+  const compatibleTag = tag as TagDef & { riskTraits?: string[] };
+  return Array.isArray(compatibleTag.riskTraits) ? compatibleTag.riskTraits : [];
+}
+
+function getFitRiskReduction(context: CalculationContext, knownTagIds: string[]): number {
+  const modelConfig = getRiskModelConfig(context);
+  const profileReduction = getCustomerRiskProfile(context).fitRiskReduction;
+  const fallback = modelConfig?.defaultFitRiskReduction ?? { enabled: true, minPreferredHits: 2, perHit: 3, max: 10 };
+  const config = profileReduction ?? fallback;
+  if (config.enabled === false) {
+    return 0;
+  }
+  const preferredHits = context.customerOrder.preferredTagIds.filter((tagId) => knownTagIds.includes(tagId)).length;
+  const minPreferredHits = readNumber(config.minPreferredHits, 2);
+  if (preferredHits < minPreferredHits) {
+    return 0;
+  }
+  return Math.min(readNumber(config.max, 10), preferredHits * readNumber(config.perHit, 3));
+}
+
+function claimMismatchCustomerMatches(context: CalculationContext, rule: ClaimMismatchRule): boolean {
+  const customerType = getCalculationCustomerType(context);
+  const customerMatches = !rule.customerIds || rule.customerIds.includes(context.customerOrder.customerId);
+  const typeMatches = !rule.customerTypes || (customerType ? rule.customerTypes.includes(customerType) : false);
+  return customerMatches && typeMatches;
 }
 
 // v2: getTagRisk 已弃用，不再用于常规风险计算
@@ -174,6 +276,7 @@ function getDarkRiskWithSensitivity(
   context: CalculationContext,
 ): number {
   const actualRisk = getDarkRiskActualRisk(darkRisk);
+  return Math.round(actualRisk * getDarkRiskCategoryMultiplier(context, darkRisk.category));
   const customerDef = context.indexes.customersById.get(context.customerOrder.customerId);
   const sensitivityList: string[] = [
     ...(context.customerOrder.darkRiskSensitivity ?? []),
@@ -314,6 +417,8 @@ function conditionMatches(modifier: Modifier, context: CalculationContext, known
       return false;
   }
 }
+
+void conditionMatches;
 
 function getModifierSuppressionFactor(modifier: Modifier, product: ProductInstance): number {
   const compatibleModifier = modifier as Modifier & { tagId?: string; targetTagId?: string };
@@ -522,6 +627,28 @@ export function calculateRisk(context: CalculationContext): RiskResult {
     }
   }
 
+
+  for (const tagId of knownTagIds) {
+    const tag = context.indexes.tagsById.get(tagId);
+    if (!tag) continue;
+    const traitRisk = getTagRiskTraits(tag).reduce((total, trait) => {
+      const bonus = readNumber(getCustomerRiskProfile(context).riskTraitBonus?.[trait], readNumber(getRiskModelConfig(context)?.defaultTraitRiskBonus, 0));
+      return total + bonus;
+    }, 0);
+    if (traitRisk !== 0) {
+      const factor = getSuppressionFactor(product, tagId);
+      const value = Math.round(traitRisk * factor);
+      knownRisk += value;
+      riskBreakdown.push(riskItem('customer_trait', context.customerOrder.id, `customer risk trait [${tag.displayName}]`, value));
+    }
+  }
+
+  const fitReduction = getFitRiskReduction(context, knownTagIds);
+  if (fitReduction > 0) {
+    knownRisk -= fitReduction;
+    riskBreakdown.push(riskItem('customer_fit', context.customerOrder.id, 'customer fit risk reduction', -fitReduction));
+  }
+
   // 3. 标签冲突 / 支撑关系风险
   for (const relation of context.configTables.tagConflicts) {
     if (!knownTagSet.has(relation.tagA) || !knownTagSet.has(relation.tagB)) {
@@ -538,7 +665,7 @@ export function calculateRisk(context: CalculationContext): RiskResult {
 
   // 4. 市场新闻风险（v2: 条件式，依赖 conditionMatches 过滤）
   for (const modifier of collectRiskModifiersFromMarketEvent(context.marketEvent)) {
-    if (!conditionMatches(modifier, context, knownTagIds)) {
+    if (!evaluateCalculationCondition(modifier.condition, context, knownTagIds, modifier)) {
       // v2: 新闻 modifier 不满足条件时静默跳过（不再输出 warning）
       continue;
     }
@@ -578,7 +705,7 @@ export function calculateRisk(context: CalculationContext): RiskResult {
   }
 
   // 7. 定价风险
-  const pricingRiskDelta = getPricingRiskDelta(context.pricingMode);
+  const pricingRiskDelta = Math.round(getPricingRiskDelta(context.pricingMode) * getPricingRiskMultiplier(context));
   knownRisk += pricingRiskDelta;
   riskBreakdown.push(riskItem('pricing_mode', context.pricingMode.id, getPricingRiskLabel(context.pricingMode), pricingRiskDelta));
 
@@ -588,6 +715,9 @@ export function calculateRisk(context: CalculationContext): RiskResult {
       continue;
     }
     if (modifier.sourceId === 'action_pr' && product.flags.hasPublicRelation) {
+      continue;
+    }
+    if (!evaluateCalculationCondition(modifier.condition, context, knownTagIds, modifier)) {
       continue;
     }
     knownRisk += modifier.value;
@@ -610,8 +740,38 @@ export function calculateRisk(context: CalculationContext): RiskResult {
   // ============================================================
   // 未知风险区间（隐藏标签 + 暗风险）
   // ============================================================
+  let claimMismatchUnknownMax = 0;
+  const trueKnownTagIds = getTrueTagIds(product, false);
+  const trueKnownTagSet = new Set(trueKnownTagIds);
+  const trueResolveTagSet = new Set(getTrueTagIds(product, context.mode === 'resolve'));
+  const hiddenUnknownTagSet = new Set(getUnrevealedHiddenTagIds(product));
+  const claimRules = (context.configTables.gameConfig as CompatibleGameConfig).claimMismatchRules ?? [];
+  for (const rule of claimRules) {
+    if (!product.appliedTagIds.includes(rule.appliedTagId) || !claimMismatchCustomerMatches(context, rule)) {
+      continue;
+    }
+    const hasRequiredSupport = !rule.requiresAnyTrueTagIds?.length || rule.requiresAnyTrueTagIds.some((tagId) => trueResolveTagSet.has(tagId));
+    const hasKnownConflict = Boolean(rule.conflictAnyTagIds?.some((tagId) => trueResolveTagSet.has(tagId)));
+    if (!hasRequiredSupport || hasKnownConflict) {
+      const riskAdd = readNumber(rule.riskAdd, 0);
+      knownRisk += riskAdd;
+      riskBreakdown.push(riskItem('claim_mismatch', rule.id, rule.displayText ?? rule.id, riskAdd));
+      continue;
+    }
+    if (context.mode !== 'resolve') {
+      const unknownConflict = rule.conflictAnyTagIds?.some((tagId) => hiddenUnknownTagSet.has(tagId)) ?? false;
+      const unknownRequired = Boolean(rule.requiresAnyTrueTagIds?.length && !rule.requiresAnyTrueTagIds.some((tagId) => trueKnownTagSet.has(tagId)));
+      if (unknownConflict || unknownRequired) {
+        const riskAdd = Math.max(0, readNumber(rule.riskAdd, 0));
+        claimMismatchUnknownMax += riskAdd;
+        unknownRiskBreakdown.push(unknownItem('system', rule.id, rule.displayText ?? rule.id, 0, riskAdd));
+      }
+    }
+  }
+
   let unknownMin = 0;
   let unknownMax = 0;
+  unknownMax += claimMismatchUnknownMax;
   const unresolvedHiddenTagIds = getUnrevealedHiddenTagIds(product);
   const unrevealedHiddenTagIds = context.mode === 'resolve' ? [] : unresolvedHiddenTagIds;
 
@@ -694,12 +854,15 @@ export function calculateRisk(context: CalculationContext): RiskResult {
     }
 
     const range = getDarkRiskRange(darkRisk);
-    unknownMin += range.riskMin;
-    unknownMax += range.riskMax;
+    const darkRiskMultiplier = getDarkRiskCategoryMultiplier(context, darkRisk.category);
+    const riskMin = Math.round(range.riskMin * darkRiskMultiplier);
+    const riskMax = Math.round(range.riskMax * darkRiskMultiplier);
+    unknownMin += riskMin;
+    unknownMax += riskMax;
     const label = shouldShowDarkRiskCategory(product, riskId)
       ? `未完全揭示的${getDarkRiskCategoryLabel(darkRisk.category)}暗风险`
       : '未完全揭示的暗风险';
-    unknownRiskBreakdown.push(unknownItem('dark_risk', 'dark_risk_unknown', label, range.riskMin, range.riskMax));
+    unknownRiskBreakdown.push(unknownItem('dark_risk', 'dark_risk_unknown', label, riskMin, riskMax));
   }
 
   // 预览模式：未知信息提示

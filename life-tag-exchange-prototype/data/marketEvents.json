@@ -34,7 +34,24 @@
         "targetId": "tag_rights_awareness",
         "sourceType": "market_event",
         "sourceId": "market_bigtech_cost_cutting",
-        "displayText": "[维权意识强] 爆雷 +15"
+        "displayText": "[维权意识强] 爆雷 +15",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_rights_awareness"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "career"
+              }
+            }
+          ]
+        }
       }
     ],
     "effects": [],
@@ -128,7 +145,9 @@
         "sourceId": "market_spring_matchmaking_season",
         "condition": {
           "type": "customer_type_is",
-          "params": { "customerType": "family" }
+          "params": {
+            "customerType": "family"
+          }
         },
         "displayText": "[会发疯] 卖给相亲/家庭顾客时爆雷 +15"
       }
@@ -161,7 +180,24 @@
         "targetId": "tag_elite_school",
         "sourceType": "market_event",
         "sourceId": "market_elite_fake_scandal",
-        "displayText": "[名校] 爆雷 +5"
+        "displayText": "[名校] 爆雷 +5",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_elite_school"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "family"
+              }
+            }
+          ]
+        }
       },
       {
         "id": "mod_elite_scandal_fake_risk",
@@ -171,7 +207,24 @@
         "targetId": "tag_fake_quality",
         "sourceType": "market_event",
         "sourceId": "market_elite_fake_scandal",
-        "displayText": "[水货] 爆雷 +30"
+        "displayText": "[水货] 爆雷 +30",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_fake_quality"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "career"
+              }
+            }
+          ]
+        }
       }
     ],
     "effects": [],
@@ -192,7 +245,24 @@
         "targetId": "tag_rights_awareness",
         "sourceType": "market_event",
         "sourceId": "market_labor_dispute_trending",
-        "displayText": "[维权意识强] 爆雷 +25"
+        "displayText": "[维权意识强] 爆雷 +25",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_rights_awareness"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "career"
+              }
+            }
+          ]
+        }
       },
       {
         "id": "mod_labor_low_salary_risk",
@@ -202,7 +272,24 @@
         "targetId": "tag_low_salary_acceptance",
         "sourceType": "market_event",
         "sourceId": "market_labor_dispute_trending",
-        "displayText": "[低薪接受] 爆雷 +20"
+        "displayText": "[低薪接受] 爆雷 +20",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_low_salary_acceptance"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "family"
+              }
+            }
+          ]
+        }
       },
       {
         "id": "mod_labor_overtime_risk",
@@ -212,7 +299,24 @@
         "targetId": "tag_overtime",
         "sourceType": "market_event",
         "sourceId": "market_labor_dispute_trending",
-        "displayText": "[能加班] 爆雷 +10"
+        "displayText": "[能加班] 爆雷 +10",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_overtime"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "family"
+              }
+            }
+          ]
+        }
       }
     ],
     "effects": [],
@@ -234,7 +338,9 @@
         "sourceId": "market_platform_persona_crackdown",
         "condition": {
           "type": "customer_type_is",
-          "params": { "customerType": "mcn" }
+          "params": {
+            "customerType": "mcn"
+          }
         },
         "displayText": "卖给短视频 MCN 时爆雷 +15（平台严打）"
       },
@@ -248,7 +354,9 @@
         "sourceId": "market_platform_persona_crackdown",
         "condition": {
           "type": "customer_type_is",
-          "params": { "customerType": "family" }
+          "params": {
+            "customerType": "family"
+          }
         },
         "displayText": "[空心人设] 卖给相亲/家庭顾客时爆雷 +15"
       }
@@ -301,7 +409,24 @@
         "targetId": "tag_fake_quality",
         "sourceType": "market_event",
         "sourceId": "market_parent_decency_panic",
-        "displayText": "[水货] 爆雷 +20"
+        "displayText": "[水货] 爆雷 +20",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_fake_quality"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "career"
+              }
+            }
+          ]
+        }
       }
     ],
     "effects": [],
@@ -332,7 +457,24 @@
         "targetId": "tag_fake_quality",
         "sourceType": "market_event",
         "sourceId": "market_returnee_value_correction",
-        "displayText": "[水货] 爆雷 +20"
+        "displayText": "[水货] 爆雷 +20",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_fake_quality"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "career"
+              }
+            }
+          ]
+        }
       },
       {
         "id": "mod_returnee_decent_price",
@@ -383,7 +525,24 @@
         "targetId": "tag_low_salary_acceptance",
         "sourceType": "market_event",
         "sourceId": "market_small_town_grind_story",
-        "displayText": "[低薪接受] 爆雷 +5"
+        "displayText": "[低薪接受] 爆雷 +5",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_low_salary_acceptance"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "family"
+              }
+            }
+          ]
+        }
       }
     ],
     "effects": [],
@@ -434,7 +593,24 @@
         "targetId": "tag_rights_awareness",
         "sourceType": "market_event",
         "sourceId": "market_startup_survival_mode",
-        "displayText": "[维权意识强] 爆雷 +20"
+        "displayText": "[维权意识强] 爆雷 +20",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_rights_awareness"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "career"
+              }
+            }
+          ]
+        }
       }
     ],
     "effects": [],
@@ -455,7 +631,24 @@
         "targetId": "tag_low_salary_acceptance",
         "sourceType": "market_event",
         "sourceId": "market_anti_work_discussion",
-        "displayText": "[低薪接受] 爆雷 +25"
+        "displayText": "[低薪接受] 爆雷 +25",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_low_salary_acceptance"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "family"
+              }
+            }
+          ]
+        }
       },
       {
         "id": "mod_anti_work_overtime_risk",
@@ -465,7 +658,24 @@
         "targetId": "tag_overtime",
         "sourceType": "market_event",
         "sourceId": "market_anti_work_discussion",
-        "displayText": "[能加班] 爆雷 +15"
+        "displayText": "[能加班] 爆雷 +15",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_overtime"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "family"
+              }
+            }
+          ]
+        }
       },
       {
         "id": "mod_anti_work_rebellious_price",
@@ -508,7 +718,9 @@
         "sourceId": "market_controversy_carnival",
         "condition": {
           "type": "pricing_mode_is",
-          "params": { "pricingModeId": "pricing_high" }
+          "params": {
+            "pricingModeId": "pricing_high"
+          }
         },
         "displayText": "[争议感] 高价卖时爆雷 +15"
       },
@@ -522,7 +734,9 @@
         "sourceId": "market_controversy_carnival",
         "condition": {
           "type": "pricing_mode_is",
-          "params": { "pricingModeId": "pricing_blind_box" }
+          "params": {
+            "pricingModeId": "pricing_blind_box"
+          }
         },
         "displayText": "[争议感] 盲盒价时爆雷 +20"
       },
@@ -567,7 +781,9 @@
         "sourceId": "market_platform_boring_penalty",
         "condition": {
           "type": "customer_type_is",
-          "params": { "customerType": "mcn" }
+          "params": {
+            "customerType": "mcn"
+          }
         },
         "displayText": "[无聊] 卖给 MCN 时爆雷 +20"
       },

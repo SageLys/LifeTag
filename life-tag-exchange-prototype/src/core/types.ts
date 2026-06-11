@@ -40,6 +40,8 @@ export interface GameConfig {
   basePackagePreferenceThreshold?: number;
   basePublicRelationRiskReduction?: number;
   marketEventsPerDay: number;
+  riskModelV3?: RiskModelV3Config;
+  claimMismatchRules?: ClaimMismatchRule[];
   rewardOptionsPerDay: number;
   rewardSystem?: {
     maintenancePointsPerDay?: number;
@@ -86,6 +88,48 @@ export interface InitialDeckEntry {
   count: number;
 }
 
+export interface FitRiskReductionConfig {
+  enabled?: boolean;
+  minPreferredHits?: number;
+  perHit?: number;
+  max?: number;
+}
+
+export interface RiskModelV3Config {
+  enabled?: boolean;
+  sourceRiskLabel?: string;
+  unknownDarkRiskUseCustomerMultiplier?: boolean;
+  pricingRiskUseCustomerMultiplier?: boolean;
+  customerTraitRiskEnabled?: boolean;
+  claimMismatchRiskEnabled?: boolean;
+  customerFitReductionEnabled?: boolean;
+  overToleranceAccidentModifierEnabled?: boolean;
+  defaultDarkRiskCategoryMultiplier?: number;
+  defaultPricingRiskMultiplier?: number;
+  defaultTraitRiskBonus?: number;
+  defaultFitRiskReduction?: FitRiskReductionConfig;
+}
+
+export interface ClaimMismatchRule {
+  id: string;
+  appliedTagId: string;
+  requiresAnyTrueTagIds?: string[];
+  conflictAnyTagIds?: string[];
+  customerTypes?: string[];
+  customerIds?: string[];
+  riskAdd: number;
+  displayText?: string;
+}
+
+export interface CustomerRiskProfile {
+  riskTraitBonus?: Record<string, number>;
+  darkRiskCategoryMultiplier?: Record<string, number>;
+  pricingRiskMultiplier?: Record<string, number>;
+  fitRiskReduction?: FitRiskReductionConfig;
+  toleranceMargin?: number;
+  overToleranceAccidentLevelAdd?: number;
+}
+
 export interface TagDef {
   id: string;
   displayName: string;
@@ -94,6 +138,8 @@ export interface TagDef {
   riskValue: number;
   isNegative: boolean;
   isWashable: boolean;
+  baseRisk?: number;
+  riskTraits?: string[];
 }
 
 export interface DarkRiskDef {
@@ -105,6 +151,11 @@ export interface DarkRiskDef {
   accidentWeight: number;
   relatedTagIds: string[];
   sensitiveCustomerIds: string[];
+  riskMin?: number;
+  riskMax?: number;
+  actualRiskDefault?: number;
+  categoryLabel?: string;
+  previewHint?: string;
 }
 
 export interface TagConflictDef {
@@ -148,6 +199,8 @@ export interface CustomerDef {
   tabooTagRiskBonus?: Record<string, number>;
   /** v2: 暗风险敏感类型——命中时全额计入，未命中时计入 30% */
   darkRiskSensitivity?: string[];
+  customerRiskProfile?: CustomerRiskProfile;
+  aliasOf?: string;
 }
 
 export interface MarketEventDef {
@@ -284,6 +337,7 @@ export interface EndingEvaluationDef {
 
 export interface Condition {
   type: string;
+  params?: Record<string, JsonValue>;
   target?: string;
   operator?: string;
   value?: JsonValue;
@@ -296,6 +350,8 @@ export interface Condition {
   customerId?: string;
   pricingModeId?: string;
   marketEventId?: string;
+  accidentLevel?: AccidentLevel;
+  accidentLevels?: AccidentLevel[];
 }
 
 export interface Effect {
