@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "prototype-v2",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "prototype-v2"],
+      "port": 5174,
+      "autoPort": true
+    }
+  ]
+}
