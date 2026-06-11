@@ -1,0 +1,1187 @@
+[
+  {
+    "id": "reward_day1_bigtech_starter",
+    "displayName": "大厂牛马流启动包",
+    "rewardSlot": "day_one_starter",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 30,
+    "cost": 30,
+    "weight": 100,
+    "description": "获得【低薪接受话术】与货源倾向【校招剩料】。",
+    "payload": {
+      "cardId": "card_low_salary_pitch",
+      "supplySourceId": "supply_campus_leftover"
+    },
+    "cardId": "card_low_salary_pitch",
+    "supplySourceId": "supply_campus_leftover"
+  },
+  {
+    "id": "reward_day1_family_starter",
+    "displayName": "稳定相亲流启动包",
+    "rewardSlot": "day_one_starter",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 30,
+    "cost": 30,
+    "weight": 100,
+    "description": "获得【体面包装】与【洗标流水线 I】。",
+    "payload": {
+      "cardId": "card_decent_package",
+      "passiveId": "passive_wash_label_pipeline"
+    },
+    "cardId": "card_decent_package",
+    "passiveId": "passive_wash_label_pipeline"
+  },
+  {
+    "id": "reward_day1_mcn_starter",
+    "displayName": "MCN 发疯流启动包",
+    "rewardSlot": "day_one_starter",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 30,
+    "cost": 30,
+    "weight": 100,
+    "description": "获得【热搜预热】与货源倾向【流量冻肉】。",
+    "payload": {
+      "cardId": "card_hot_search_warmup",
+      "supplySourceId": "supply_flow_frozen_meat"
+    },
+    "cardId": "card_hot_search_warmup",
+    "supplySourceId": "supply_flow_frozen_meat"
+  },
+  {
+    "id": "reward_perm_ap_cap_1",
+    "displayName": "行动点上限 +1 (1)",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 50,
+    "cost": 50,
+    "weight": 700,
+    "description": "永久：每日行动点 +1，上限 9。",
+    "payload": {
+      "stat": "dailyActionPoints",
+      "op": "add",
+      "value": 1,
+      "maxPurchases": 1,
+      "cap": 9
+    },
+    "stat": "dailyActionPoints",
+    "op": "add",
+    "value": 1,
+    "maxPurchases": 1,
+    "cap": 9
+  },
+  {
+    "id": "reward_perm_ap_cap_2",
+    "displayName": "行动点上限 +1 (2)",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 70,
+    "cost": 70,
+    "weight": 700,
+    "description": "永久：每日行动点 +1，上限 9。",
+    "payload": {
+      "stat": "dailyActionPoints",
+      "op": "add",
+      "value": 1,
+      "maxPurchases": 1,
+      "cap": 9
+    },
+    "stat": "dailyActionPoints",
+    "op": "add",
+    "value": 1,
+    "maxPurchases": 1,
+    "cap": 9
+  },
+  {
+    "id": "reward_perm_ap_cap_3",
+    "displayName": "行动点上限 +1 (3)",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 90,
+    "cost": 90,
+    "weight": 700,
+    "description": "永久：每日行动点 +1，上限 9。",
+    "payload": {
+      "stat": "dailyActionPoints",
+      "op": "add",
+      "value": 1,
+      "maxPurchases": 1,
+      "cap": 9
+    },
+    "stat": "dailyActionPoints",
+    "op": "add",
+    "value": 1,
+    "maxPurchases": 1,
+    "cap": 9
+  },
+  {
+    "id": "reward_perm_ap_cap_4",
+    "displayName": "行动点上限 +1 (4)",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 120,
+    "cost": 120,
+    "weight": 700,
+    "description": "永久：每日行动点 +1，上限 9。",
+    "payload": {
+      "stat": "dailyActionPoints",
+      "op": "add",
+      "value": 1,
+      "maxPurchases": 1,
+      "cap": 9
+    },
+    "stat": "dailyActionPoints",
+    "op": "add",
+    "value": 1,
+    "maxPurchases": 1,
+    "cap": 9
+  },
+  {
+    "id": "reward_perm_draw_1",
+    "displayName": "每日抽牌数 +1 I",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 50,
+    "cost": 50,
+    "weight": 700,
+    "description": "永久：每日抽牌数 +1。",
+    "payload": {
+      "stat": "dailyDrawCount",
+      "op": "add",
+      "value": 1,
+      "maxPurchases": 1
+    },
+    "stat": "dailyDrawCount",
+    "op": "add",
+    "value": 1,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_perm_draw_2",
+    "displayName": "每日抽牌数 +1 II",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 50,
+    "cost": 50,
+    "weight": 700,
+    "description": "永久：每日抽牌数 +1。",
+    "payload": {
+      "stat": "dailyDrawCount",
+      "op": "add",
+      "value": 1,
+      "maxPurchases": 1
+    },
+    "stat": "dailyDrawCount",
+    "op": "add",
+    "value": 1,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_perm_draw_3",
+    "displayName": "每日抽牌数 +1 III",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 50,
+    "cost": 50,
+    "weight": 700,
+    "description": "永久：每日抽牌数 +1。",
+    "payload": {
+      "stat": "dailyDrawCount",
+      "op": "add",
+      "value": 1,
+      "maxPurchases": 1
+    },
+    "stat": "dailyDrawCount",
+    "op": "add",
+    "value": 1,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_perm_buy_limit_1",
+    "displayName": "每日进货上限 +1 I",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 50,
+    "cost": 50,
+    "weight": 700,
+    "description": "永久：每日可进货数 +1。",
+    "payload": {
+      "stat": "dailyProductBuyLimit",
+      "op": "add",
+      "value": 1,
+      "maxPurchases": 1
+    },
+    "stat": "dailyProductBuyLimit",
+    "op": "add",
+    "value": 1,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_perm_buy_limit_2",
+    "displayName": "每日进货上限 +1 II",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 50,
+    "cost": 50,
+    "weight": 700,
+    "description": "永久：每日可进货数 +1。",
+    "payload": {
+      "stat": "dailyProductBuyLimit",
+      "op": "add",
+      "value": 1,
+      "maxPurchases": 1
+    },
+    "stat": "dailyProductBuyLimit",
+    "op": "add",
+    "value": 1,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_perm_candidate_1",
+    "displayName": "每日商品候选 +1 I",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 50,
+    "cost": 50,
+    "weight": 700,
+    "description": "永久：每日商品候选 +1。",
+    "payload": {
+      "stat": "dailyProductCandidateCount",
+      "op": "add",
+      "value": 1,
+      "maxPurchases": 1
+    },
+    "stat": "dailyProductCandidateCount",
+    "op": "add",
+    "value": 1,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_perm_candidate_2",
+    "displayName": "每日商品候选 +1 II",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 50,
+    "cost": 50,
+    "weight": 700,
+    "description": "永久：每日商品候选 +1。",
+    "payload": {
+      "stat": "dailyProductCandidateCount",
+      "op": "add",
+      "value": 1,
+      "maxPurchases": 1
+    },
+    "stat": "dailyProductCandidateCount",
+    "op": "add",
+    "value": 1,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_perm_inventory_1",
+    "displayName": "库存上限 +2 I",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 40,
+    "cost": 40,
+    "weight": 700,
+    "description": "永久：库存上限 +2。",
+    "payload": {
+      "stat": "inventoryLimit",
+      "op": "add",
+      "value": 2,
+      "maxPurchases": 1
+    },
+    "stat": "inventoryLimit",
+    "op": "add",
+    "value": 2,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_perm_inventory_2",
+    "displayName": "库存上限 +2 II",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 40,
+    "cost": 40,
+    "weight": 700,
+    "description": "永久：库存上限 +2。",
+    "payload": {
+      "stat": "inventoryLimit",
+      "op": "add",
+      "value": 2,
+      "maxPurchases": 1
+    },
+    "stat": "inventoryLimit",
+    "op": "add",
+    "value": 2,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_perm_inventory_3",
+    "displayName": "库存上限 +2 III",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 40,
+    "cost": 40,
+    "weight": 700,
+    "description": "永久：库存上限 +2。",
+    "payload": {
+      "stat": "inventoryLimit",
+      "op": "add",
+      "value": 2,
+      "maxPurchases": 1
+    },
+    "stat": "inventoryLimit",
+    "op": "add",
+    "value": 2,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_perm_rep_cap_1",
+    "displayName": "信誉上限 +10 (1)",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 30,
+    "cost": 30,
+    "weight": 700,
+    "description": "永久：信誉上限 +10，并回复 10 信誉。",
+    "payload": {
+      "stat": "maxReputation",
+      "op": "add",
+      "value": 10,
+      "maxPurchases": 1,
+      "restoreReputation": 10
+    },
+    "stat": "maxReputation",
+    "op": "add",
+    "value": 10,
+    "maxPurchases": 1,
+    "restoreReputation": 10
+  },
+  {
+    "id": "reward_perm_rep_cap_2",
+    "displayName": "信誉上限 +10 (2)",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 30,
+    "cost": 30,
+    "weight": 700,
+    "description": "永久：信誉上限 +10，并回复 10 信誉。",
+    "payload": {
+      "stat": "maxReputation",
+      "op": "add",
+      "value": 10,
+      "maxPurchases": 1,
+      "restoreReputation": 10
+    },
+    "stat": "maxReputation",
+    "op": "add",
+    "value": 10,
+    "maxPurchases": 1,
+    "restoreReputation": 10
+  },
+  {
+    "id": "reward_perm_rep_cap_3",
+    "displayName": "信誉上限 +10 (3)",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 30,
+    "cost": 30,
+    "weight": 700,
+    "description": "永久：信誉上限 +10，并回复 10 信誉。",
+    "payload": {
+      "stat": "maxReputation",
+      "op": "add",
+      "value": 10,
+      "maxPurchases": 1,
+      "restoreReputation": 10
+    },
+    "stat": "maxReputation",
+    "op": "add",
+    "value": 10,
+    "maxPurchases": 1,
+    "restoreReputation": 10
+  },
+  {
+    "id": "reward_perm_rep_cap_4",
+    "displayName": "信誉上限 +10 (4)",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 30,
+    "cost": 30,
+    "weight": 700,
+    "description": "永久：信誉上限 +10，并回复 10 信誉。",
+    "payload": {
+      "stat": "maxReputation",
+      "op": "add",
+      "value": 10,
+      "maxPurchases": 1,
+      "restoreReputation": 10
+    },
+    "stat": "maxReputation",
+    "op": "add",
+    "value": 10,
+    "maxPurchases": 1,
+    "restoreReputation": 10
+  },
+  {
+    "id": "reward_perm_rep_cap_5",
+    "displayName": "信誉上限 +10 (5)",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 30,
+    "cost": 30,
+    "weight": 700,
+    "description": "永久：信誉上限 +10，并回复 10 信誉。",
+    "payload": {
+      "stat": "maxReputation",
+      "op": "add",
+      "value": 10,
+      "maxPurchases": 1,
+      "restoreReputation": 10
+    },
+    "stat": "maxReputation",
+    "op": "add",
+    "value": 10,
+    "maxPurchases": 1,
+    "restoreReputation": 10
+  },
+  {
+    "id": "reward_perm_cash_floor_1",
+    "displayName": "每日开店周转金 +20 (1)",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 40,
+    "cost": 40,
+    "weight": 700,
+    "description": "永久：每日低保现金目标 +20。",
+    "payload": {
+      "stat": "dailyOpeningCashBonus",
+      "op": "add",
+      "value": 20,
+      "maxPurchases": 1
+    },
+    "stat": "dailyOpeningCashBonus",
+    "op": "add",
+    "value": 20,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_perm_cash_floor_2",
+    "displayName": "每日开店周转金 +20 (2)",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 40,
+    "cost": 40,
+    "weight": 700,
+    "description": "永久：每日低保现金目标 +20。",
+    "payload": {
+      "stat": "dailyOpeningCashBonus",
+      "op": "add",
+      "value": 20,
+      "maxPurchases": 1
+    },
+    "stat": "dailyOpeningCashBonus",
+    "op": "add",
+    "value": 20,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_perm_cash_floor_3",
+    "displayName": "每日开店周转金 +20 (3)",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 40,
+    "cost": 40,
+    "weight": 700,
+    "description": "永久：每日低保现金目标 +20。",
+    "payload": {
+      "stat": "dailyOpeningCashBonus",
+      "op": "add",
+      "value": 20,
+      "maxPurchases": 1
+    },
+    "stat": "dailyOpeningCashBonus",
+    "op": "add",
+    "value": 20,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_perm_free_identify",
+    "displayName": "每天首次鉴定免费",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 50,
+    "cost": 50,
+    "weight": 700,
+    "description": "永久：每天第一次鉴定不消耗行动点。",
+    "payload": {
+      "stat": "firstIdentifyFree",
+      "op": "add",
+      "value": 1,
+      "maxPurchases": 1
+    },
+    "stat": "firstIdentifyFree",
+    "op": "add",
+    "value": 1,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_perm_wash_cash_1",
+    "displayName": "首次洗标现金 -15",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 60,
+    "cost": 60,
+    "weight": 700,
+    "description": "永久：每天第一次洗标现金成本 -15。",
+    "payload": {
+      "stat": "firstWashCashDiscount",
+      "op": "add",
+      "value": 15,
+      "maxPurchases": 1
+    },
+    "stat": "firstWashCashDiscount",
+    "op": "add",
+    "value": 15,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_perm_free_wash",
+    "displayName": "每天首次洗标免费行动",
+    "rewardSlot": "paid_shop",
+    "rewardType": "add_passive",
+    "type": "add_passive",
+    "price": 90,
+    "cost": 90,
+    "weight": 700,
+    "description": "永久：每天第一次洗标不消耗行动点。",
+    "payload": {
+      "passiveId": "passive_wash_label_pipeline"
+    },
+    "passiveId": "passive_wash_label_pipeline"
+  },
+  {
+    "id": "reward_perm_package_multiplier",
+    "displayName": "基础包装倍率 1.30",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 50,
+    "cost": 50,
+    "weight": 700,
+    "description": "永久：基础包装倍率 1.25 → 1.30。",
+    "payload": {
+      "stat": "basePackageMultiplier",
+      "op": "add",
+      "value": 0.05,
+      "maxPurchases": 1,
+      "cap": 1.3
+    },
+    "stat": "basePackageMultiplier",
+    "op": "add",
+    "value": 0.05,
+    "maxPurchases": 1,
+    "cap": 1.3
+  },
+  {
+    "id": "reward_perm_package_risk",
+    "displayName": "包装爆雷降低",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 80,
+    "cost": 80,
+    "weight": 700,
+    "description": "永久：包装爆雷 +8 → +5。",
+    "payload": {
+      "stat": "basePackageRiskAdd",
+      "op": "add",
+      "value": -3,
+      "maxPurchases": 1
+    },
+    "stat": "basePackageRiskAdd",
+    "op": "add",
+    "value": -3,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_perm_pr_cash",
+    "displayName": "公关现金成本 -10",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 60,
+    "cost": 60,
+    "weight": 700,
+    "description": "永久：公关现金成本 -10。",
+    "payload": {
+      "stat": "basePrCashDiscount",
+      "op": "add",
+      "value": 10,
+      "maxPurchases": 1
+    },
+    "stat": "basePrCashDiscount",
+    "op": "add",
+    "value": 10,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_perm_pr_risk",
+    "displayName": "公关降风险增强",
+    "rewardSlot": "paid_shop",
+    "rewardType": "permanent_upgrade",
+    "type": "permanent_upgrade",
+    "price": 90,
+    "cost": 90,
+    "weight": 700,
+    "description": "永久：公关降风险 -25 → -35。",
+    "payload": {
+      "stat": "basePublicRelationRiskReduction",
+      "op": "add",
+      "value": 10,
+      "maxPurchases": 1
+    },
+    "stat": "basePublicRelationRiskReduction",
+    "op": "add",
+    "value": 10,
+    "maxPurchases": 1
+  },
+  {
+    "id": "reward_add_card_skilled_assembly_line",
+    "displayName": "获得卡牌：熟练流水线",
+    "rewardSlot": "free_build",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 0,
+    "cost": 0,
+    "weight": 200,
+    "description": "获得一张经营卡。",
+    "payload": {
+      "cardId": "card_skilled_assembly_line"
+    },
+    "cardId": "card_skilled_assembly_line"
+  },
+  {
+    "id": "reward_shop_add_card_skilled_assembly_line",
+    "displayName": "购买卡牌：熟练流水线",
+    "rewardSlot": "paid_shop",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 45,
+    "cost": 45,
+    "weight": 200,
+    "description": "购买一张经营卡。",
+    "payload": {
+      "cardId": "card_skilled_assembly_line"
+    },
+    "cardId": "card_skilled_assembly_line"
+  },
+  {
+    "id": "reward_add_card_overtime_processing",
+    "displayName": "获得卡牌：加班加工",
+    "rewardSlot": "free_build",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 0,
+    "cost": 0,
+    "weight": 200,
+    "description": "获得一张经营卡。",
+    "payload": {
+      "cardId": "card_overtime_processing"
+    },
+    "cardId": "card_overtime_processing"
+  },
+  {
+    "id": "reward_shop_add_card_overtime_processing",
+    "displayName": "购买卡牌：加班加工",
+    "rewardSlot": "paid_shop",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 45,
+    "cost": 45,
+    "weight": 200,
+    "description": "购买一张经营卡。",
+    "payload": {
+      "cardId": "card_overtime_processing"
+    },
+    "cardId": "card_overtime_processing"
+  },
+  {
+    "id": "reward_add_card_batch_processing",
+    "displayName": "获得卡牌：批量处理",
+    "rewardSlot": "free_build",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 0,
+    "cost": 0,
+    "weight": 200,
+    "description": "获得一张经营卡。",
+    "payload": {
+      "cardId": "card_batch_processing"
+    },
+    "cardId": "card_batch_processing"
+  },
+  {
+    "id": "reward_shop_add_card_batch_processing",
+    "displayName": "购买卡牌：批量处理",
+    "rewardSlot": "paid_shop",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 45,
+    "cost": 45,
+    "weight": 200,
+    "description": "购买一张经营卡。",
+    "payload": {
+      "cardId": "card_batch_processing"
+    },
+    "cardId": "card_batch_processing"
+  },
+  {
+    "id": "reward_add_card_low_price_harvest",
+    "displayName": "获得卡牌：低价收割",
+    "rewardSlot": "free_build",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 0,
+    "cost": 0,
+    "weight": 200,
+    "description": "获得一张经营卡。",
+    "payload": {
+      "cardId": "card_low_price_harvest"
+    },
+    "cardId": "card_low_price_harvest"
+  },
+  {
+    "id": "reward_shop_add_card_low_price_harvest",
+    "displayName": "购买卡牌：低价收割",
+    "rewardSlot": "paid_shop",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 45,
+    "cost": 45,
+    "weight": 200,
+    "description": "购买一张经营卡。",
+    "payload": {
+      "cardId": "card_low_price_harvest"
+    },
+    "cardId": "card_low_price_harvest"
+  },
+  {
+    "id": "reward_add_card_regular_customer_credit",
+    "displayName": "获得卡牌：熟客赊账",
+    "rewardSlot": "free_build",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 0,
+    "cost": 0,
+    "weight": 200,
+    "description": "获得一张经营卡。",
+    "payload": {
+      "cardId": "card_regular_customer_credit"
+    },
+    "cardId": "card_regular_customer_credit"
+  },
+  {
+    "id": "reward_shop_add_card_regular_customer_credit",
+    "displayName": "购买卡牌：熟客赊账",
+    "rewardSlot": "paid_shop",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 45,
+    "cost": 45,
+    "weight": 200,
+    "description": "购买一张经营卡。",
+    "payload": {
+      "cardId": "card_regular_customer_credit"
+    },
+    "cardId": "card_regular_customer_credit"
+  },
+  {
+    "id": "reward_add_card_file_deletion",
+    "displayName": "获得卡牌：背调删档",
+    "rewardSlot": "free_build",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 0,
+    "cost": 0,
+    "weight": 200,
+    "description": "获得一张经营卡。",
+    "payload": {
+      "cardId": "card_file_deletion"
+    },
+    "cardId": "card_file_deletion"
+  },
+  {
+    "id": "reward_shop_add_card_file_deletion",
+    "displayName": "购买卡牌：背调删档",
+    "rewardSlot": "paid_shop",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 45,
+    "cost": 45,
+    "weight": 200,
+    "description": "购买一张经营卡。",
+    "payload": {
+      "cardId": "card_file_deletion"
+    },
+    "cardId": "card_file_deletion"
+  },
+  {
+    "id": "reward_add_card_seal_package",
+    "displayName": "获得卡牌：封口包装",
+    "rewardSlot": "free_build",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 0,
+    "cost": 0,
+    "weight": 200,
+    "description": "获得一张经营卡。",
+    "payload": {
+      "cardId": "card_seal_package"
+    },
+    "cardId": "card_seal_package"
+  },
+  {
+    "id": "reward_shop_add_card_seal_package",
+    "displayName": "购买卡牌：封口包装",
+    "rewardSlot": "paid_shop",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 45,
+    "cost": 45,
+    "weight": 200,
+    "description": "购买一张经营卡。",
+    "payload": {
+      "cardId": "card_seal_package"
+    },
+    "cardId": "card_seal_package"
+  },
+  {
+    "id": "reward_add_card_risk_underwriting",
+    "displayName": "获得卡牌：风险承销",
+    "rewardSlot": "free_build",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 0,
+    "cost": 0,
+    "weight": 200,
+    "description": "获得一张经营卡。",
+    "payload": {
+      "cardId": "card_risk_underwriting"
+    },
+    "cardId": "card_risk_underwriting"
+  },
+  {
+    "id": "reward_shop_add_card_risk_underwriting",
+    "displayName": "购买卡牌：风险承销",
+    "rewardSlot": "paid_shop",
+    "rewardType": "add_card",
+    "type": "add_card",
+    "price": 45,
+    "cost": 45,
+    "weight": 200,
+    "description": "购买一张经营卡。",
+    "payload": {
+      "cardId": "card_risk_underwriting"
+    },
+    "cardId": "card_risk_underwriting"
+  },
+  {
+    "id": "reward_shop_upgrade_card",
+    "displayName": "升级一张卡牌",
+    "rewardSlot": "paid_shop",
+    "rewardType": "upgrade_card",
+    "type": "upgrade_card",
+    "price": 55,
+    "cost": 55,
+    "weight": 200,
+    "description": "选择 1 张可升级卡牌升级。",
+    "payload": {},
+    "requires": "has_upgradable_card"
+  },
+  {
+    "id": "reward_shop_remove_card",
+    "displayName": "删除一张卡牌",
+    "rewardSlot": "paid_shop",
+    "rewardType": "remove_card",
+    "type": "remove_card",
+    "price": 65,
+    "cost": 65,
+    "weight": 200,
+    "description": "删除 1 张非临时卡牌。",
+    "payload": {},
+    "requires": {
+      "deck_size_above": 6
+    }
+  },
+  {
+    "id": "reward_shop_supply_supply_campus_leftover",
+    "displayName": "购买货源：校招剩料",
+    "rewardSlot": "paid_shop",
+    "rewardType": "add_supply_source",
+    "type": "add_supply_source",
+    "price": 50,
+    "cost": 50,
+    "weight": 150,
+    "description": "获得一个货源倾向。",
+    "payload": {
+      "supplySourceId": "supply_campus_leftover"
+    },
+    "supplySourceId": "supply_campus_leftover"
+  },
+  {
+    "id": "reward_shop_supply_supply_flow_frozen_meat",
+    "displayName": "购买货源：流量冻肉",
+    "rewardSlot": "paid_shop",
+    "rewardType": "add_supply_source",
+    "type": "add_supply_source",
+    "price": 50,
+    "cost": 50,
+    "weight": 150,
+    "description": "获得一个货源倾向。",
+    "payload": {
+      "supplySourceId": "supply_flow_frozen_meat"
+    },
+    "supplySourceId": "supply_flow_frozen_meat"
+  },
+  {
+    "id": "reward_shop_supply_supply_marriage_boutique",
+    "displayName": "购买货源：婚恋精品库",
+    "rewardSlot": "paid_shop",
+    "rewardType": "add_supply_source",
+    "type": "add_supply_source",
+    "price": 50,
+    "cost": 50,
+    "weight": 150,
+    "description": "获得一个货源倾向。",
+    "payload": {
+      "supplySourceId": "supply_marriage_boutique"
+    },
+    "supplySourceId": "supply_marriage_boutique"
+  },
+  {
+    "id": "reward_shop_supply_supply_black_box_wholesale",
+    "displayName": "购买货源：黑箱批发",
+    "rewardSlot": "paid_shop",
+    "rewardType": "add_supply_source",
+    "type": "add_supply_source",
+    "price": 50,
+    "cost": 50,
+    "weight": 150,
+    "description": "获得一个货源倾向。",
+    "payload": {
+      "supplySourceId": "supply_black_box_wholesale"
+    },
+    "supplySourceId": "supply_black_box_wholesale"
+  },
+  {
+    "id": "reward_maintain_cash_flow",
+    "displayName": "现金周转",
+    "rewardSlot": "maintenance",
+    "rewardType": "gain_cash",
+    "type": "gain_cash",
+    "price": 0,
+    "cost": 0,
+    "weight": 450,
+    "description": "获得 45 现金。",
+    "payload": {
+      "amount": 45
+    },
+    "amount": 45,
+    "maintenanceCost": 1
+  },
+  {
+    "id": "reward_maintain_reputation_repair",
+    "displayName": "舆论修补",
+    "rewardSlot": "maintenance",
+    "rewardType": "gain_reputation",
+    "type": "gain_reputation",
+    "price": 0,
+    "cost": 0,
+    "weight": 450,
+    "description": "信誉 +15。",
+    "payload": {
+      "amount": 15
+    },
+    "amount": 15,
+    "maintenanceCost": 1
+  },
+  {
+    "id": "reward_maintain_risk_window",
+    "displayName": "风险窗口",
+    "rewardSlot": "maintenance",
+    "rewardType": "add_temporary_modifier",
+    "type": "add_temporary_modifier",
+    "price": 0,
+    "cost": 0,
+    "weight": 450,
+    "description": "次日首次出售爆雷 -15。",
+    "payload": {
+      "effects": [
+        {
+          "type": "add_temporary_modifier",
+          "params": {
+            "duration": "next_day",
+            "actionId": "sell_product",
+            "target": "sell_product",
+            "stat": "risk",
+            "op": "add",
+            "value": -15,
+            "scope": "first_use"
+          },
+          "displayText": "次日首次出售爆雷 -15"
+        }
+      ]
+    },
+    "effects": [
+      {
+        "type": "add_temporary_modifier",
+        "params": {
+          "duration": "next_day",
+          "actionId": "sell_product",
+          "target": "sell_product",
+          "stat": "risk",
+          "op": "add",
+          "value": -15,
+          "scope": "first_use"
+        },
+        "displayText": "次日首次出售爆雷 -15"
+      }
+    ],
+    "maintenanceCost": 1
+  },
+  {
+    "id": "reward_bonus_cash",
+    "displayName": "爆单现金",
+    "rewardSlot": "bonus",
+    "rewardType": "gain_cash",
+    "type": "gain_cash",
+    "price": 0,
+    "cost": 0,
+    "weight": 450,
+    "description": "现金 +50。",
+    "payload": {
+      "amount": 50
+    },
+    "amount": 50
+  },
+  {
+    "id": "reward_bonus_discount",
+    "displayName": "成长折扣",
+    "rewardSlot": "bonus",
+    "rewardType": "add_temporary_modifier",
+    "type": "add_temporary_modifier",
+    "price": 0,
+    "cost": 0,
+    "weight": 450,
+    "description": "次日首个付费奖励 -30%。",
+    "payload": {
+      "effects": [
+        {
+          "type": "add_temporary_modifier",
+          "params": {
+            "duration": "next_day",
+            "rewardSlot": "paid_shop",
+            "stat": "price",
+            "op": "multiply",
+            "value": 0.7,
+            "scope": "first_purchase"
+          },
+          "displayText": "次日首个付费奖励 -30%"
+        }
+      ]
+    },
+    "effects": [
+      {
+        "type": "add_temporary_modifier",
+        "params": {
+          "duration": "next_day",
+          "rewardSlot": "paid_shop",
+          "stat": "price",
+          "op": "multiply",
+          "value": 0.7,
+          "scope": "first_purchase"
+        },
+        "displayText": "次日首个付费奖励 -30%"
+      }
+    ]
+  },
+  {
+    "id": "reward_bonus_insurance",
+    "displayName": "事故保险",
+    "rewardSlot": "bonus",
+    "rewardType": "temporary_insurance",
+    "type": "temporary_insurance",
+    "price": 0,
+    "cost": 0,
+    "weight": 450,
+    "description": "下一次重大/严重事故惩罚降低。",
+    "payload": {
+      "temporaryInsurance": {
+        "accidentLevels": [
+          "major",
+          "severe"
+        ],
+        "modifiers": [
+          {
+            "stat": "fine",
+            "op": "multiply",
+            "value": 0.5
+          },
+          {
+            "stat": "reputationLoss",
+            "op": "add",
+            "value": -10
+          }
+        ],
+        "uses": 1
+      }
+    },
+    "temporaryInsurance": {
+      "accidentLevels": [
+        "major",
+        "severe"
+      ],
+      "modifiers": [
+        {
+          "stat": "fine",
+          "op": "multiply",
+          "value": 0.5
+        },
+        {
+          "stat": "reputationLoss",
+          "op": "add",
+          "value": -10
+        }
+      ],
+      "uses": 1
+    }
+  }
+]

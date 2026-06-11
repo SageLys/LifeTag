@@ -1,0 +1,162 @@
+[
+  {
+    "id": "conflict_elite_fake_quality",
+    "tagA": "tag_elite_school",
+    "tagB": "tag_fake_quality",
+    "relationType": "conflict",
+    "priceDelta": -10,
+    "riskDelta": 35
+  },
+  {
+    "id": "conflict_low_salary_rights",
+    "tagA": "tag_low_salary_acceptance",
+    "tagB": "tag_rights_awareness",
+    "relationType": "conflict",
+    "priceDelta": -5,
+    "riskDelta": 35
+  },
+  {
+    "id": "conflict_stable_crazy",
+    "tagA": "tag_stable",
+    "tagB": "tag_crazy",
+    "relationType": "conflict",
+    "priceDelta": -15,
+    "riskDelta": 40
+  },
+  {
+    "id": "conflict_decent_empty_persona",
+    "tagA": "tag_decent",
+    "tagB": "tag_empty_persona",
+    "relationType": "conflict",
+    "priceDelta": -10,
+    "riskDelta": 30
+  },
+  {
+    "id": "conflict_family_absurd",
+    "tagA": "tag_social_savvy",
+    "tagB": "tag_absurd",
+    "relationType": "conflict",
+    "priceDelta": -10,
+    "riskDelta": 30
+  },
+  {
+    "id": "conflict_overtime_fragile",
+    "tagA": "tag_overtime",
+    "tagB": "tag_fragile_heart",
+    "relationType": "conflict",
+    "priceDelta": -5,
+    "riskDelta": 25
+  },
+  {
+    "id": "conflict_elite_age35",
+    "tagA": "tag_elite_school",
+    "tagB": "tag_age_35_plus",
+    "relationType": "conflict",
+    "priceDelta": -5,
+    "riskDelta": 15
+  },
+  {
+    "id": "conflict_mcn_boring",
+    "tagA": "tag_controversial",
+    "tagB": "tag_boring",
+    "relationType": "conflict",
+    "priceDelta": -20,
+    "riskDelta": 10
+  },
+  {
+    "id": "conflict_rebellious_low_salary",
+    "tagA": "tag_rebellious",
+    "tagB": "tag_low_salary_acceptance",
+    "relationType": "conflict",
+    "priceDelta": -5,
+    "riskDelta": 25
+  },
+  {
+    "id": "conflict_returnee_fake",
+    "tagA": "tag_oversea_returnee",
+    "tagB": "tag_fake_quality",
+    "relationType": "conflict",
+    "priceDelta": -15,
+    "riskDelta": 35
+  },
+  {
+    "id": "support_young_elite",
+    "tagA": "tag_young",
+    "tagB": "tag_elite_school",
+    "relationType": "support",
+    "priceDelta": 15,
+    "riskDelta": -3
+  },
+  {
+    "id": "support_overtime_resilient",
+    "tagA": "tag_overtime",
+    "tagB": "tag_resilient",
+    "relationType": "support",
+    "priceDelta": 15,
+    "riskDelta": -5
+  },
+  {
+    "id": "support_stable_emotion",
+    "tagA": "tag_stable",
+    "tagB": "tag_emotionally_stable",
+    "relationType": "support",
+    "priceDelta": 20,
+    "riskDelta": -6
+  },
+  {
+    "id": "support_decent_social",
+    "tagA": "tag_decent",
+    "tagB": "tag_social_savvy",
+    "relationType": "support",
+    "priceDelta": 15,
+    "riskDelta": -5
+  },
+  {
+    "id": "support_crazy_absurd",
+    "tagA": "tag_crazy",
+    "tagB": "tag_absurd",
+    "relationType": "support",
+    "priceDelta": 20,
+    "riskDelta": 0
+  },
+  {
+    "id": "support_controversial_rebellious",
+    "tagA": "tag_controversial",
+    "tagB": "tag_rebellious",
+    "relationType": "support",
+    "priceDelta": 20,
+    "riskDelta": 5
+  },
+  {
+    "id": "conflict_decent_crazy",
+    "tagA": "tag_decent",
+    "tagB": "tag_crazy",
+    "relationType": "conflict",
+    "priceDelta": -15,
+    "riskDelta": 35
+  },
+  {
+    "id": "conflict_emotionally_stable_fragile",
+    "tagA": "tag_emotionally_stable",
+    "tagB": "tag_fragile_heart",
+    "relationType": "conflict",
+    "priceDelta": -10,
+    "riskDelta": 28
+  },
+  {
+    "id": "conflict_boring_controversial",
+    "tagA": "tag_boring",
+    "tagB": "tag_controversial",
+    "relationType": "conflict",
+    "priceDelta": -20,
+    "riskDelta": 12
+  },
+  {
+    "id": "support_fake_quality_empty_persona",
+    "tagA": "tag_fake_quality",
+    "tagB": "tag_empty_persona",
+    "relationType": "support",
+    "priceDelta": 0,
+    "riskDelta": 12
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "action_identify",
+    "displayName": "鉴定",
+    "description": "揭示 1 个隐藏标签；没有隐藏标签时提示暗风险类别。",
+    "dailyLimit": 1,
+    "effects": [],
+    "actionPointCost": 1,
+    "cashCost": 0
+  },
+  {
+    "id": "action_wash_tag",
+    "displayName": "洗标",
+    "description": "压制 1 个可洗负面标签；被压制标签不再提供售价加成或基础风险。",
+    "dailyLimit": 1,
+    "effects": [],
+    "actionPointCost": 1,
+    "cashCost": 15
+  },
+  {
+    "id": "action_package",
+    "displayName": "包装",
+    "description": "售价倍率 ×1.25，爆雷 +8；命中 2 个当前顾客偏好时售价 +15。",
+    "dailyLimit": 1,
+    "effects": [],
+    "actionPointCost": 1,
+    "cashCost": 10
+  },
+  {
+    "id": "action_pr",
+    "displayName": "公关",
+    "description": "本单爆雷 -25，并将小事故降为无事故、中事故降为小事故。",
+    "dailyLimit": 1,
+    "effects": [],
+    "actionPointCost": 1,
+    "cashCost": 20
+  }
+]

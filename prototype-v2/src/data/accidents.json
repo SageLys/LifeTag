@@ -1,0 +1,52 @@
+[
+  {
+    "id": "accident_none",
+    "level": "none",
+    "displayName": "无事故",
+    "loss": 0,
+    "accidentText": "没有发生明显事故。",
+    "refundRate": 0,
+    "fine": 0,
+    "reputationLoss": 0
+  },
+  {
+    "id": "accident_minor",
+    "level": "minor",
+    "displayName": "轻微事故",
+    "loss": 10,
+    "accidentText": "轻微售后争议。",
+    "refundRate": 0.1,
+    "fine": 0,
+    "reputationLoss": 4
+  },
+  {
+    "id": "accident_medium",
+    "level": "medium",
+    "displayName": "中等事故",
+    "loss": 25,
+    "accidentText": "舆情或客户投诉开始发酵。",
+    "refundRate": 0.25,
+    "fine": 0,
+    "reputationLoss": 12
+  },
+  {
+    "id": "accident_major",
+    "level": "major",
+    "displayName": "重大事故",
+    "loss": 50,
+    "accidentText": "爆雷造成明显损失。",
+    "refundRate": 0.5,
+    "fine": 0,
+    "reputationLoss": 30
+  },
+  {
+    "id": "accident_severe",
+    "level": "severe",
+    "displayName": "严重事故",
+    "loss": 100,
+    "accidentText": "严重爆雷，店铺承压。",
+    "refundRate": 1,
+    "fine": 35,
+    "reputationLoss": 52
+  }
+]

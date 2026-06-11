@@ -1,0 +1,285 @@
+{
+  "id": "game_config_default",
+  "displayName": "默认 8 天原型配置",
+  "runLengthDays": 8,
+  "initialCash": 150,
+  "targetTotalProfit": 500,
+  "initialReputation": 100,
+  "maxReputation": 100,
+  "dailyActionPoints": 5,
+  "dailyDrawCount": 6,
+  "dailyProductCandidateCount": 5,
+  "dailyProductBuyLimit": 3,
+  "dailyCustomerOrderCount": 4,
+  "inventoryLimit": 8,
+  "marketEventsPerDay": 1,
+  "rewardOptionsPerDay": 3,
+  "dailyMinimumSaleCount": 1,
+  "freshnessLossPerDay": 1,
+  "spoiledAt": 0,
+  "spoiledPriceAdd": -20,
+  "spoiledRiskAdd": 20,
+  "riskThresholds": {
+    "none": {
+      "min": 0,
+      "max": 39
+    },
+    "minor": {
+      "min": 40,
+      "max": 59
+    },
+    "medium": {
+      "min": 60,
+      "max": 79
+    },
+    "major": {
+      "min": 80,
+      "max": 99
+    },
+    "severe": {
+      "min": 100,
+      "max": null
+    }
+  },
+  "initialDeck": [
+    {
+      "cardId": "card_low_salary_pitch",
+      "count": 2
+    },
+    {
+      "cardId": "card_decent_package",
+      "count": 2
+    },
+    {
+      "cardId": "card_crazy_persona",
+      "count": 1
+    },
+    {
+      "cardId": "card_background_check",
+      "count": 1
+    },
+    {
+      "cardId": "card_trial_transfer",
+      "count": 1
+    },
+    {
+      "cardId": "card_pr_package",
+      "count": 1
+    },
+    {
+      "cardId": "card_hot_search_warmup",
+      "count": 1
+    },
+    {
+      "cardId": "card_risk_underwriting",
+      "count": 1
+    }
+  ],
+  "notes": "首版 8 天 HTML 快速验证配置。累计利润是通关目标，现金是构筑资源，信誉是血量。",
+  "rewardSystem": {
+    "maintenancePointsPerDay": 2,
+    "freeBuildChoiceCount": 3,
+    "freeBuildPickCount": 1,
+    "paidShopMinOptions": 8,
+    "paidShopMaxOptions": 10,
+    "bonusRewardChoiceCount": 3,
+    "bonusRewardPickCount": 1,
+    "dayOnePaidRewardDiscount": 0
+  },
+  "bonusRewardTriggers": {
+    "dailyProfitAtLeast": 120,
+    "singleDealProfitAtLeast": 100,
+    "noAccidentAndSalesAtLeast": 2,
+    "blindBoxDealMaxAccidentLevel": "medium"
+  },
+  "initialDeckMode": "fixed_plus_random_packs",
+  "initialDeckFixedCardIds": [
+    "card_low_salary_pitch",
+    "card_decent_package",
+    "card_crazy_persona",
+    "card_background_check",
+    "card_pr_package",
+    "card_risk_underwriting"
+  ],
+  "initialDeckRandomPacks": [
+    {
+      "id": "starter_pack_bigtech",
+      "displayName": "大厂牛马流起始牌包",
+      "pickCount": 1,
+      "cardIds": [
+        "card_elite_endorsement",
+        "card_overtime_narrative",
+        "card_trial_transfer"
+      ]
+    },
+    {
+      "id": "starter_pack_family",
+      "displayName": "稳定相亲流起始牌包",
+      "pickCount": 1,
+      "cardIds": [
+        "card_emotional_stability_certificate",
+        "card_parent_background_check",
+        "card_decent_endorsement"
+      ]
+    },
+    {
+      "id": "starter_pack_mcn",
+      "displayName": "MCN 发疯流起始牌包",
+      "pickCount": 1,
+      "cardIds": [
+        "card_hot_search_warmup",
+        "card_black_red_package",
+        "card_platform_hedge"
+      ]
+    }
+  ],
+  "initialDeckCardIds": [
+    "card_low_salary_pitch",
+    "card_decent_package",
+    "card_crazy_persona",
+    "card_background_check",
+    "card_pr_package",
+    "card_risk_underwriting",
+    "card_elite_endorsement",
+    "card_emotional_stability_certificate",
+    "card_hot_search_warmup"
+  ],
+  "flowOverloadRisk": {
+    "enabled": true,
+    "customerIds": [
+      "customer_short_video_mcn"
+    ],
+    "tagIds": [
+      "tag_crazy",
+      "tag_absurd",
+      "tag_controversial",
+      "tag_rebellious",
+      "tag_fragile_heart",
+      "tag_empty_persona"
+    ],
+    "steps": [
+      {
+        "minCount": 0,
+        "maxCount": 2,
+        "riskAdd": 0
+      },
+      {
+        "minCount": 3,
+        "maxCount": 3,
+        "riskAdd": 8
+      },
+      {
+        "minCount": 4,
+        "maxCount": 4,
+        "riskAdd": 15
+      },
+      {
+        "minCount": 5,
+        "maxCount": 99,
+        "riskAdd": 25
+      }
+    ],
+    "displayText": "流量标签过载"
+  },
+  "maxActionPoints": 9,
+  "dailyOpeningCashFloor": 60,
+  "dailyOpeningCashBonus": 0,
+  "basePackageMultiplier": 1.25,
+  "basePackageRiskAdd": 8,
+  "basePackagePreferenceBonus": 15,
+  "basePackagePreferenceThreshold": 2,
+  "basePublicRelationRiskReduction": 25,
+  "riskModelV3": {
+    "enabled": true,
+    "sourceRiskLabel": "??????",
+    "unknownDarkRiskUseCustomerMultiplier": true,
+    "pricingRiskUseCustomerMultiplier": true,
+    "customerTraitRiskEnabled": true,
+    "claimMismatchRiskEnabled": true,
+    "customerFitReductionEnabled": true,
+    "overToleranceAccidentModifierEnabled": true,
+    "defaultDarkRiskCategoryMultiplier": 0.3,
+    "defaultPricingRiskMultiplier": 1,
+    "defaultTraitRiskBonus": 0,
+    "defaultFitRiskReduction": {
+      "enabled": true,
+      "minPreferredHits": 2,
+      "perHit": 3,
+      "max": 10
+    }
+  },
+  "claimMismatchRules": [
+    {
+      "id": "claim_elite_without_credential_support",
+      "appliedTagId": "tag_elite_school",
+      "requiresAnyTrueTagIds": [
+        "tag_elite_school",
+        "tag_small_town_grinder"
+      ],
+      "customerTypes": [
+        "career",
+        "family"
+      ],
+      "riskAdd": 25,
+      "displayText": "????????????"
+    },
+    {
+      "id": "claim_decent_with_empty_persona",
+      "appliedTagId": "tag_decent",
+      "conflictAnyTagIds": [
+        "tag_empty_persona",
+        "tag_crazy",
+        "tag_absurd"
+      ],
+      "customerTypes": [
+        "family"
+      ],
+      "riskAdd": 30,
+      "displayText": "???????????"
+    },
+    {
+      "id": "claim_emotionally_stable_with_fragile",
+      "appliedTagId": "tag_emotionally_stable",
+      "conflictAnyTagIds": [
+        "tag_fragile_heart",
+        "tag_crazy"
+      ],
+      "customerTypes": [
+        "family"
+      ],
+      "riskAdd": 28,
+      "displayText": "?????????????"
+    },
+    {
+      "id": "claim_low_salary_with_rights_awareness",
+      "appliedTagId": "tag_low_salary_acceptance",
+      "conflictAnyTagIds": [
+        "tag_rights_awareness",
+        "tag_rebellious"
+      ],
+      "customerTypes": [
+        "career"
+      ],
+      "riskAdd": 30,
+      "displayText": "?????????????"
+    },
+    {
+      "id": "claim_flow_package_to_family",
+      "appliedTagId": "tag_crazy",
+      "customerTypes": [
+        "family"
+      ],
+      "riskAdd": 35,
+      "displayText": "???????????????"
+    },
+    {
+      "id": "claim_controversy_to_family",
+      "appliedTagId": "tag_controversial",
+      "customerTypes": [
+        "family"
+      ],
+      "riskAdd": 25,
+      "displayText": "?????????????"
+    }
+  ]
+}

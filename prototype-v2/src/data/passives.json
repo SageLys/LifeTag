@@ -1,0 +1,349 @@
+[
+  {
+    "id": "passive_black_red_is_red",
+    "displayName": "黑红也是红",
+    "effectText": "卖给短视频 MCN 时，小事故不扣信誉，改为额外现金 +20。",
+    "effects": [
+      {
+        "type": "modify_accident_result",
+        "params": {
+          "condition": {
+            "type": "all",
+            "conditions": [
+              {
+                "type": "customer_type_is",
+                "params": {
+                  "customerType": "mcn"
+                }
+              },
+              {
+                "type": "accident_level_is",
+                "params": {
+                  "accidentLevel": "minor"
+                }
+              }
+            ]
+          },
+          "modifiers": [
+            {
+              "stat": "reputationLoss",
+              "op": "set",
+              "value": 0
+            },
+            {
+              "stat": "cash",
+              "op": "add",
+              "value": 20
+            }
+          ]
+        },
+        "displayText": "MCN 小事故：信誉损失归零，现金 +20"
+      }
+    ],
+    "archetype": "mcn",
+    "description": "卖给短视频 MCN 时，小事故不扣信誉，改为额外现金 +20。"
+  },
+  {
+    "id": "passive_wash_line",
+    "displayName": "洗标流水线",
+    "effectText": "旧 ID，等价于洗标流水线。",
+    "effects": [
+      {
+        "type": "alias_passive",
+        "params": {
+          "passiveId": "passive_wash_label_pipeline"
+        },
+        "displayText": "等价于洗标流水线"
+      }
+    ],
+    "archetype": "family",
+    "description": "旧 ID，等价于 passive_wash_label_pipeline。",
+    "aliasOf": "passive_wash_label_pipeline"
+  },
+  {
+    "id": "passive_bigtech_endorsement",
+    "displayName": "大厂背书合作",
+    "effectText": "卖给大厂 HR 且商品有 [名校] 或 [年轻] 时，售价 +20。",
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "price",
+          "op": "add",
+          "value": 20,
+          "condition": {
+            "type": "all",
+            "conditions": [
+              {
+                "type": "customer_is",
+                "params": {
+                  "customerId": "customer_bigtech_hr"
+                }
+              },
+              {
+                "type": "product_has_any_tag",
+                "params": {
+                  "tagIds": [
+                    "tag_elite_school",
+                    "tag_young"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "displayText": "大厂 HR 且有 [名校]/[年轻]：售价 +20"
+      }
+    ],
+    "archetype": "bigtech",
+    "description": "卖给大厂 HR 时，若商品有 [名校] 或 [年轻]，售价 +20。"
+  },
+  {
+    "id": "passive_black_box_king",
+    "displayName": "盲盒之王",
+    "effectText": "盲盒定价更有收益。",
+    "effects": []
+  },
+  {
+    "id": "passive_background_outsource",
+    "displayName": "背调外包",
+    "effectText": "旧 ID，等价于背调外包。",
+    "effects": [
+      {
+        "type": "alias_passive",
+        "params": {
+          "passiveId": "passive_background_check_outsource"
+        },
+        "displayText": "等价于背调外包"
+      }
+    ],
+    "archetype": "bigtech",
+    "description": "旧 ID，等价于 passive_background_check_outsource。",
+    "aliasOf": "passive_background_check_outsource"
+  },
+  {
+    "id": "passive_acquaintance_society",
+    "displayName": "熟人社会",
+    "effectText": "旧 ID，等价于熟人社会公关。",
+    "effects": [
+      {
+        "type": "alias_passive",
+        "params": {
+          "passiveId": "passive_family_network_pr"
+        },
+        "displayText": "等价于熟人社会公关"
+      }
+    ],
+    "archetype": "family",
+    "description": "旧 ID，等价于 passive_family_network_pr。",
+    "aliasOf": "passive_family_network_pr"
+  },
+  {
+    "id": "passive_parent_safe_pack",
+    "displayName": "家长安心包",
+    "effectText": "稳定体面组合更受欢迎。",
+    "effects": []
+  },
+  {
+    "id": "passive_platform_grey_operation",
+    "displayName": "平台灰产运营",
+    "effectText": "平台风险可被部分转移。",
+    "effects": []
+  },
+  {
+    "id": "passive_low_salary_scaling",
+    "displayName": "低薪规模化",
+    "effectText": "低薪接受组合的利润提高。",
+    "effects": []
+  },
+  {
+    "id": "passive_risk_tier_pricing",
+    "displayName": "风险分层定价",
+    "effectText": "高风险商品可通过定价转移部分风险。",
+    "effects": []
+  },
+  {
+    "id": "passive_public_opinion_stoploss",
+    "displayName": "舆论止损预案",
+    "effectText": "每天第一次大事故或严重事故，事故等级 -1。",
+    "effects": [
+      {
+        "type": "modify_accident_level",
+        "params": {
+          "scope": "once_per_day",
+          "condition": {
+            "type": "accident_level_in",
+            "params": {
+              "accidentLevels": [
+                "major",
+                "severe"
+              ]
+            }
+          },
+          "op": "add",
+          "value": -1
+        },
+        "displayText": "每日首次 major/severe 事故等级 -1"
+      }
+    ],
+    "archetype": "risk_control",
+    "description": "每天第一次事故等级为 major 或 severe 时，事故等级 -1。"
+  },
+  {
+    "id": "passive_cold_chain_inventory",
+    "displayName": "冷链库存",
+    "effectText": "库存与进货波动更稳定。",
+    "effects": []
+  },
+  {
+    "id": "passive_wash_label_pipeline",
+    "displayName": "洗标流水线",
+    "archetype": "family",
+    "description": "每天第一次洗标不消耗行动点。",
+    "effectText": "每天第一次洗标不消耗行动点。",
+    "effects": [
+      {
+        "type": "modify_action_cost",
+        "params": {
+          "actionId": "action_wash_tag",
+          "scope": "first_use_per_day",
+          "stat": "actionPointCost",
+          "op": "add",
+          "value": -1,
+          "min": 0
+        },
+        "displayText": "每日首次洗标 AP -1，最低 0"
+      }
+    ]
+  },
+  {
+    "id": "passive_background_check_outsource",
+    "displayName": "背调外包",
+    "archetype": "bigtech",
+    "description": "每天第一次深度背调现金成本 -15，且额外 risk -5。",
+    "effectText": "每天第一次深度背调现金成本 -15，且额外爆雷 -5。",
+    "effects": [
+      {
+        "type": "modify_card_cost",
+        "params": {
+          "cardIds": [
+            "card_background_check",
+            "card_background_check_plus"
+          ],
+          "scope": "first_use_per_day",
+          "stat": "cashCost",
+          "op": "add",
+          "value": -15,
+          "min": 0
+        },
+        "displayText": "每日首次深度背调现金成本 -15"
+      },
+      {
+        "type": "add_deal_modifier_after_effect",
+        "params": {
+          "afterEffectType": "reveal_dark_risk_category",
+          "stat": "risk",
+          "op": "add",
+          "value": -5,
+          "duration": "until_product_sold"
+        },
+        "displayText": "揭示暗风险后额外爆雷 -5"
+      }
+    ]
+  },
+  {
+    "id": "passive_family_network_pr",
+    "displayName": "熟人社会公关",
+    "archetype": "family",
+    "description": "卖给家长委员会时，人设类暗风险造成的爆雷 -15。",
+    "effectText": "卖给家长委员会且暗风险为人设类时，爆雷 -15。",
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": -15,
+          "condition": {
+            "type": "all",
+            "conditions": [
+              {
+                "type": "customer_is",
+                "params": {
+                  "customerId": "customer_parent_committee"
+                }
+              },
+              {
+                "type": "dark_risk_category_is",
+                "params": {
+                  "category": "persona"
+                }
+              }
+            ]
+          }
+        },
+        "displayText": "家长委员会 + 人设暗风险：爆雷 -15"
+      }
+    ]
+  },
+  {
+    "id": "passive_platform_pr_contact",
+    "displayName": "平台公关熟人",
+    "archetype": "mcn",
+    "description": "平台类暗风险命中时，爆雷 -10。",
+    "effectText": "平台类暗风险（限流/反噬/旧料）命中时，爆雷 -10。",
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": -10,
+          "condition": {
+            "type": "dark_risk_category_is",
+            "params": {
+              "category": "platform"
+            }
+          }
+        },
+        "displayText": "平台暗风险：爆雷 -10"
+      }
+    ]
+  },
+  {
+    "id": "passive_collapse_contingency",
+    "displayName": "塌房预案",
+    "archetype": "mcn",
+    "description": "每次卖给短视频 MCN 时，若最终风险 >= 60，爆雷 -15。每回合最多触发 1 次。",
+    "effectText": "卖给 MCN 且最终爆雷 >= 60 时，爆雷 -15（每回合最多 1 次）。",
+    "effects": [
+      {
+        "type": "add_deal_modifier",
+        "params": {
+          "stat": "risk",
+          "op": "add",
+          "value": -15,
+          "scope": "once_per_day",
+          "condition": {
+            "type": "all",
+            "conditions": [
+              {
+                "type": "customer_type_is",
+                "params": {
+                  "customerType": "mcn"
+                }
+              },
+              {
+                "type": "known_risk_gte",
+                "params": {
+                  "value": 60
+                }
+              }
+            ]
+          }
+        },
+        "displayText": "MCN 且爆雷 >= 60：爆雷 -15（每日限 1 次）"
+      }
+    ]
+  }
+]

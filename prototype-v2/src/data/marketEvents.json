@@ -1,0 +1,804 @@
+[
+  {
+    "id": "market_bigtech_cost_cutting",
+    "displayName": "大厂降本增效",
+    "newsText": "大厂开始重新估价可加班、低风险肉。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [
+      {
+        "id": "mod_bigtech_overtime_price",
+        "stat": "price",
+        "op": "add",
+        "value": 15,
+        "targetId": "tag_overtime",
+        "sourceType": "market_event",
+        "sourceId": "market_bigtech_cost_cutting",
+        "displayText": "[能加班] 售价 +15"
+      },
+      {
+        "id": "mod_bigtech_resilient_price",
+        "stat": "price",
+        "op": "add",
+        "value": 15,
+        "targetId": "tag_resilient",
+        "sourceType": "market_event",
+        "sourceId": "market_bigtech_cost_cutting",
+        "displayText": "[抗压] 售价 +15"
+      },
+      {
+        "id": "mod_bigtech_rights_risk",
+        "stat": "risk",
+        "op": "add",
+        "value": 15,
+        "targetId": "tag_rights_awareness",
+        "sourceType": "market_event",
+        "sourceId": "market_bigtech_cost_cutting",
+        "displayText": "[维权意识强] 爆雷 +15",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_rights_awareness"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "career"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "effects": [],
+    "effectText": "[能加班]、[抗压] 售价 +15；[维权意识强] 爆雷 +15。"
+  },
+  {
+    "id": "market_crazy_literature_hot",
+    "displayName": "发疯文学走红",
+    "newsText": "流量端追捧发疯和抽象标签，MCN 加价，但流量过载风险更高。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [
+      {
+        "id": "mod_crazy_hot_crazy_price",
+        "stat": "price",
+        "op": "add",
+        "value": 20,
+        "targetId": "tag_crazy",
+        "sourceType": "market_event",
+        "sourceId": "market_crazy_literature_hot",
+        "displayText": "[会发疯] 售价 +20"
+      },
+      {
+        "id": "mod_crazy_hot_absurd_price",
+        "stat": "price",
+        "op": "add",
+        "value": 20,
+        "targetId": "tag_absurd",
+        "sourceType": "market_event",
+        "sourceId": "market_crazy_literature_hot",
+        "displayText": "[抽象] 售价 +20"
+      },
+      {
+        "id": "mod_crazy_hot_boring_price",
+        "stat": "price",
+        "op": "add",
+        "value": -10,
+        "targetId": "tag_boring",
+        "sourceType": "market_event",
+        "sourceId": "market_crazy_literature_hot",
+        "displayText": "[无聊] 售价 -10"
+      }
+    ],
+    "effects": [],
+    "effectText": "[会发疯]、[抽象] 售价 +20；[无聊] 售价 -10。（流量过载风险加重由 flowOverloadRisk 规则处理）"
+  },
+  {
+    "id": "market_spring_matchmaking_season",
+    "displayName": "春季相亲旺季",
+    "newsText": "稳定、体面、情绪稳定需求上涨。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [
+      {
+        "id": "mod_matchmaking_stable_price",
+        "stat": "price",
+        "op": "add",
+        "value": 15,
+        "targetId": "tag_stable",
+        "sourceType": "market_event",
+        "sourceId": "market_spring_matchmaking_season",
+        "displayText": "[稳定] 售价 +15"
+      },
+      {
+        "id": "mod_matchmaking_decent_price",
+        "stat": "price",
+        "op": "add",
+        "value": 15,
+        "targetId": "tag_decent",
+        "sourceType": "market_event",
+        "sourceId": "market_spring_matchmaking_season",
+        "displayText": "[体面] 售价 +15"
+      },
+      {
+        "id": "mod_matchmaking_emotion_price",
+        "stat": "price",
+        "op": "add",
+        "value": 20,
+        "targetId": "tag_emotionally_stable",
+        "sourceType": "market_event",
+        "sourceId": "market_spring_matchmaking_season",
+        "displayText": "[情绪稳定] 售价 +20"
+      },
+      {
+        "id": "mod_matchmaking_crazy_risk",
+        "stat": "risk",
+        "op": "add",
+        "value": 15,
+        "targetId": "tag_crazy",
+        "sourceType": "market_event",
+        "sourceId": "market_spring_matchmaking_season",
+        "condition": {
+          "type": "customer_type_is",
+          "params": {
+            "customerType": "family"
+          }
+        },
+        "displayText": "[会发疯] 卖给相亲/家庭顾客时爆雷 +15"
+      }
+    ],
+    "effects": [],
+    "effectText": "[稳定]、[体面] 售价 +15；[情绪稳定] 售价 +20；[会发疯] 卖给家庭类顾客时爆雷 +15。"
+  },
+  {
+    "id": "market_elite_fake_scandal",
+    "displayName": "名校水货翻车",
+    "newsText": "名校与水货组合被重点审视。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [
+      {
+        "id": "mod_elite_scandal_elite_price",
+        "stat": "price",
+        "op": "add",
+        "value": 15,
+        "targetId": "tag_elite_school",
+        "sourceType": "market_event",
+        "sourceId": "market_elite_fake_scandal",
+        "displayText": "[名校] 售价 +15"
+      },
+      {
+        "id": "mod_elite_scandal_elite_risk",
+        "stat": "risk",
+        "op": "add",
+        "value": 5,
+        "targetId": "tag_elite_school",
+        "sourceType": "market_event",
+        "sourceId": "market_elite_fake_scandal",
+        "displayText": "[名校] 爆雷 +5",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_elite_school"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "family"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "mod_elite_scandal_fake_risk",
+        "stat": "risk",
+        "op": "add",
+        "value": 30,
+        "targetId": "tag_fake_quality",
+        "sourceType": "market_event",
+        "sourceId": "market_elite_fake_scandal",
+        "displayText": "[水货] 爆雷 +30",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_fake_quality"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "career"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "effects": [],
+    "effectText": "[名校] 售价 +15、爆雷 +5；[水货] 爆雷 +30。"
+  },
+  {
+    "id": "market_labor_dispute_trending",
+    "displayName": "劳动纠纷上热搜",
+    "newsText": "维权意识和低薪接受组合风险提高。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [
+      {
+        "id": "mod_labor_rights_risk",
+        "stat": "risk",
+        "op": "add",
+        "value": 25,
+        "targetId": "tag_rights_awareness",
+        "sourceType": "market_event",
+        "sourceId": "market_labor_dispute_trending",
+        "displayText": "[维权意识强] 爆雷 +25",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_rights_awareness"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "career"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "mod_labor_low_salary_risk",
+        "stat": "risk",
+        "op": "add",
+        "value": 20,
+        "targetId": "tag_low_salary_acceptance",
+        "sourceType": "market_event",
+        "sourceId": "market_labor_dispute_trending",
+        "displayText": "[低薪接受] 爆雷 +20",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_low_salary_acceptance"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "family"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "mod_labor_overtime_risk",
+        "stat": "risk",
+        "op": "add",
+        "value": 10,
+        "targetId": "tag_overtime",
+        "sourceType": "market_event",
+        "sourceId": "market_labor_dispute_trending",
+        "displayText": "[能加班] 爆雷 +10",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_overtime"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "family"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "effects": [],
+    "effectText": "[维权意识强] 爆雷 +25；[低薪接受] 爆雷 +20；[能加班] 爆雷 +10。"
+  },
+  {
+    "id": "market_platform_persona_crackdown",
+    "displayName": "平台整治虚假人设",
+    "newsText": "平台严打内容水分，MCN 流派风险明显提高。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [
+      {
+        "id": "mod_platform_persona_crackdown_mcn_risk",
+        "stat": "risk",
+        "op": "add",
+        "value": 15,
+        "sourceType": "market_event",
+        "sourceId": "market_platform_persona_crackdown",
+        "condition": {
+          "type": "customer_type_is",
+          "params": {
+            "customerType": "mcn"
+          }
+        },
+        "displayText": "卖给短视频 MCN 时爆雷 +15（平台严打）"
+      },
+      {
+        "id": "mod_platform_empty_persona_risk_non_mcn",
+        "stat": "risk",
+        "op": "add",
+        "value": 15,
+        "targetId": "tag_empty_persona",
+        "sourceType": "market_event",
+        "sourceId": "market_platform_persona_crackdown",
+        "condition": {
+          "type": "customer_type_is",
+          "params": {
+            "customerType": "family"
+          }
+        },
+        "displayText": "[空心人设] 卖给相亲/家庭顾客时爆雷 +15"
+      }
+    ],
+    "effects": [],
+    "effectText": "平台严打：卖给 MCN 时爆雷 +15；[空心人设] 卖给相亲/家庭类顾客时爆雷 +15。"
+  },
+  {
+    "id": "market_parent_decency_panic",
+    "displayName": "家长圈体面恐慌",
+    "newsText": "体面、安全、熟人背书需求上涨。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [
+      {
+        "id": "mod_parent_decent_price",
+        "stat": "price",
+        "op": "add",
+        "value": 20,
+        "targetId": "tag_decent",
+        "sourceType": "market_event",
+        "sourceId": "market_parent_decency_panic",
+        "displayText": "[体面] 售价 +20"
+      },
+      {
+        "id": "mod_parent_stable_price",
+        "stat": "price",
+        "op": "add",
+        "value": 10,
+        "targetId": "tag_stable",
+        "sourceType": "market_event",
+        "sourceId": "market_parent_decency_panic",
+        "displayText": "[稳定] 售价 +10"
+      },
+      {
+        "id": "mod_parent_social_price",
+        "stat": "price",
+        "op": "add",
+        "value": 15,
+        "targetId": "tag_social_savvy",
+        "sourceType": "market_event",
+        "sourceId": "market_parent_decency_panic",
+        "displayText": "[会来事] 售价 +15"
+      },
+      {
+        "id": "mod_parent_fake_risk",
+        "stat": "risk",
+        "op": "add",
+        "value": 20,
+        "targetId": "tag_fake_quality",
+        "sourceType": "market_event",
+        "sourceId": "market_parent_decency_panic",
+        "displayText": "[水货] 爆雷 +20",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_fake_quality"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "career"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "effects": [],
+    "effectText": "[体面] 售价 +20；[稳定] 售价 +10；[会来事] 售价 +15；[水货] 爆雷 +20。"
+  },
+  {
+    "id": "market_returnee_value_correction",
+    "displayName": "海归身价回调",
+    "newsText": "海归溢价下降，水货风险更敏感。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [
+      {
+        "id": "mod_returnee_price_down",
+        "stat": "price",
+        "op": "add",
+        "value": -15,
+        "targetId": "tag_oversea_returnee",
+        "sourceType": "market_event",
+        "sourceId": "market_returnee_value_correction",
+        "displayText": "[海归] 售价 -15"
+      },
+      {
+        "id": "mod_returnee_fake_risk",
+        "stat": "risk",
+        "op": "add",
+        "value": 20,
+        "targetId": "tag_fake_quality",
+        "sourceType": "market_event",
+        "sourceId": "market_returnee_value_correction",
+        "displayText": "[水货] 爆雷 +20",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_fake_quality"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "career"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "mod_returnee_decent_price",
+        "stat": "price",
+        "op": "add",
+        "value": 5,
+        "targetId": "tag_decent",
+        "sourceType": "market_event",
+        "sourceId": "market_returnee_value_correction",
+        "displayText": "[体面] 售价 +5"
+      }
+    ],
+    "effects": [],
+    "effectText": "[海归] 售价 -15；[水货] 爆雷 +20；[体面] 售价 +5。"
+  },
+  {
+    "id": "market_small_town_grind_story",
+    "displayName": "小镇做题家叙事回暖",
+    "newsText": "小镇做题家和抗压更受关注。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [
+      {
+        "id": "mod_grind_small_town_price",
+        "stat": "price",
+        "op": "add",
+        "value": 20,
+        "targetId": "tag_small_town_grinder",
+        "sourceType": "market_event",
+        "sourceId": "market_small_town_grind_story",
+        "displayText": "[小镇做题家] 售价 +20"
+      },
+      {
+        "id": "mod_grind_resilient_price",
+        "stat": "price",
+        "op": "add",
+        "value": 10,
+        "targetId": "tag_resilient",
+        "sourceType": "market_event",
+        "sourceId": "market_small_town_grind_story",
+        "displayText": "[抗压] 售价 +10"
+      },
+      {
+        "id": "mod_grind_low_salary_risk",
+        "stat": "risk",
+        "op": "add",
+        "value": 5,
+        "targetId": "tag_low_salary_acceptance",
+        "sourceType": "market_event",
+        "sourceId": "market_small_town_grind_story",
+        "displayText": "[低薪接受] 爆雷 +5",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_low_salary_acceptance"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "family"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "effects": [],
+    "effectText": "[小镇做题家] 售价 +20；[抗压] 售价 +10；[低薪接受] 爆雷 +5。"
+  },
+  {
+    "id": "market_startup_survival_mode",
+    "displayName": "创业公司生存模式",
+    "newsText": "创业老板偏好低价、加班、抗压组合。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [
+      {
+        "id": "mod_startup_low_salary_price",
+        "stat": "price",
+        "op": "add",
+        "value": 15,
+        "targetId": "tag_low_salary_acceptance",
+        "sourceType": "market_event",
+        "sourceId": "market_startup_survival_mode",
+        "displayText": "[低薪接受] 售价 +15"
+      },
+      {
+        "id": "mod_startup_overtime_price",
+        "stat": "price",
+        "op": "add",
+        "value": 15,
+        "targetId": "tag_overtime",
+        "sourceType": "market_event",
+        "sourceId": "market_startup_survival_mode",
+        "displayText": "[能加班] 售价 +15"
+      },
+      {
+        "id": "mod_startup_resilient_price",
+        "stat": "price",
+        "op": "add",
+        "value": 10,
+        "targetId": "tag_resilient",
+        "sourceType": "market_event",
+        "sourceId": "market_startup_survival_mode",
+        "displayText": "[抗压] 售价 +10"
+      },
+      {
+        "id": "mod_startup_rights_risk",
+        "stat": "risk",
+        "op": "add",
+        "value": 20,
+        "targetId": "tag_rights_awareness",
+        "sourceType": "market_event",
+        "sourceId": "market_startup_survival_mode",
+        "displayText": "[维权意识强] 爆雷 +20",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_rights_awareness"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "career"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "effects": [],
+    "effectText": "[低薪接受]、[能加班] 售价 +15；[抗压] 售价 +10；[维权意识强] 爆雷 +20。"
+  },
+  {
+    "id": "market_anti_work_discussion",
+    "displayName": "反内卷讨论升温",
+    "newsText": "低薪接受与能加班叙事变得更危险。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [
+      {
+        "id": "mod_anti_work_low_salary_risk",
+        "stat": "risk",
+        "op": "add",
+        "value": 25,
+        "targetId": "tag_low_salary_acceptance",
+        "sourceType": "market_event",
+        "sourceId": "market_anti_work_discussion",
+        "displayText": "[低薪接受] 爆雷 +25",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_low_salary_acceptance"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "family"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "mod_anti_work_overtime_risk",
+        "stat": "risk",
+        "op": "add",
+        "value": 15,
+        "targetId": "tag_overtime",
+        "sourceType": "market_event",
+        "sourceId": "market_anti_work_discussion",
+        "displayText": "[能加班] 爆雷 +15",
+        "condition": {
+          "type": "all",
+          "conditions": [
+            {
+              "type": "product_has_tag",
+              "params": {
+                "tagId": "tag_overtime"
+              }
+            },
+            {
+              "type": "customer_type_is",
+              "params": {
+                "customerType": "family"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "mod_anti_work_rebellious_price",
+        "stat": "price",
+        "op": "add",
+        "value": 10,
+        "targetId": "tag_rebellious",
+        "sourceType": "market_event",
+        "sourceId": "market_anti_work_discussion",
+        "displayText": "[反骨] 售价 +10"
+      }
+    ],
+    "effects": [],
+    "effectText": "[低薪接受] 爆雷 +25；[能加班] 爆雷 +15；[反骨] 售价 +10。"
+  },
+  {
+    "id": "market_controversy_carnival",
+    "displayName": "争议流量狂欢",
+    "newsText": "争议、反骨、抽象带来更高价格，高价卖时风险更大。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [
+      {
+        "id": "mod_controversy_controversial_price",
+        "stat": "price",
+        "op": "add",
+        "value": 25,
+        "targetId": "tag_controversial",
+        "sourceType": "market_event",
+        "sourceId": "market_controversy_carnival",
+        "displayText": "[争议感] 售价 +25"
+      },
+      {
+        "id": "mod_controversy_controversial_risk_high_price",
+        "stat": "risk",
+        "op": "add",
+        "value": 15,
+        "targetId": "tag_controversial",
+        "sourceType": "market_event",
+        "sourceId": "market_controversy_carnival",
+        "condition": {
+          "type": "pricing_mode_is",
+          "params": {
+            "pricingModeId": "pricing_high"
+          }
+        },
+        "displayText": "[争议感] 高价卖时爆雷 +15"
+      },
+      {
+        "id": "mod_controversy_controversial_risk_blind_box",
+        "stat": "risk",
+        "op": "add",
+        "value": 20,
+        "targetId": "tag_controversial",
+        "sourceType": "market_event",
+        "sourceId": "market_controversy_carnival",
+        "condition": {
+          "type": "pricing_mode_is",
+          "params": {
+            "pricingModeId": "pricing_blind_box"
+          }
+        },
+        "displayText": "[争议感] 盲盒价时爆雷 +20"
+      },
+      {
+        "id": "mod_controversy_rebellious_price",
+        "stat": "price",
+        "op": "add",
+        "value": 15,
+        "targetId": "tag_rebellious",
+        "sourceType": "market_event",
+        "sourceId": "market_controversy_carnival",
+        "displayText": "[反骨] 售价 +15"
+      },
+      {
+        "id": "mod_controversy_absurd_price",
+        "stat": "price",
+        "op": "add",
+        "value": 15,
+        "targetId": "tag_absurd",
+        "sourceType": "market_event",
+        "sourceId": "market_controversy_carnival",
+        "displayText": "[抽象] 售价 +15"
+      }
+    ],
+    "effects": [],
+    "effectText": "[争议感] 售价 +25，高价卖时爆雷 +15，盲盒价时爆雷 +20；[反骨] 售价 +15；[抽象] 售价 +15。"
+  },
+  {
+    "id": "market_platform_boring_penalty",
+    "displayName": "流量审美疲劳",
+    "newsText": "平台受众对无聊内容越来越不感兴趣，MCN 的无聊商品风险激增。",
+    "durationDays": 1,
+    "conditions": [],
+    "modifiers": [
+      {
+        "id": "mod_boring_mcn_risk",
+        "stat": "risk",
+        "op": "add",
+        "value": 20,
+        "targetId": "tag_boring",
+        "sourceType": "market_event",
+        "sourceId": "market_platform_boring_penalty",
+        "condition": {
+          "type": "customer_type_is",
+          "params": {
+            "customerType": "mcn"
+          }
+        },
+        "displayText": "[无聊] 卖给 MCN 时爆雷 +20"
+      },
+      {
+        "id": "mod_boring_price_down",
+        "stat": "price",
+        "op": "add",
+        "value": -10,
+        "targetId": "tag_boring",
+        "sourceType": "market_event",
+        "sourceId": "market_platform_boring_penalty",
+        "displayText": "[无聊] 售价 -10"
+      }
+    ],
+    "effects": [],
+    "effectText": "[无聊] 卖给 MCN 时爆雷 +20；[无聊] 售价 -10。"
+  }
+]

@@ -1,0 +1,461 @@
+[
+  {
+    "id": "customer_bigtech_hr",
+    "displayName": "大厂 HR",
+    "description": "要体面、稳定、可控的职场标签组合。",
+    "preferredTagIds": [
+      "tag_young",
+      "tag_elite_school",
+      "tag_overtime",
+      "tag_low_salary_acceptance",
+      "tag_resilient",
+      "tag_small_town_grinder"
+    ],
+    "preferredTagPriceBonus": {
+      "tag_young": 20,
+      "tag_elite_school": 25,
+      "tag_overtime": 20,
+      "tag_resilient": 15,
+      "tag_small_town_grinder": 20
+    },
+    "tabooTagIds": [
+      "tag_crazy",
+      "tag_rights_awareness",
+      "tag_fake_quality",
+      "tag_job_hopping_risk",
+      "tag_fragile_heart",
+      "tag_age_35_plus"
+    ],
+    "tabooTagRiskBonus": {
+      "tag_crazy": 25,
+      "tag_rights_awareness": 30,
+      "tag_fake_quality": 35,
+      "tag_job_hopping_risk": 25,
+      "tag_fragile_heart": 20,
+      "tag_age_35_plus": 12
+    },
+    "riskTolerance": 40,
+    "priceSensitivity": 50,
+    "preferredPricingModeIds": [
+      "pricing_normal",
+      "pricing_high"
+    ],
+    "budget": 240,
+    "customerType": "career",
+    "darkRiskSensitivity": [
+      "career_background"
+    ],
+    "customerRiskProfile": {
+      "riskTraitBonus": {
+        "fraud": 25,
+        "credential_gap": 28,
+        "quality_defect": 20,
+        "labor_conflict": 22,
+        "career_instability": 18,
+        "contract_risk": 18,
+        "volatile": 10
+      },
+      "darkRiskCategoryMultiplier": {
+        "career_background": 1.2,
+        "persona": 0.35,
+        "platform": 0.2
+      },
+      "pricingRiskMultiplier": {
+        "pricing_cheap": 0.8,
+        "pricing_normal": 1,
+        "pricing_high": 1.25,
+        "pricing_blind_box": 1.35,
+        "pricing_clearance": 0.55
+      },
+      "fitRiskReduction": {
+        "enabled": true,
+        "minPreferredHits": 3,
+        "perHit": 3,
+        "max": 10
+      },
+      "toleranceMargin": 12,
+      "overToleranceAccidentLevelAdd": 1
+    }
+  },
+  {
+    "id": "customer_startup_boss",
+    "displayName": "创业老板",
+    "description": "压成本、要执行、愿意赌一点风险。",
+    "preferredTagIds": [
+      "tag_overtime",
+      "tag_low_salary_acceptance",
+      "tag_resilient",
+      "tag_experienced",
+      "tag_outsider"
+    ],
+    "preferredTagPriceBonus": {
+      "tag_overtime": 20,
+      "tag_low_salary_acceptance": 25,
+      "tag_resilient": 15,
+      "tag_experienced": 20
+    },
+    "tabooTagIds": [
+      "tag_rights_awareness",
+      "tag_fragile_heart",
+      "tag_job_hopping_risk",
+      "tag_rebellious"
+    ],
+    "tabooTagRiskBonus": {
+      "tag_rights_awareness": 32,
+      "tag_fragile_heart": 20,
+      "tag_job_hopping_risk": 25,
+      "tag_rebellious": 18
+    },
+    "riskTolerance": 55,
+    "priceSensitivity": 70,
+    "preferredPricingModeIds": [
+      "pricing_cheap",
+      "pricing_normal"
+    ],
+    "budget": 165,
+    "customerType": "career",
+    "darkRiskSensitivity": [
+      "career_background"
+    ],
+    "customerRiskProfile": {
+      "riskTraitBonus": {
+        "labor_conflict": 28,
+        "career_instability": 22,
+        "contract_risk": 20,
+        "volatile": 12,
+        "fraud": 12,
+        "credential_gap": 8
+      },
+      "darkRiskCategoryMultiplier": {
+        "career_background": 1,
+        "persona": 0.25,
+        "platform": 0.15
+      },
+      "pricingRiskMultiplier": {
+        "pricing_cheap": 0.75,
+        "pricing_normal": 1,
+        "pricing_high": 1.05,
+        "pricing_blind_box": 1.15,
+        "pricing_clearance": 0.55
+      },
+      "fitRiskReduction": {
+        "enabled": true,
+        "minPreferredHits": 2,
+        "perHit": 4,
+        "max": 12
+      },
+      "toleranceMargin": 18,
+      "overToleranceAccidentLevelAdd": 1
+    }
+  },
+  {
+    "id": "customer_matchmaker",
+    "displayName": "相亲中介",
+    "description": "偏好稳定、体面、情绪稳定的包装。",
+    "preferredTagIds": [
+      "tag_stable",
+      "tag_decent",
+      "tag_emotionally_stable",
+      "tag_oversea_returnee",
+      "tag_social_savvy"
+    ],
+    "preferredTagPriceBonus": {
+      "tag_stable": 20,
+      "tag_decent": 25,
+      "tag_emotionally_stable": 25,
+      "tag_oversea_returnee": 30,
+      "tag_social_savvy": 20
+    },
+    "tabooTagIds": [
+      "tag_crazy",
+      "tag_absurd",
+      "tag_empty_persona",
+      "tag_fragile_heart",
+      "tag_rebellious",
+      "tag_controversial"
+    ],
+    "tabooTagRiskBonus": {
+      "tag_crazy": 35,
+      "tag_absurd": 28,
+      "tag_empty_persona": 30,
+      "tag_fragile_heart": 24,
+      "tag_rebellious": 22,
+      "tag_controversial": 22
+    },
+    "riskTolerance": 35,
+    "priceSensitivity": 45,
+    "preferredPricingModeIds": [
+      "pricing_normal",
+      "pricing_high"
+    ],
+    "budget": 205,
+    "customerType": "family",
+    "darkRiskSensitivity": [
+      "persona"
+    ],
+    "customerRiskProfile": {
+      "riskTraitBonus": {
+        "persona_fragile": 26,
+        "fraud": 18,
+        "status_claim": 8,
+        "volatile": 22,
+        "family_unacceptable": 30,
+        "public_opinion_risk": 18
+      },
+      "darkRiskCategoryMultiplier": {
+        "career_background": 0.35,
+        "persona": 1.15,
+        "platform": 0.35
+      },
+      "pricingRiskMultiplier": {
+        "pricing_cheap": 0.85,
+        "pricing_normal": 1,
+        "pricing_high": 1.2,
+        "pricing_blind_box": 1.3,
+        "pricing_clearance": 0.65
+      },
+      "fitRiskReduction": {
+        "enabled": true,
+        "minPreferredHits": 2,
+        "perHit": 4,
+        "max": 12
+      },
+      "toleranceMargin": 12,
+      "overToleranceAccidentLevelAdd": 1
+    }
+  },
+  {
+    "id": "customer_parent_committee",
+    "displayName": "家长委员会",
+    "description": "重视安全、熟人评价和家庭叙事。",
+    "preferredTagIds": [
+      "tag_stable",
+      "tag_decent",
+      "tag_emotionally_stable",
+      "tag_social_savvy",
+      "tag_small_town_grinder",
+      "tag_elite_school"
+    ],
+    "preferredTagPriceBonus": {
+      "tag_stable": 20,
+      "tag_decent": 25,
+      "tag_emotionally_stable": 20,
+      "tag_social_savvy": 20,
+      "tag_small_town_grinder": 15
+    },
+    "tabooTagIds": [
+      "tag_fake_quality",
+      "tag_rebellious",
+      "tag_controversial",
+      "tag_crazy",
+      "tag_absurd",
+      "tag_empty_persona",
+      "tag_fragile_heart"
+    ],
+    "tabooTagRiskBonus": {
+      "tag_fake_quality": 35,
+      "tag_rebellious": 28,
+      "tag_controversial": 30,
+      "tag_crazy": 40,
+      "tag_absurd": 35,
+      "tag_empty_persona": 32,
+      "tag_fragile_heart": 24
+    },
+    "riskTolerance": 30,
+    "priceSensitivity": 40,
+    "preferredPricingModeIds": [
+      "pricing_normal"
+    ],
+    "budget": 275,
+    "customerType": "family",
+    "darkRiskSensitivity": [
+      "persona",
+      "career_background"
+    ],
+    "customerRiskProfile": {
+      "riskTraitBonus": {
+        "fraud": 25,
+        "credential_gap": 15,
+        "quality_defect": 20,
+        "persona_fragile": 30,
+        "volatile": 28,
+        "family_unacceptable": 36,
+        "public_opinion_risk": 25,
+        "status_claim": 10
+      },
+      "darkRiskCategoryMultiplier": {
+        "career_background": 0.8,
+        "persona": 1.25,
+        "platform": 0.6
+      },
+      "pricingRiskMultiplier": {
+        "pricing_cheap": 0.85,
+        "pricing_normal": 1,
+        "pricing_high": 1.3,
+        "pricing_blind_box": 1.45,
+        "pricing_clearance": 0.7
+      },
+      "fitRiskReduction": {
+        "enabled": true,
+        "minPreferredHits": 3,
+        "perHit": 3,
+        "max": 10
+      },
+      "toleranceMargin": 10,
+      "overToleranceAccidentLevelAdd": 1
+    }
+  },
+  {
+    "id": "customer_short_video_mcn",
+    "displayName": "短视频 MCN",
+    "description": "追求流量和争议，核心标签价值高，主要风险来自平台事故和流量过载。",
+    "preferredTagIds": [
+      "tag_crazy",
+      "tag_absurd",
+      "tag_controversial",
+      "tag_rebellious",
+      "tag_fragile_heart",
+      "tag_empty_persona"
+    ],
+    "preferredTagPriceBonus": {
+      "tag_crazy": 35,
+      "tag_absurd": 30,
+      "tag_controversial": 35,
+      "tag_rebellious": 25,
+      "tag_fragile_heart": 20,
+      "tag_empty_persona": 20
+    },
+    "tabooTagIds": [
+      "tag_boring",
+      "tag_stable",
+      "tag_decent",
+      "tag_emotionally_stable"
+    ],
+    "tabooTagRiskBonus": {
+      "tag_boring": 35,
+      "tag_stable": 12,
+      "tag_decent": 10,
+      "tag_emotionally_stable": 8
+    },
+    "riskTolerance": 85,
+    "priceSensitivity": 55,
+    "preferredPricingModeIds": [
+      "pricing_normal",
+      "pricing_blind_box"
+    ],
+    "budget": 245,
+    "customerType": "mcn",
+    "darkRiskSensitivity": [
+      "platform"
+    ],
+    "customerRiskProfile": {
+      "riskTraitBonus": {
+        "low_flow": 25,
+        "platform": 25,
+        "public_opinion_risk": 12,
+        "flow": -3,
+        "volatile": 0,
+        "persona_fragile": 4,
+        "fraud": 6,
+        "credential_gap": 2
+      },
+      "darkRiskCategoryMultiplier": {
+        "career_background": 0.2,
+        "persona": 0.35,
+        "platform": 1.25
+      },
+      "pricingRiskMultiplier": {
+        "pricing_cheap": 0.9,
+        "pricing_normal": 1,
+        "pricing_high": 1.05,
+        "pricing_blind_box": 1.25,
+        "pricing_clearance": 0.75
+      },
+      "fitRiskReduction": {
+        "enabled": true,
+        "minPreferredHits": 2,
+        "perHit": 5,
+        "max": 18
+      },
+      "toleranceMargin": 25,
+      "overToleranceAccidentLevelAdd": 0
+    }
+  },
+  {
+    "id": "customer_matchmaking_agency",
+    "displayName": "相亲中介",
+    "description": "偏好稳定、体面、情绪稳定的包装。",
+    "preferredTagIds": [
+      "tag_stable",
+      "tag_decent",
+      "tag_emotionally_stable",
+      "tag_oversea_returnee",
+      "tag_social_savvy"
+    ],
+    "preferredTagPriceBonus": {
+      "tag_stable": 20,
+      "tag_decent": 25,
+      "tag_emotionally_stable": 25,
+      "tag_oversea_returnee": 30,
+      "tag_social_savvy": 20
+    },
+    "tabooTagIds": [
+      "tag_crazy",
+      "tag_absurd",
+      "tag_empty_persona",
+      "tag_fragile_heart",
+      "tag_rebellious",
+      "tag_controversial"
+    ],
+    "tabooTagRiskBonus": {
+      "tag_crazy": 35,
+      "tag_absurd": 28,
+      "tag_empty_persona": 30,
+      "tag_fragile_heart": 24,
+      "tag_rebellious": 22,
+      "tag_controversial": 22
+    },
+    "riskTolerance": 35,
+    "priceSensitivity": 45,
+    "preferredPricingModeIds": [
+      "pricing_normal",
+      "pricing_high"
+    ],
+    "budget": 205,
+    "customerType": "family",
+    "aliasOf": "customer_matchmaker",
+    "darkRiskSensitivity": [
+      "persona"
+    ],
+    "customerRiskProfile": {
+      "riskTraitBonus": {
+        "persona_fragile": 26,
+        "fraud": 18,
+        "status_claim": 8,
+        "volatile": 22,
+        "family_unacceptable": 30,
+        "public_opinion_risk": 18
+      },
+      "darkRiskCategoryMultiplier": {
+        "career_background": 0.35,
+        "persona": 1.15,
+        "platform": 0.35
+      },
+      "pricingRiskMultiplier": {
+        "pricing_cheap": 0.85,
+        "pricing_normal": 1,
+        "pricing_high": 1.2,
+        "pricing_blind_box": 1.3,
+        "pricing_clearance": 0.65
+      },
+      "fitRiskReduction": {
+        "enabled": true,
+        "minPreferredHits": 2,
+        "perHit": 4,
+        "max": 12
+      },
+      "toleranceMargin": 12,
+      "overToleranceAccidentLevelAdd": 1
+    }
+  }
+]

@@ -1,0 +1,178 @@
+[
+  {
+    "id": "dark_background_mismatch",
+    "displayName": "背调不一致",
+    "category": "career_background",
+    "baseRisk": 15,
+    "revealRisk": 35,
+    "riskMin": 8,
+    "riskMax": 35,
+    "actualRiskDefault": 28,
+    "accidentWeight": 25,
+    "relatedTagIds": [
+      "tag_elite_school",
+      "tag_fake_quality",
+      "tag_job_hopping_risk"
+    ],
+    "sensitiveCustomerIds": [
+      "customer_bigtech_hr"
+    ]
+  },
+  {
+    "id": "dark_fake_internship_gap",
+    "displayName": "实习经历断档",
+    "category": "career_background",
+    "baseRisk": 10,
+    "revealRisk": 30,
+    "riskMin": 5,
+    "riskMax": 28,
+    "actualRiskDefault": 22,
+    "accidentWeight": 20,
+    "relatedTagIds": [
+      "tag_young",
+      "tag_elite_school",
+      "tag_small_town_grinder"
+    ],
+    "sensitiveCustomerIds": [
+      "customer_bigtech_hr",
+      "customer_startup_boss"
+    ]
+  },
+  {
+    "id": "dark_trial_period_backfire",
+    "displayName": "试用期反噬",
+    "category": "career_background",
+    "baseRisk": 15,
+    "revealRisk": 40,
+    "riskMin": 8,
+    "riskMax": 38,
+    "actualRiskDefault": 30,
+    "accidentWeight": 30,
+    "relatedTagIds": [
+      "tag_low_salary_acceptance",
+      "tag_overtime",
+      "tag_rights_awareness"
+    ],
+    "sensitiveCustomerIds": [
+      "customer_startup_boss",
+      "customer_bigtech_hr"
+    ]
+  },
+  {
+    "id": "dark_persona_collapse",
+    "displayName": "人设崩塌",
+    "category": "persona",
+    "baseRisk": 15,
+    "revealRisk": 40,
+    "riskMin": 8,
+    "riskMax": 38,
+    "actualRiskDefault": 30,
+    "accidentWeight": 30,
+    "relatedTagIds": [
+      "tag_decent",
+      "tag_empty_persona",
+      "tag_crazy"
+    ],
+    "sensitiveCustomerIds": [
+      "customer_matchmaker",
+      "customer_parent_committee"
+    ]
+  },
+  {
+    "id": "dark_family_network_exposure",
+    "displayName": "熟人圈爆料",
+    "category": "persona",
+    "baseRisk": 10,
+    "revealRisk": 35,
+    "riskMin": 6,
+    "riskMax": 34,
+    "actualRiskDefault": 26,
+    "accidentWeight": 25,
+    "relatedTagIds": [
+      "tag_oversea_returnee",
+      "tag_decent",
+      "tag_fake_quality"
+    ],
+    "sensitiveCustomerIds": [
+      "customer_parent_committee"
+    ]
+  },
+  {
+    "id": "dark_emotional_record_leak",
+    "displayName": "情绪记录外泄",
+    "category": "persona",
+    "baseRisk": 10,
+    "revealRisk": 30,
+    "riskMin": 5,
+    "riskMax": 30,
+    "actualRiskDefault": 22,
+    "accidentWeight": 20,
+    "relatedTagIds": [
+      "tag_emotionally_stable",
+      "tag_fragile_heart",
+      "tag_crazy"
+    ],
+    "sensitiveCustomerIds": [
+      "customer_matchmaker",
+      "customer_parent_committee"
+    ]
+  },
+  {
+    "id": "dark_platform_shadowban",
+    "displayName": "平台限流",
+    "category": "platform",
+    "baseRisk": 10,
+    "revealRisk": 35,
+    "riskMin": 8,
+    "riskMax": 36,
+    "actualRiskDefault": 28,
+    "accidentWeight": 25,
+    "relatedTagIds": [
+      "tag_absurd",
+      "tag_controversial",
+      "tag_crazy"
+    ],
+    "sensitiveCustomerIds": [
+      "customer_short_video_mcn"
+    ]
+  },
+  {
+    "id": "dark_fandom_backlash",
+    "displayName": "粉圈反噬",
+    "category": "platform",
+    "baseRisk": 15,
+    "revealRisk": 45,
+    "riskMin": 10,
+    "riskMax": 45,
+    "actualRiskDefault": 35,
+    "accidentWeight": 35,
+    "relatedTagIds": [
+      "tag_empty_persona",
+      "tag_controversial",
+      "tag_fragile_heart"
+    ],
+    "sensitiveCustomerIds": [
+      "customer_short_video_mcn"
+    ]
+  },
+  {
+    "id": "dark_old_content_archaeology",
+    "displayName": "旧料被扒",
+    "category": "platform",
+    "baseRisk": 10,
+    "revealRisk": 40,
+    "riskMin": 8,
+    "riskMax": 40,
+    "actualRiskDefault": 32,
+    "accidentWeight": 30,
+    "relatedTagIds": [
+      "tag_rebellious",
+      "tag_crazy",
+      "tag_absurd"
+    ],
+    "sensitiveCustomerIds": [
+      "customer_short_video_mcn",
+      "customer_parent_committee"
+    ]
+  }
+]
