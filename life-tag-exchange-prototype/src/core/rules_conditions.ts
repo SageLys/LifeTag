@@ -171,6 +171,14 @@ export function evaluateCondition(condition: Condition, context: ConditionContex
         ? { ok: true, failedReasons: [] }
         : { ok: false, failedReasons: ['当前顾客不满足卡牌条件。'] };
     }
+    case 'customer_type_is': {
+      const params = (condition as Condition & { params?: Record<string, unknown> }).params ?? {};
+      const customerType = (typeof condition.value === 'string' ? condition.value : null) ?? (typeof params.customerType === 'string' ? params.customerType : null);
+      const selectedType = context.selectedCustomerOrder?.customerType ?? context.indexes.customersById.get(context.selectedCustomerOrder?.customerId ?? '')?.customerType;
+      return selectedType === customerType
+        ? { ok: true, failedReasons: [] }
+        : { ok: false, failedReasons: ['当前顾客类型不满足卡牌条件。'] };
+    }
     case 'market_event_active': {
       const marketEventId = condition.marketEventId ?? (typeof condition.value === 'string' ? condition.value : null);
       return context.dayState.marketEvent?.id === marketEventId || context.dayState.marketEvents.some((event) => event.id === marketEventId)

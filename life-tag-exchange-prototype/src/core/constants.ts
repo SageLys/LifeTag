@@ -83,6 +83,7 @@ export const RewardType = {
   GainReputation: 'gain_reputation',
   GainInsurance: 'gain_insurance',
   TemporaryModifier: 'temporary_modifier',
+  PermanentUpgrade: 'permanent_upgrade',
 } as const;
 export type RewardType = (typeof RewardType)[keyof typeof RewardType];
 

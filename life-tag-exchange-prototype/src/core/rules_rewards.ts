@@ -109,6 +109,7 @@ function getEffectSummary(app: AppRuntime, reward: RewardDef): string {
   if (type === RewardType.TemporaryInsurance) return '获得一次性事故保险';
   if (type === RewardType.AddTemporaryModifier) return '获得临时效果';
   if (type === RewardType.ProductRepair) return '处理库存商品';
+  if (type === RewardType.PermanentUpgrade) return reward.description || '永久成长';
   return reward.description || '特殊奖励效果';
 }
 
@@ -159,6 +160,15 @@ function bonusReasons(app: AppRuntime): string[] {
 
 export function ensureRewardState(app: AppRuntime): RewardPhaseState {
   if (app.state.dayState.rewardState) return app.state.dayState.rewardState;
+  if (!app.state.dayState.phaseFlags.noAccidentRecoveryApplied && app.state.dayState.accidentCount === 0) {
+    const recovery = 5 + (app.state.dayState.soldProductCount >= 2 ? 5 : 0);
+    const before = app.state.reputation;
+    app.state.reputation = Math.min(app.state.maxReputation, app.state.reputation + recovery);
+    app.state.dayState.phaseFlags.noAccidentRecoveryApplied = true;
+    if (app.state.reputation > before) {
+      addLog(app, `今日无事故，信誉恢复 ${app.state.reputation - before}。`);
+    }
+  }
   const system = app.configs.gameConfig.rewardSystem ?? {};
   const paidMin = system.paidShopMinOptions ?? 6;
   const paidMax = Math.max(paidMin, system.paidShopMaxOptions ?? 8);
@@ -166,11 +176,12 @@ export function ensureRewardState(app: AppRuntime): RewardPhaseState {
   const paidCount = randomInt(paidRng, paidMin, paidMax);
   app.state.rngState = paidRng.value;
   const reasons = bonusReasons(app);
+  const dayOneStarterOptions = app.state.currentDay === 1 ? allRewards(app, 'day_one_starter') : [];
   const state: RewardPhaseState = {
     maintenancePointsRemaining: system.maintenancePointsPerDay ?? 3,
     maintenancePointsTotal: system.maintenancePointsPerDay ?? 3,
     maintenanceOptions: allRewards(app, 'maintenance'),
-    freeBuildOptions: drawRewards(app, 'free_build', system.freeBuildChoiceCount ?? 3),
+    freeBuildOptions: dayOneStarterOptions.length > 0 ? dayOneStarterOptions : drawRewards(app, 'free_build', system.freeBuildChoiceCount ?? 3),
     paidShopOptions: drawRewards(app, 'paid_shop', paidCount),
     bonusOptions: reasons.length > 0 ? drawRewards(app, 'bonus', system.bonusRewardChoiceCount ?? 3) : [],
     selectedFreeBuildRewardId: null,
@@ -328,7 +339,42 @@ export function canChooseReward(app: AppRuntime, reward: RewardOptionInstance | 
   if (getRewardType(reward) === RewardType.UpgradeCard && getUpgradableCards(app).length === 0) return { ok: false, reason: '没有可升级卡牌。' };
   if (getRewardType(reward) === RewardType.RemoveCard && getRemovableCards(app).length === 0) return { ok: false, reason: deckSize(app) <= 6 ? '牌组总数不高于 6，不能删牌。' : '没有可删除卡牌。' };
   if (getRewardType(reward) === RewardType.ProductRepair && app.state.inventory.filter((product) => !product.flags.sold).length === 0) return { ok: false, reason: '没有可处理的库存。' };
+  if (getRewardType(reward) === RewardType.PermanentUpgrade) {
+    const maxPurchases = readNumber(reward, 'maxPurchases', Infinity);
+    const purchased = app.state.rewardLog.filter((entry) => entry.rewardId === reward.rewardId).length;
+    if (purchased >= maxPurchases) return { ok: false, reason: '该永久升级已达到上限。' };
+  }
   return { ok: true };
+}
+
+function applyPermanentUpgrade(app: AppRuntime, reward: RewardOptionInstance, result: RewardApplyResult): void {
+  const stat = readString(reward, 'stat');
+  const op = readString(reward, 'op') ?? 'add';
+  const value = readNumber(reward, 'value', 0);
+  if (!stat) {
+    result.messages.push('永久升级缺少 stat。');
+    return;
+  }
+  const config = app.configs.gameConfig as unknown as Record<string, unknown>;
+  const before = typeof config[stat] === 'number' ? config[stat] as number : 0;
+  let after = op === 'set' ? value : before + value;
+  const cap = readNumber(reward, 'cap', NaN);
+  if (Number.isFinite(cap)) after = Math.min(after, cap);
+  config[stat] = after;
+  if (stat === 'maxReputation') {
+    app.state.maxReputation = after;
+    const restore = readNumber(reward, 'restoreReputation', 0);
+    app.state.reputation = Math.min(app.state.maxReputation, app.state.reputation + restore);
+  }
+  if (stat === 'dailyActionPoints') {
+    const maxActionPoints = app.configs.gameConfig.maxActionPoints ?? after;
+    app.configs.gameConfig.dailyActionPoints = Math.min(after, maxActionPoints);
+  }
+  if (app.state.phase === RunPhase.DayOpening && stat === 'dailyActionPoints') {
+    app.state.dayState.actionPoints = app.configs.gameConfig.dailyActionPoints;
+  }
+  result.effectsApplied.push(`${reward.displayName}：${stat} ${before} → ${after}`);
+  result.resourceChanges.push(`${stat} ${before}->${after}`);
 }
 
 export function applyReward(app: AppRuntime, reward: RewardOptionInstance, target: RewardTarget = {}): RewardApplyResult {
@@ -367,6 +413,19 @@ export function applyReward(app: AppRuntime, reward: RewardOptionInstance, targe
     else app.state.deckState.discardPile.push(card);
     result.effectsApplied.push(`获得卡牌《${app.index.cardsById.get(cardId)?.displayName ?? cardId}》`);
     result.deckChanges.push(`add ${cardId}`);
+    const bundledPassiveId = readString(reward, 'passiveId');
+    if (bundledPassiveId && app.index.passivesById.has(bundledPassiveId) && !app.state.activePassives.some((passive) => passive.passiveId === bundledPassiveId)) {
+      app.state.activePassives.push({ passiveId: bundledPassiveId, gainedDay: app.state.currentDay, source: reward.rewardId });
+      result.effectsApplied.push(`获得店铺被动《${app.index.passivesById.get(bundledPassiveId)?.displayName ?? bundledPassiveId}》`);
+      result.passiveChanges.push(`passive +${bundledPassiveId}`);
+    }
+    const bundledSupplySourceId = readString(reward, 'supplySourceId');
+    if (bundledSupplySourceId && app.index.supplySourcesById.has(bundledSupplySourceId)) {
+      const def = app.index.supplySourcesById.get(bundledSupplySourceId);
+      app.state.activeSupplySources.push({ supplySourceId: bundledSupplySourceId, gainedDay: app.state.currentDay, remainingDays: def?.durationDays ?? null, source: reward.rewardId });
+      result.effectsApplied.push(`获得货源倾向《${def?.displayName ?? bundledSupplySourceId}》`);
+      result.supplySourceChanges.push(`supply +${bundledSupplySourceId}`);
+    }
   } else if (type === RewardType.UpgradeCard) {
     const card = findCardByInstanceId(app, target.cardInstanceId) ?? getUpgradableCards(app)[0];
     const oldDef = card ? app.index.cardsById.get(card.cardDefId) : null;
@@ -421,6 +480,8 @@ export function applyReward(app: AppRuntime, reward: RewardOptionInstance, targe
     product.productModifiers ??= [];
     product.productModifiers.push({ stat: 'risk', op: 'add', value: -10, sourceType: 'reward', sourceId: reward.rewardId, displayText: '清仓处理：腐败/爆雷 -10' });
     result.effectsApplied.push(`清仓处理《${product.displayName}》：新鲜度 +1，爆雷 -10`);
+  } else if (type === RewardType.PermanentUpgrade) {
+    applyPermanentUpgrade(app, reward, result);
   } else {
     result.messages.push(`奖励类型 ${type} 暂未支持。`);
   }

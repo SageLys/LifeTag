@@ -180,7 +180,24 @@ export function resolveDeal(app: AppRuntime): DealResult {
   const outcome = calculateAccidentOutcome(context, finalAccidentLevel, finalPrice);
   const cashDelta = finalPrice - outcome.refund - outcome.fine;
   const singleProfit = finalPrice - product.cost - outcome.refund - outcome.fine;
-  const totalProfitGain = Math.max(0, singleProfit);
+  let totalProfitGain = Math.max(0, singleProfit);
+  const profitModifiers = [
+    ...(product.productModifiers ?? []),
+    ...(product.dealModifiers ?? []),
+    ...app.state.dayState.temporaryDayModifiers,
+    ...(app.state.dayState.temporaryDealModifiers ?? []),
+  ].filter((modifier) => (!modifier.targetId || modifier.targetId === product.id) && modifier.stat === 'totalProfitGain');
+  for (const modifier of profitModifiers) {
+    const condition = modifier.condition as { type?: string; accidentLevel?: AccidentLevel; params?: { accidentLevel?: AccidentLevel; accidentLevels?: AccidentLevel[] } } | undefined;
+    const matches =
+      !condition ||
+      (condition.type === 'accident_level_is' &&
+        ((condition.accidentLevel ?? condition.params?.accidentLevel) === finalAccidentLevel ||
+          Boolean(condition.params?.accidentLevels?.includes(finalAccidentLevel))));
+    if (matches) {
+      totalProfitGain = Math.max(0, modifier.op === 'multiply' ? Math.round(totalProfitGain * modifier.value) : totalProfitGain + modifier.value);
+    }
+  }
   const reputationDelta = -outcome.reputationLoss;
   const dealId = `deal_${app.state.runId}_${app.state.currentDay}_${app.state.dealLog.length + 1}`;
   const createdAt = new Date().toISOString();
@@ -210,6 +227,9 @@ export function resolveDeal(app: AppRuntime): DealResult {
   }
   if (pricingMode.id === 'pricing_blind_box') {
     app.state.dayState.blindBoxDealAccidentLevels.push(finalAccidentLevel);
+  }
+  if (pricingMode.id === 'pricing_clearance') {
+    app.state.dayState.phaseFlags.clearanceSaleUsed = true;
   }
   for (const modifier of app.state.temporaryRunModifiers) {
     if (modifier.stat === 'risk' && modifier.target === 'sell_product' && modifier.consumed < modifier.uses) {

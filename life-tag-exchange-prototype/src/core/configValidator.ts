@@ -107,16 +107,16 @@ function validateGameConfig(gameConfig: GameConfig, cardIds: Set<string>, errors
 
   const expectedNumbers: Array<[keyof GameConfig, number]> = [
     ['runLengthDays', 8],
-    ['initialCash', 120],
+    ['initialCash', 150],
     ['targetTotalProfit', 500],
     ['initialReputation', 100],
     ['maxReputation', 100],
-    ['dailyActionPoints', 4],
-    ['dailyDrawCount', 5],
-    ['dailyProductCandidateCount', 4],
-    ['dailyProductBuyLimit', 2],
-    ['dailyCustomerOrderCount', 3],
-    ['inventoryLimit', 6],
+    ['dailyActionPoints', 5],
+    ['dailyDrawCount', 6],
+    ['dailyProductCandidateCount', 5],
+    ['dailyProductBuyLimit', 3],
+    ['dailyCustomerOrderCount', 4],
+    ['inventoryLimit', 8],
     ['rewardOptionsPerDay', 3],
     ['marketEventsPerDay', 1],
   ];

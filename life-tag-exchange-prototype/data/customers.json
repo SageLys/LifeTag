@@ -35,9 +35,11 @@
       "pricing_normal",
       "pricing_high"
     ],
-    "budget": 250,
+    "budget": 240,
     "customerType": "career",
-    "darkRiskSensitivity": ["career_background"]
+    "darkRiskSensitivity": [
+      "career_background"
+    ]
   },
   {
     "id": "customer_startup_boss",
@@ -71,9 +73,11 @@
       "pricing_cheap",
       "pricing_normal"
     ],
-    "budget": 220,
+    "budget": 165,
     "customerType": "career",
-    "darkRiskSensitivity": ["career_background"]
+    "darkRiskSensitivity": [
+      "career_background"
+    ]
   },
   {
     "id": "customer_matchmaker",
@@ -111,9 +115,11 @@
       "pricing_normal",
       "pricing_high"
     ],
-    "budget": 230,
+    "budget": 205,
     "customerType": "family",
-    "darkRiskSensitivity": ["persona"]
+    "darkRiskSensitivity": [
+      "persona"
+    ]
   },
   {
     "id": "customer_parent_committee",
@@ -150,9 +156,12 @@
     "preferredPricingModeIds": [
       "pricing_normal"
     ],
-    "budget": 260,
+    "budget": 275,
     "customerType": "family",
-    "darkRiskSensitivity": ["persona", "career_background"]
+    "darkRiskSensitivity": [
+      "persona",
+      "career_background"
+    ]
   },
   {
     "id": "customer_short_video_mcn",
@@ -190,9 +199,11 @@
       "pricing_normal",
       "pricing_blind_box"
     ],
-    "budget": 250,
+    "budget": 245,
     "customerType": "mcn",
-    "darkRiskSensitivity": ["platform"]
+    "darkRiskSensitivity": [
+      "platform"
+    ]
   },
   {
     "id": "customer_matchmaking_agency",
@@ -230,9 +241,11 @@
       "pricing_normal",
       "pricing_high"
     ],
-    "budget": 230,
+    "budget": 205,
     "customerType": "family",
     "aliasOf": "customer_matchmaker",
-    "darkRiskSensitivity": ["persona"]
+    "darkRiskSensitivity": [
+      "persona"
+    ]
   }
 ]

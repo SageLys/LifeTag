@@ -95,6 +95,43 @@ function riskMeter(maxRisk: number): string {
   `;
 }
 
+function nextLowerAccidentHint(app: AppRuntime): string {
+  const preview = app.state.dayState.currentDealPreview;
+  if (!preview) return '';
+  const thresholds = app.configs.gameConfig.riskThresholds;
+  const risk = preview.riskDisplayType === 'exact' ? preview.exactRisk ?? preview.riskMax : preview.riskMax;
+  const targetMax =
+    risk >= (thresholds.severe.min ?? 100) ? thresholds.major.max :
+    risk >= thresholds.major.min ? thresholds.medium.max :
+    risk >= thresholds.medium.min ? thresholds.minor.max :
+    risk >= thresholds.minor.min ? thresholds.none.max :
+    null;
+  if (typeof targetMax !== 'number') {
+    return '已在无事故区间';
+  }
+  return `降到下一事故等级还差 ${Math.max(0, risk - targetMax)} 爆雷`;
+}
+
+function renderTopRiskItems(items: RiskBreakdownItem[]): string {
+  const top = [...items]
+    .filter((item) => item.value > 0)
+    .sort((left, right) => Math.abs(right.value) - Math.abs(left.value))
+    .slice(0, 3);
+  return top.length > 0 ? top.map((item) => `<li>${escapeHtml(item.label)}：${formatSigned(item.value)}</li>`).join('') : '<li>暂无主要正向风险</li>';
+}
+
+function renderAvailableTreatments(app: AppRuntime): string {
+  const product = getSelectedProduct(app);
+  const methods = ['公关', '便宜卖', '清仓卖'];
+  if (product?.hiddenTagIds.some((tagId) => !product.revealedHiddenTagIds.includes(tagId)) || product?.darkRiskIds.length) {
+    methods.push('深度背调', '风险承销');
+  }
+  if (getSelectedCustomerOrder(app)?.customerType === 'career') {
+    methods.push('试用期转嫁');
+  }
+  return methods.map((method) => `<span class="tag-chip">${escapeHtml(method)}</span>`).join('');
+}
+
 function renderActions(app: AppRuntime): string {
   const preview = app.state.dayState.currentDealPreview;
   const missing = getMissingSelections(app);
@@ -144,6 +181,7 @@ export function renderDealPreview(app: AppRuntime): string {
         <div><dt>预计利润</dt><dd class="number price-value">${formatSigned(preview.estimatedProfit)}</dd></div>
         <div><dt>爆雷</dt><dd class="number risk-value">${riskDisplay(app)}</dd></div>
         <div><dt>事故预测</dt><dd>${escapeHtml(preview.accidentPreview.label)}</dd></div>
+        <div><dt>降级距离</dt><dd>${escapeHtml(nextLowerAccidentHint(app))}</dd></div>
       </dl>
       ${riskMeter(preview.riskMax)}
       ${preview.unknownRiskBreakdown.length > 0 ? '<p class="warning-text">仍有未知标签或暗风险，爆雷只显示区间。</p>' : ''}
@@ -153,8 +191,12 @@ export function renderDealPreview(app: AppRuntime): string {
         <ul>${renderBreakdown(preview.priceBreakdown)}</ul>
         <h3>已知风险</h3>
         <ul>${renderRiskBreakdown(preview.riskBreakdown)}</ul>
+        <h3>主要风险前三项</h3>
+        <ul>${renderTopRiskItems(preview.riskBreakdown)}</ul>
         <h3>未知风险提示</h3>
         <ul>${renderUnknownRiskBreakdown(preview.unknownRiskBreakdown)}</ul>
+        <h3>可用处理方式</h3>
+        <p class="tag-list">${renderAvailableTreatments(app)}</p>
       </details>
       ${preview.warnings.map((warning) => `<p class="warning-text">${escapeHtml(warning)}</p>`).join('')}
       ${renderActions(app)}

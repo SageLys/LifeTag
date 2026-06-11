@@ -28,9 +28,9 @@ const LEVEL_ORDER: AccidentLevel[] = [
 const DEFAULT_ACCIDENT_EFFECTS: Record<AccidentLevel, { refundRate: number; fine: number; reputationLoss: number }> = {
   [AccidentLevel.None]: { refundRate: 0, fine: 0, reputationLoss: 0 },
   [AccidentLevel.Minor]: { refundRate: 0.1, fine: 0, reputationLoss: 5 },
-  [AccidentLevel.Medium]: { refundRate: 0.3, fine: 0, reputationLoss: 15 },
-  [AccidentLevel.Major]: { refundRate: 0.5, fine: 10, reputationLoss: 30 },
-  [AccidentLevel.Severe]: { refundRate: 0.8, fine: 30, reputationLoss: 45 },
+  [AccidentLevel.Medium]: { refundRate: 0.25, fine: 0, reputationLoss: 12 },
+  [AccidentLevel.Major]: { refundRate: 0.5, fine: 0, reputationLoss: 30 },
+  [AccidentLevel.Severe]: { refundRate: 1, fine: 35, reputationLoss: 50 },
 };
 
 type CompatibleThresholds = Partial<{
@@ -67,6 +67,10 @@ function shiftLevel(level: AccidentLevel, delta: number): AccidentLevel {
 
 function minLevel(level: AccidentLevel, min: AccidentLevel): AccidentLevel {
   return LEVEL_ORDER[Math.max(LEVEL_ORDER.indexOf(level), LEVEL_ORDER.indexOf(min))];
+}
+
+function maxLevel(level: AccidentLevel, max: AccidentLevel): AccidentLevel {
+  return LEVEL_ORDER[Math.min(LEVEL_ORDER.indexOf(level), LEVEL_ORDER.indexOf(max))];
 }
 
 function dealModifiers(context: CalculationContext) {
@@ -167,6 +171,12 @@ export function applyAccidentLevelModifiers(
     );
   }
 
+  if (context.pricingMode.id === 'pricing_clearance' && LEVEL_ORDER.indexOf(finalAccidentLevel) > LEVEL_ORDER.indexOf(AccidentLevel.Medium)) {
+    const before = finalAccidentLevel;
+    finalAccidentLevel = AccidentLevel.Medium;
+    breakdown.push(breakdownItem('pricing_clearance_accident_cap', `清仓卖：${getAccidentLevelLabel(before)} → ${getAccidentLevelLabel(finalAccidentLevel)}`, '最高中事故', 'pricing_mode', context.pricingMode.id));
+  }
+
   if (
     context.activePassives.some((passive) => passive.passiveId === 'passive_public_opinion_stoploss') &&
     !context.dayState.phaseFlags.passivePublicOpinionStoplossUsed &&
@@ -182,6 +192,7 @@ export function applyAccidentLevelModifiers(
     const before = finalAccidentLevel;
     if (modifier.op === 'add') finalAccidentLevel = shiftLevel(finalAccidentLevel, modifier.value);
     if ((modifier as typeof modifier & { min?: AccidentLevel }).min) finalAccidentLevel = minLevel(finalAccidentLevel, (modifier as typeof modifier & { min: AccidentLevel }).min);
+    if ((modifier as typeof modifier & { max?: AccidentLevel }).max) finalAccidentLevel = maxLevel(finalAccidentLevel, (modifier as typeof modifier & { max: AccidentLevel }).max);
     breakdown.push(breakdownItem(`modifier_accident_level_${modifier.sourceId ?? breakdown.length}`, `${modifier.displayText ?? '事故等级修正'}：${getAccidentLevelLabel(before)} → ${getAccidentLevelLabel(finalAccidentLevel)}`, modifier.value, modifier.sourceType ?? 'modifier', modifier.sourceId ?? 'unknown'));
   }
 
@@ -233,10 +244,10 @@ export function calculateAccidentOutcome(
     defaultAccidentEffects?: Partial<Record<AccidentLevel, Partial<{ refundRate: number; fine: number; reputationLoss: number }>>>;
   }).defaultAccidentEffects?.[accidentLevel];
   const fallback = DEFAULT_ACCIDENT_EFFECTS[accidentLevel];
-  const refundRate = Math.max(0, Math.min(1, readNumber(configured?.refundRate ?? configuredDefaults?.refundRate, fallback.refundRate)));
+  let refundRate = Math.max(0, Math.min(1, readNumber(configured?.refundRate ?? configuredDefaults?.refundRate, fallback.refundRate)));
   let fine = Math.max(0, Math.round(readNumber(configured?.fine ?? configuredDefaults?.fine, fallback.fine)));
   let reputationLoss = Math.max(0, Math.round(readNumber(configured?.reputationLoss ?? configuredDefaults?.reputationLoss, fallback.reputationLoss)));
-  const refund = Math.max(0, Math.round(finalPrice * refundRate));
+  let refund = Math.max(0, Math.round(finalPrice * refundRate));
   const accidentOutcomeBreakdown = [
     breakdownItem('refund_rate', '退款比例', refundRate),
     breakdownItem('refund', '退款', refund),
@@ -255,7 +266,18 @@ export function calculateAccidentOutcome(
     context.runState.cash += 20;
   }
 
-  for (const modifier of dealModifiers(context).filter((item) => (item.stat === 'fine' || item.stat === 'reputationLoss' || item.stat === 'cash') && modifierAccidentLevelMatches(item, accidentLevel))) {
+  for (const modifier of dealModifiers(context).filter((item) => (item.stat === 'fine' || item.stat === 'refund' || item.stat === 'refundRate' || item.stat === 'reputationLoss' || item.stat === 'cash') && modifierAccidentLevelMatches(item, accidentLevel))) {
+    if (modifier.stat === 'refundRate') {
+      const before = refundRate;
+      refundRate = Math.max(0, Math.min(1, modifier.op === 'multiply' ? refundRate * modifier.value : refundRate + modifier.value));
+      refund = Math.max(0, Math.round(finalPrice * refundRate));
+      accidentOutcomeBreakdown.push(breakdownItem(`modifier_refund_rate_${modifier.sourceId ?? accidentOutcomeBreakdown.length}`, `${modifier.displayText ?? '退款比例修正'}：退款比例 ${before} → ${refundRate}`, refundRate - before, modifier.sourceType ?? 'modifier', modifier.sourceId ?? 'unknown'));
+    }
+    if (modifier.stat === 'refund') {
+      const before = refund;
+      refund = modifier.op === 'multiply' ? Math.round(refund * modifier.value) : Math.max(0, refund + modifier.value);
+      accidentOutcomeBreakdown.push(breakdownItem(`modifier_refund_${modifier.sourceId ?? accidentOutcomeBreakdown.length}`, `${modifier.displayText ?? '退款修正'}：退款 ${before} → ${refund}`, refund - before, modifier.sourceType ?? 'modifier', modifier.sourceId ?? 'unknown'));
+    }
     if (modifier.stat === 'fine') {
       const before = fine;
       fine = modifier.op === 'multiply' ? Math.round(fine * modifier.value) : Math.max(0, fine + modifier.value);

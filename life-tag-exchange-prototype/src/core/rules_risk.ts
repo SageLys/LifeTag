@@ -136,7 +136,7 @@ function isSuppressed(product: ProductInstance, tagId: string): boolean {
 }
 
 function getSuppressionFactor(product: ProductInstance, tagId: string): number {
-  return isSuppressed(product, tagId) ? 0.3 : 1;
+  return isSuppressed(product, tagId) ? 0 : 1;
 }
 
 function isDarkRiskFullyKnown(product: ProductInstance, riskId: string): boolean {
@@ -227,10 +227,10 @@ function getRelationRiskDelta(relation: TagConflictDef): number {
 function getRelationSuppressionFactor(product: ProductInstance, relation: TagConflictDef): number {
   const suppressedCount = [relation.tagA, relation.tagB].filter((tagId) => isSuppressed(product, tagId)).length;
   if (suppressedCount === 2) {
-    return 0.1;
+    return 0;
   }
   if (suppressedCount === 1) {
-    return 0.3;
+    return 0;
   }
   return 1;
 }
@@ -273,12 +273,22 @@ function conditionMatches(modifier: Modifier, context: CalculationContext, known
   const customerDef = context.indexes.customersById.get(context.customerOrder.customerId);
 
   switch (condition.type) {
+    case 'all':
+      return Array.isArray((condition as typeof condition & { conditions?: typeof condition[] }).conditions)
+        ? (condition as typeof condition & { conditions: typeof condition[] }).conditions.every((child) => conditionMatches({ ...modifier, condition: child }, context, knownTagIds))
+        : false;
+    case 'any':
+      return Array.isArray((condition as typeof condition & { conditions?: typeof condition[] }).conditions)
+        ? (condition as typeof condition & { conditions: typeof condition[] }).conditions.some((child) => conditionMatches({ ...modifier, condition: child }, context, knownTagIds))
+        : false;
     case 'product_has_tag':
       return Boolean(tagId && knownTagIds.includes(tagId));
     case 'product_lacks_tag':
       return Boolean(tagId && !knownTagIds.includes(tagId));
     case 'product_has_any_tag':
       return Boolean(tagIds?.some((conditionTagId) => knownTagIds.includes(conditionTagId)));
+    case 'product_has_all_tags':
+      return Boolean(tagIds && tagIds.every((conditionTagId) => knownTagIds.includes(conditionTagId)));
     case 'product_lacks_all_tags':
       return Boolean(tagIds && tagIds.every((conditionTagId) => !knownTagIds.includes(conditionTagId)));
     case 'customer_is':
@@ -556,13 +566,15 @@ export function calculateRisk(context: CalculationContext): RiskResult {
 
   // 6. 基础操作风险（包装 +10，公关 -20）
   if (product.flags.packaged) {
-    knownRisk += 10;
-    riskBreakdown.push(riskItem('base_action', 'action_package', '基础包装', 10));
+    const packageRiskAdd = readNumber(context.configTables.gameConfig.basePackageRiskAdd, 8);
+    knownRisk += packageRiskAdd;
+    riskBreakdown.push(riskItem('base_action', 'action_package', '基础包装', packageRiskAdd));
   }
 
   if (product.flags.hasPublicRelation) {
-    knownRisk -= 20;
-    riskBreakdown.push(riskItem('base_action', 'action_pr', '公关处理', -20));
+    const publicRelationRiskReduction = readNumber(context.configTables.gameConfig.basePublicRelationRiskReduction, 25);
+    knownRisk -= publicRelationRiskReduction;
+    riskBreakdown.push(riskItem('base_action', 'action_pr', '公关处理', -publicRelationRiskReduction));
   }
 
   // 7. 定价风险

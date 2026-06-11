@@ -7,6 +7,7 @@ export function createInitialGameState(gameConfig: GameConfig): RunState {
   const rngSeed = Date.now();
   const rng = createRng(rngSeed);
   const deckState = createInitialDeckState(gameConfig, rng);
+  const maxActionPoints = gameConfig.maxActionPoints ?? gameConfig.dailyActionPoints;
 
   return {
     runId: `run_${Date.now()}`,
@@ -32,7 +33,7 @@ export function createInitialGameState(gameConfig: GameConfig): RunState {
     dayState: {
       dayNumber: 1,
       phase: RunPhase.RunInit,
-      actionPoints: gameConfig.dailyActionPoints,
+      actionPoints: Math.min(gameConfig.dailyActionPoints, maxActionPoints),
       marketEvent: null,
       marketEvents: [],
       productCandidates: [],

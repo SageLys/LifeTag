@@ -167,7 +167,7 @@ export function bindEvents(app: AppRuntime): void {
         if (result.ok && result.dealResult) {
           showDealResult(result.dealResult);
           if (app.state.phase === RunPhase.DaySell) {
-            advancePhase(app);
+            returnToProcess(app);
           }
         }
         renderApp(app);

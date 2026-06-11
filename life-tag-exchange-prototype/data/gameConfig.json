@@ -2,16 +2,16 @@
   "id": "game_config_default",
   "displayName": "默认 8 天原型配置",
   "runLengthDays": 8,
-  "initialCash": 120,
+  "initialCash": 150,
   "targetTotalProfit": 500,
   "initialReputation": 100,
   "maxReputation": 100,
-  "dailyActionPoints": 4,
-  "dailyDrawCount": 5,
-  "dailyProductCandidateCount": 4,
-  "dailyProductBuyLimit": 2,
-  "dailyCustomerOrderCount": 3,
-  "inventoryLimit": 6,
+  "dailyActionPoints": 5,
+  "dailyDrawCount": 6,
+  "dailyProductCandidateCount": 5,
+  "dailyProductBuyLimit": 3,
+  "dailyCustomerOrderCount": 4,
+  "inventoryLimit": 8,
   "marketEventsPerDay": 1,
   "rewardOptionsPerDay": 3,
   "dailyMinimumSaleCount": 1,
@@ -77,14 +77,14 @@
   ],
   "notes": "首版 8 天 HTML 快速验证配置。累计利润是通关目标，现金是构筑资源，信誉是血量。",
   "rewardSystem": {
-    "maintenancePointsPerDay": 3,
+    "maintenancePointsPerDay": 2,
     "freeBuildChoiceCount": 3,
     "freeBuildPickCount": 1,
-    "paidShopMinOptions": 6,
-    "paidShopMaxOptions": 8,
+    "paidShopMinOptions": 8,
+    "paidShopMaxOptions": 10,
     "bonusRewardChoiceCount": 3,
     "bonusRewardPickCount": 1,
-    "dayOnePaidRewardDiscount": 10
+    "dayOnePaidRewardDiscount": 0
   },
   "bonusRewardTriggers": {
     "dailyProfitAtLeast": 120,
@@ -146,7 +146,9 @@
   ],
   "flowOverloadRisk": {
     "enabled": true,
-    "customerIds": ["customer_short_video_mcn"],
+    "customerIds": [
+      "customer_short_video_mcn"
+    ],
     "tagIds": [
       "tag_crazy",
       "tag_absurd",
@@ -156,11 +158,35 @@
       "tag_empty_persona"
     ],
     "steps": [
-      { "minCount": 0, "maxCount": 2, "riskAdd": 0 },
-      { "minCount": 3, "maxCount": 3, "riskAdd": 8 },
-      { "minCount": 4, "maxCount": 4, "riskAdd": 15 },
-      { "minCount": 5, "maxCount": 99, "riskAdd": 25 }
+      {
+        "minCount": 0,
+        "maxCount": 2,
+        "riskAdd": 0
+      },
+      {
+        "minCount": 3,
+        "maxCount": 3,
+        "riskAdd": 8
+      },
+      {
+        "minCount": 4,
+        "maxCount": 4,
+        "riskAdd": 15
+      },
+      {
+        "minCount": 5,
+        "maxCount": 99,
+        "riskAdd": 25
+      }
     ],
     "displayText": "流量标签过载"
-  }
+  },
+  "maxActionPoints": 9,
+  "dailyOpeningCashFloor": 60,
+  "dailyOpeningCashBonus": 0,
+  "basePackageMultiplier": 1.25,
+  "basePackageRiskAdd": 8,
+  "basePackagePreferenceBonus": 15,
+  "basePackagePreferenceThreshold": 2,
+  "basePublicRelationRiskReduction": 25
 }

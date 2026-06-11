@@ -26,11 +26,19 @@ export interface GameConfig {
   initialReputation: number;
   maxReputation: number;
   dailyActionPoints: number;
+  maxActionPoints?: number;
   dailyDrawCount: number;
   dailyProductCandidateCount: number;
   dailyProductBuyLimit: number;
   dailyCustomerOrderCount: number;
   inventoryLimit: number;
+  dailyOpeningCashFloor?: number;
+  dailyOpeningCashBonus?: number;
+  basePackageMultiplier?: number;
+  basePackageRiskAdd?: number;
+  basePackagePreferenceBonus?: number;
+  basePackagePreferenceThreshold?: number;
+  basePublicRelationRiskReduction?: number;
   marketEventsPerDay: number;
   rewardOptionsPerDay: number;
   rewardSystem?: {

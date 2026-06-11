@@ -100,10 +100,11 @@ function ensurePhaseContent(app: AppRuntime): void {
 }
 
 function createEmptyDayState(app: AppRuntime, dayNumber: number): RunState['dayState'] {
+  const maxActionPoints = app.configs.gameConfig.maxActionPoints ?? app.configs.gameConfig.dailyActionPoints;
   return {
     dayNumber,
     phase: RunPhase.DayOpening,
-    actionPoints: app.configs.gameConfig.dailyActionPoints,
+    actionPoints: Math.min(app.configs.gameConfig.dailyActionPoints, maxActionPoints),
     marketEvent: null,
     marketEvents: [],
     productCandidates: [],
@@ -130,6 +131,17 @@ function createEmptyDayState(app: AppRuntime, dayNumber: number): RunState['dayS
     phaseFlags: {},
     log: [],
   };
+}
+
+function applyOpeningCashFloor(app: AppRuntime): void {
+  const floor = app.configs.gameConfig.dailyOpeningCashFloor ?? 0;
+  const extra = app.configs.gameConfig.dailyOpeningCashBonus ?? 0;
+  const target = floor + extra;
+  if (target > 0 && app.state.cash < target) {
+    const before = app.state.cash;
+    app.state.cash = target;
+    addRunLog(app.state, `开店周转补助：现金 ${before} → ${target}，不计入累计利润。`);
+  }
 }
 
 function applyNextDayRunModifiers(app: AppRuntime): void {
@@ -186,6 +198,7 @@ function ageInventoryForNextDay(app: AppRuntime): void {
 export function startNewRun(app: AppRuntime): void {
   const shouldLogRestart = app.state.phase !== RunPhase.RunInit;
   app.state = createNewGame(app.configs.gameConfig);
+  applyOpeningCashFloor(app);
   ensurePhaseContent(app);
 
   if (shouldLogRestart) {
@@ -243,6 +256,7 @@ export function finishDayAndStartNextDay(app: AppRuntime): void {
   syncPhase(state, RunPhase.DayOpening);
   applyNextDayRunModifiers(app);
   addRunLog(state, `第 ${state.currentDay} 天开店。`);
+  applyOpeningCashFloor(app);
   ensurePhaseContent(app);
 }
 

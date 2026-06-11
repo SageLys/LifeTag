@@ -38,7 +38,11 @@ export function getBuyProductDisabledReason(app: AppRuntime, product: ProductIns
     return '商品状态不可买入';
   }
 
-  if (app.state.cash < product.cost) {
+  const purchaseDiscount = app.state.temporaryRunModifiers.find(
+    (modifier) => modifier.scope === 'next_purchase' && modifier.stat === 'cost' && modifier.consumed < modifier.uses,
+  );
+  const effectiveCost = Math.max(1, product.cost - (purchaseDiscount ? Math.abs(purchaseDiscount.value) : 0));
+  if (app.state.cash < effectiveCost) {
     return '现金不足';
   }
 

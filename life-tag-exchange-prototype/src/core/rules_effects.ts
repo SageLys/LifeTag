@@ -115,6 +115,8 @@ const SUPPORTED_EFFECT_TYPES = new Set([
   'gain_reputation',
   'lose_reputation',
   'draw_cards',
+  'gain_action_points',
+  'add_temporary_modifier',
 ]);
 
 export function getCardActionPointCost(cardDef: CardDef, cardInstance?: CardInstance | null): number {
@@ -138,7 +140,7 @@ export function getCardTargetType(cardDef: CardDef): NonNullable<CardDef['target
   if (cardDef.targetType) {
     return cardDef.targetType;
   }
-  if (cardDef.id === 'card_draw_two_filter_one') {
+  if (cardDef.id === 'card_draw_two_filter_one' || cardDef.id === 'card_overtime_processing' || cardDef.id === 'card_regular_customer_credit' || cardDef.id === 'card_low_price_harvest' || cardDef.id === 'card_skilled_assembly_line') {
     return 'player';
   }
   return cardDef.targetType ?? 'selected_product';
@@ -338,6 +340,7 @@ function applyModifyAccidentResult(effect: Effect, context: EffectContext): Effe
   const op = typeof params.op === 'string' ? params.op : null;
   const value = typeof params.value === 'number' ? params.value : null;
   const accidentLevel = typeof params.accidentLevel === 'string' ? params.accidentLevel : null;
+  const accidentLevels = Array.isArray(params.accidentLevels) ? params.accidentLevels.filter((level): level is string => typeof level === 'string') : [];
   if (!stat || !op || value === null) {
     return { ok: false, effectType: effect.type, message: '缺少事故修正参数。' };
   }
@@ -349,7 +352,7 @@ function applyModifyAccidentResult(effect: Effect, context: EffectContext): Effe
     sourceType: 'card',
     sourceId: context.cardDef.id,
     displayText: effect.displayText ?? getModifierLabel(context, '事故修正'),
-    condition: accidentLevel ? { type: 'accident_level_is', params: { accidentLevel } } : undefined,
+    condition: accidentLevel || accidentLevels.length > 0 ? { type: 'accident_level_is', params: { accidentLevel, accidentLevels } } : undefined,
     durationType: 'this_deal',
     targetId: getProduct(context)?.id,
   });
@@ -371,7 +374,13 @@ function applySimpleModifier(effect: Effect, context: EffectContext): EffectResu
 function applySuppressTag(effect: Effect, context: EffectContext): EffectResult {
   const product = getProduct(context);
   const params = getParams(effect);
-  const tagId = effect.tagId ?? effect.targetTagId ?? context.targetTagId ?? (typeof params.tagId === 'string' ? params.tagId : null) ?? (typeof effect.value === 'string' ? effect.value : null);
+  let tagId = effect.tagId ?? effect.targetTagId ?? context.targetTagId ?? (typeof params.tagId === 'string' ? params.tagId : null) ?? (typeof effect.value === 'string' ? effect.value : null);
+  if (!tagId && product && params.autoPick === 'known_negative') {
+    tagId = getAllKnownTagIds(product).find((knownTagId) => {
+      const tag = context.indexes.tagsById.get(knownTagId);
+      return Boolean(tag?.isNegative && tag.isWashable && !product.suppressedTagIds.includes(knownTagId));
+    }) ?? null;
+  }
   if (!product || !tagId) {
     return { ok: false, effectType: effect.type, message: '缺少商品或标签目标。' };
   }
@@ -389,6 +398,42 @@ function applySuppressTag(effect: Effect, context: EffectContext): EffectResult 
     product.suppressedTagIds.push(tagId);
   }
   return { ok: true, effectType: effect.type, message: `压制了【${tag.displayName}】。` };
+}
+
+function applyGainActionPoints(effect: Effect, context: EffectContext): EffectResult {
+  const params = getParams(effect);
+  const base = getNumberValue(effect, 0);
+  const reputationBelow = typeof params.reputationBelow === 'number' ? params.reputationBelow : null;
+  const extra = reputationBelow !== null && context.runState.reputation < reputationBelow ? (typeof params.extra === 'number' ? params.extra : 0) : 0;
+  const maxActionPoints = context.configs.gameConfig.maxActionPoints ?? 99;
+  const before = context.dayState.actionPoints;
+  context.dayState.actionPoints = Math.min(maxActionPoints, context.dayState.actionPoints + base + extra);
+  return { ok: true, effectType: effect.type, message: `行动点 +${context.dayState.actionPoints - before}。` };
+}
+
+function applyAddTemporaryModifier(effect: Effect, context: EffectContext): EffectResult {
+  const params = getParams(effect);
+  const stat = typeof params.stat === 'string' ? params.stat : null;
+  const op = typeof params.op === 'string' ? params.op : null;
+  const value = typeof params.value === 'number' ? params.value : null;
+  if (!stat || !op || value === null) {
+    return { ok: false, effectType: effect.type, message: '缺少临时修正参数。' };
+  }
+  context.runState.temporaryRunModifiers.push({
+    id: `card_temp_${context.runState.nextInstanceCounter++}`,
+    sourceRewardId: context.cardDef.id,
+    displayName: context.cardDef.displayName,
+    gainedDay: context.runState.currentDay,
+    timing: params.duration === 'next_day' ? 'next_day' : 'this_day',
+    scope: typeof params.scope === 'string' ? params.scope : 'first_card_type',
+    target: typeof params.target === 'string' ? params.target : typeof params.cardType === 'string' ? params.cardType : typeof params.actionId === 'string' ? params.actionId : undefined,
+    stat,
+    op,
+    value,
+    uses: typeof params.uses === 'number' ? params.uses : 1,
+    consumed: 0,
+  });
+  return { ok: true, effectType: effect.type, message: effect.displayText ?? '获得临时修正。' };
 }
 
 function applyResourceEffect(effect: Effect, context: EffectContext): EffectResult {
@@ -454,6 +499,10 @@ export function applyEffect(effect: Effect, context: EffectContext): EffectResul
       return applyResourceEffect(effect, context);
     case 'draw_cards':
       return applyDrawCards(effect, context);
+    case 'gain_action_points':
+      return applyGainActionPoints(effect, context);
+    case 'add_temporary_modifier':
+      return applyAddTemporaryModifier(effect, context);
     default:
       console.warn(`Unsupported effect type: ${effect.type}`);
       return { ok: false, effectType: effect.type, message: `该卡牌包含暂未支持的效果：${effect.type}。` };

@@ -171,12 +171,22 @@ function conditionMatches(modifier: Modifier, context: CalculationContext, known
   const customerDef = context.indexes.customersById.get(context.customerOrder.customerId);
 
   switch (condition.type) {
+    case 'all':
+      return Array.isArray((condition as typeof condition & { conditions?: typeof condition[] }).conditions)
+        ? (condition as typeof condition & { conditions: typeof condition[] }).conditions.every((child) => conditionMatches({ ...modifier, condition: child }, context, knownTagIds))
+        : false;
+    case 'any':
+      return Array.isArray((condition as typeof condition & { conditions?: typeof condition[] }).conditions)
+        ? (condition as typeof condition & { conditions: typeof condition[] }).conditions.some((child) => conditionMatches({ ...modifier, condition: child }, context, knownTagIds))
+        : false;
     case 'product_has_tag':
       return Boolean(tagId && knownTagIds.includes(tagId));
     case 'product_lacks_tag':
       return Boolean(tagId && !knownTagIds.includes(tagId));
     case 'product_has_any_tag':
       return Boolean(tagIds?.some((conditionTagId) => knownTagIds.includes(conditionTagId)));
+    case 'product_has_all_tags':
+      return Boolean(tagIds && tagIds.every((conditionTagId) => knownTagIds.includes(conditionTagId)));
     case 'product_lacks_all_tags':
       return Boolean(tagIds && tagIds.every((conditionTagId) => !knownTagIds.includes(conditionTagId)));
     case 'customer_is':
@@ -264,7 +274,7 @@ function getPackageMultiplier(product: ProductInstance): number {
   if (compatibleProduct.packageMultiplier) {
     return compatibleProduct.packageMultiplier;
   }
-  return product.flags.packaged || compatibleProduct.packaged ? 1.2 : 1;
+  return product.flags.packaged || compatibleProduct.packaged ? 1.25 : 1;
 }
 
 function applySimplePriceModifiers(context: CalculationContext, breakdown: BreakdownItem[], warnings: string[]): { add: number; multipliers: number[] } {
@@ -376,7 +386,8 @@ export function calculatePrice(context: CalculationContext): PriceResult {
     priceBreakdown.push(item('raw_price_floor', '售价下限', 'price', 'set', '至少 1', 'system', 'price_floor'));
   }
 
-  const packageMultiplier = getPackageMultiplier(product);
+  const configuredPackageMultiplier = context.configTables.gameConfig.basePackageMultiplier;
+  const packageMultiplier = product.flags.packaged && typeof configuredPackageMultiplier === 'number' ? configuredPackageMultiplier : getPackageMultiplier(product);
   if (packageMultiplier !== 1) {
     priceBreakdown.push(item('package_multiplier', '基础包装', 'priceMultiplier', 'multiply', `×${packageMultiplier}`, 'product', product.id));
   }

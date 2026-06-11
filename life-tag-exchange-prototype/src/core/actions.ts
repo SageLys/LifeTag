@@ -67,7 +67,7 @@ const FALLBACK_BASE_ACTION_COSTS: Record<BaseActionId, BaseActionCost> = {
   action_identify: { actionPointCost: 1, cashCost: 0 },
   action_package: { actionPointCost: 1, cashCost: 10 },
   action_pr: { actionPointCost: 1, cashCost: 20 },
-  action_wash_tag: { actionPointCost: 1, cashCost: 20 },
+  action_wash_tag: { actionPointCost: 1, cashCost: 15 },
 };
 
 export function selectProductCandidate(app: AppRuntime, productId: string): void {
@@ -113,9 +113,25 @@ export function getBaseActionCost(app: AppRuntime, actionId: string): BaseAction
     cost.actionPointCost = Math.max(0, cost.actionPointCost - 1);
   }
 
+  if (actionId === 'action_wash_tag' && !app.state.dayState.phaseFlags.firstWashCashDiscountUsed) {
+    const discount = (app.configs.gameConfig as typeof app.configs.gameConfig & { firstWashCashDiscount?: number }).firstWashCashDiscount ?? 0;
+    cost.cashCost = Math.max(0, cost.cashCost - discount);
+  }
+
+  if (actionId === 'action_identify' && !app.state.dayState.phaseFlags.firstIdentifyFreeUsed) {
+    const firstIdentifyFree = (app.configs.gameConfig as typeof app.configs.gameConfig & { firstIdentifyFree?: number }).firstIdentifyFree ?? 0;
+    if (firstIdentifyFree > 0) {
+      cost.actionPointCost = 0;
+    }
+  }
+
+  if (actionId === 'action_pr') {
+    cost.cashCost = Math.max(0, cost.cashCost - ((app.configs.gameConfig as typeof app.configs.gameConfig & { basePrCashDiscount?: number }).basePrCashDiscount ?? 0));
+  }
+
   const freeAction = app.state.temporaryRunModifiers.find(
     (modifier) =>
-      modifier.scope === 'first_action' &&
+      (modifier.scope === 'first_action' || modifier.scope === 'first_base_action') &&
       modifier.target === actionId &&
       modifier.stat === 'actionPointCost' &&
       modifier.consumed < modifier.uses,
@@ -207,7 +223,7 @@ export function getBaseActionDisabledReason(app: AppRuntime, actionId: string, p
 
   switch (actionId) {
     case 'action_identify':
-      return getUnrevealedHiddenTagId(product) ? null : '该商品没有可鉴定的隐藏标签。';
+      return getUnrevealedHiddenTagId(product) || getUnresolvedDarkRiskIds(product).length > 0 ? null : '该商品没有可鉴定的隐藏标签或暗风险线索。';
     case 'action_package':
       return product.flags.packaged ? '该商品已包装。' : null;
     case 'action_pr':
@@ -243,10 +259,14 @@ function spendBaseActionCost(app: AppRuntime, actionId: string): void {
   app.state.cash = Math.max(0, app.state.cash - cost.cashCost);
   if (actionId === 'action_wash_tag') {
     app.state.dayState.phaseFlags.passiveWashLabelUsed = true;
+    app.state.dayState.phaseFlags.firstWashCashDiscountUsed = true;
+  }
+  if (actionId === 'action_identify') {
+    app.state.dayState.phaseFlags.firstIdentifyFreeUsed = true;
   }
   const freeAction = app.state.temporaryRunModifiers.find(
     (modifier) =>
-      modifier.scope === 'first_action' &&
+      (modifier.scope === 'first_action' || modifier.scope === 'first_base_action') &&
       modifier.target === actionId &&
       modifier.stat === 'actionPointCost' &&
       modifier.consumed < modifier.uses,
@@ -276,7 +296,13 @@ function applyIdentifyAction(app: AppRuntime, payload: BaseActionPayload): Actio
 
   const hiddenTagId = getUnrevealedHiddenTagId(product);
   if (!hiddenTagId) {
-    return { ok: false, reason: 'no_hidden_tag', message: '该商品没有可鉴定的隐藏标签。' };
+    const darkRiskId = getUnresolvedDarkRiskIds(product)[0];
+    if (!darkRiskId) {
+      return { ok: false, reason: 'no_hidden_tag', message: '该商品没有可鉴定的隐藏标签或暗风险线索。' };
+    }
+    product.darkRiskRevealLevels[darkRiskId] = 'hinted';
+    const risk = app.index.darkRisksById.get(darkRiskId);
+    return finishBaseAction(app, 'action_identify', `鉴定【${product.displayName}】，发现${risk?.category ?? '未知'}类暗风险线索。`);
   }
 
   product.revealedHiddenTagIds.push(hiddenTagId);
@@ -294,6 +320,22 @@ function applyPackageAction(app: AppRuntime, payload: BaseActionPayload): Action
   }
 
   product.flags.packaged = true;
+  const preferenceThreshold = app.configs.gameConfig.basePackagePreferenceThreshold ?? 2;
+  const preferenceBonus = app.configs.gameConfig.basePackagePreferenceBonus ?? 15;
+  const selectedOrder = getSelectedCustomerOrder(app);
+  const knownTags = getAllKnownTagIds(product);
+  const preferenceHits = selectedOrder ? selectedOrder.preferredTagIds.filter((tagId) => knownTags.includes(tagId)).length : 0;
+  if (selectedOrder && preferenceHits >= preferenceThreshold && preferenceBonus !== 0) {
+    product.productModifiers ??= [];
+    product.productModifiers.push({
+      stat: 'price',
+      op: 'add',
+      value: preferenceBonus,
+      sourceType: 'base_action',
+      sourceId: 'action_package',
+      displayText: `基础包装：命中 ${preferenceHits} 个顾客偏好，售价 +${preferenceBonus}`,
+    });
+  }
   return finishBaseAction(app, 'action_package', `包装【${product.displayName}】，花费 ${getBaseActionCost(app, 'action_package').cashCost} 现金，售价提高但爆雷上升。`);
 }
 
@@ -304,6 +346,16 @@ function applyPublicRelationAction(app: AppRuntime, payload: BaseActionPayload):
   }
 
   product.flags.hasPublicRelation = true;
+  product.productModifiers ??= [];
+  product.productModifiers.push({
+    stat: 'accidentLevel',
+    op: 'add',
+    value: -1,
+    sourceType: 'base_action',
+    sourceId: 'action_pr',
+    displayText: '基础公关：小/中事故降级',
+    condition: { type: 'accident_level_is', params: { accidentLevels: ['minor', 'medium'] } },
+  });
   return finishBaseAction(app, 'action_pr', `公关【${product.displayName}】，花费 ${getBaseActionCost(app, 'action_pr').cashCost} 现金，本商品风险降低。`);
 }
 
@@ -320,6 +372,18 @@ function applyWashTagAction(app: AppRuntime, payload: BaseActionPayload): Action
   }
 
   product.suppressedTagIds.push(tagId);
+  const selectedOrder = getSelectedCustomerOrder(app);
+  if (selectedOrder?.tabooTagIds.includes(tagId)) {
+    product.productModifiers ??= [];
+    product.productModifiers.push({
+      stat: 'risk',
+      op: 'add',
+      value: -10,
+      sourceType: 'base_action',
+      sourceId: 'action_wash_tag',
+      displayText: '洗标命中当前顾客雷区：爆雷 -10',
+    });
+  }
   return finishBaseAction(app, 'action_wash_tag', `洗标【${product.displayName}】的【${tag.displayName}】，花费 ${getBaseActionCost(app, 'action_wash_tag').cashCost} 现金，标签被压制。`);
 }
 
@@ -379,11 +443,11 @@ function getEffectiveCardCosts(app: AppRuntime, cardDef: CardDef, cardInstance: 
     (modifier) =>
       modifier.scope === 'first_card_type' &&
       modifier.target === cardDef.cardType &&
-      modifier.stat === 'cashCost' &&
       modifier.consumed < modifier.uses,
   );
   if (freePackage) {
-    cashCost = 0;
+    if (freePackage.stat === 'cashCost') cashCost = 0;
+    if (freePackage.stat === 'actionPointCost') return { apCost: 0, cashCost };
   }
   return { apCost, cashCost };
 }
@@ -403,7 +467,20 @@ function validateEffectAvailability(app: AppRuntime, effects: Effect[], targetPr
         }
         break;
       case 'suppress_tag': {
-        const tagId = effect.tagId ?? effect.targetTagId ?? (typeof effect.value === 'string' ? effect.value : null);
+        const params = (effect.params ?? {}) as Record<string, unknown>;
+        const tagId = effect.tagId ?? effect.targetTagId ?? (typeof params.tagId === 'string' ? params.tagId : null) ?? (typeof effect.value === 'string' ? effect.value : null);
+        if (!tagId && params.autoPick === 'known_negative') {
+          const available = targetProduct
+            ? getAllKnownTagIds(targetProduct).some((knownTagId) => {
+                const tag = app.index.tagsById.get(knownTagId);
+                return Boolean(tag?.isNegative && tag.isWashable && !targetProduct.suppressedTagIds.includes(knownTagId));
+              })
+            : false;
+          if (!available) {
+            return '该卡牌需要商品存在已揭示、可压制的负面标签。';
+          }
+          break;
+        }
         if (!targetProduct || !tagId) {
           return '该卡牌需要指定可压制标签。';
         }
@@ -697,6 +774,13 @@ export function selectPricingMode(app: AppRuntime, pricingModeId: string): Actio
       };
     }
   }
+  if (pricingMode.id === 'pricing_clearance' && app.state.dayState.phaseFlags.clearanceSaleUsed) {
+    return {
+      ok: false,
+      reason: 'daily_limit',
+      message: '清仓卖每日限 1 次。',
+    };
+  }
 
   app.state.dayState.selectedPricingModeId = pricingMode.id;
   refreshDealPreviewIfPossible(app);
@@ -888,14 +972,32 @@ export function buyProduct(app: AppRuntime, productId: string): ActionResult {
     };
   }
 
-  app.state.cash -= product.cost;
+  const purchaseDiscount = app.state.temporaryRunModifiers.find(
+    (modifier) =>
+      modifier.scope === 'next_purchase' &&
+      modifier.stat === 'cost' &&
+      modifier.consumed < modifier.uses,
+  );
+  const discount = purchaseDiscount ? Math.abs(purchaseDiscount.value) : 0;
+  const finalCost = Math.max(1, product.cost - discount);
+  app.state.cash -= finalCost;
+  if (purchaseDiscount) {
+    purchaseDiscount.consumed += 1;
+    if (product.darkRiskIds.length > 0) {
+      const refund = 10;
+      app.state.cash += refund;
+      app.state.runLog.push(`[第 ${app.state.currentDay} 天][DAY_PURCHASE] 低价收割命中暗风险，返还 ${refund} 现金。`);
+      app.state.dayState.log.push(`[第 ${app.state.currentDay} 天][DAY_PURCHASE] 低价收割命中暗风险，返还 ${refund} 现金。`);
+    }
+    app.state.temporaryRunModifiers = app.state.temporaryRunModifiers.filter((modifier) => modifier.consumed < modifier.uses);
+  }
   product.status = ProductStatus.Inventory;
   product.flags.inInventory = true;
   app.state.inventory.push(product);
   app.state.dayState.boughtProductCount += 1;
   app.state.dayState.selectedProductId = product.id;
 
-  const message = `买入【${product.displayName}】，花费 ${product.cost} 现金。`;
+  const message = `买入【${product.displayName}】，花费 ${finalCost} 现金${discount > 0 ? `（已优惠 ${discount}）` : ''}。`;
   app.state.runLog.push(`[第 ${app.state.currentDay} 天][DAY_PURCHASE] ${message}`);
   app.state.dayState.log.push(`[第 ${app.state.currentDay} 天][DAY_PURCHASE] ${message}`);
 
