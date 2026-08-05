@@ -3,9 +3,6 @@ import { createAppRuntime } from '../core/createAppRuntime';
 import { drawCards } from '../core/deckSystem';
 import { createRng } from '../core/rng';
 import { finishDayAndStartNextDay } from '../core/dayFlow';
-import { generateProductCandidates } from '../core/productGenerator';
-import { generateCustomerOrders } from '../core/customerGenerator';
-import { RunPhase } from '../core/constants';
 import type { AppRuntime } from '../core/types';
 
 describe('core flow', () => {
@@ -44,21 +41,15 @@ describe('core flow', () => {
     }
   });
 
-  it('has product candidates after advancing to DayPurchase phase', () => {
-    app.state.phase = RunPhase.DayPurchase;
-    generateProductCandidates(app);
+  it('has product candidates immediately after run start (no phase advance)', () => {
     expect(app.state.dayState.productCandidates.length).toBeGreaterThan(0);
   });
 
-  it('has customer orders after advancing to DayCustomer phase', () => {
-    app.state.phase = RunPhase.DayCustomer;
-    generateCustomerOrders(app);
+  it('has customer orders immediately after run start (no phase advance)', () => {
     expect(app.state.dayState.customerOrders.length).toBeGreaterThan(0);
   });
 
-  it('advances to day 2 after finishDayAndStartNextDay', () => {
-    // finishDayAndStartNextDay requires DayReward phase
-    app.state.phase = RunPhase.DayReward;
+  it('advances to day 2 after finishDayAndStartNextDay (no phase gate)', () => {
     finishDayAndStartNextDay(app);
     expect(app.state.currentDay).toBe(2);
   });

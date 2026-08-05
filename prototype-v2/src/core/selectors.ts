@@ -1,4 +1,4 @@
-import { ProductStatus, RunPhase } from './constants';
+import { ProductStatus } from './constants';
 import type { AppRuntime, CardDef, CardInstance, CustomerOrder, DeckState, MarketEventDef, PricingModeDef, ProductInstance, TagDef } from './types';
 
 type PreferenceEntry = string | { tagId: string; priceBonus?: number };
@@ -22,10 +22,7 @@ export function isProductInInventory(app: AppRuntime, productId: string): boolea
 }
 
 export function getBuyProductDisabledReason(app: AppRuntime, product: ProductInstance | undefined): string | null {
-  if (app.state.dayState.phase !== RunPhase.DayPurchase) {
-    return '只能在进货阶段买入';
-  }
-
+  // 去阶段化：不再检查 DayPurchase 阶段，仅校验具体进货条件。
   if (!product) {
     return '商品不存在';
   }

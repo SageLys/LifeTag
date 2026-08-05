@@ -131,7 +131,8 @@ export function createDealPreview(app: AppRuntime): DealPreview | null {
   const priceResult = calculatePrice(context);
   const riskResult = calculateRisk(context);
   const accidentPreview = getAccidentLevelRange(riskResult.riskMin, riskResult.riskMax, app.configs.gameConfig);
-  const canConfirmSell = app.state.phase === 'DAY_SELL' && product.status === ProductStatus.Inventory && !product.flags.sold;
+  // 去阶段化：能否出售只取决于商品本身是否为可售库存，与当前阶段无关。
+  const canConfirmSell = product.status === ProductStatus.Inventory && !product.flags.sold;
 
   return {
     productId: product.id,
@@ -156,7 +157,7 @@ export function createDealPreview(app: AppRuntime): DealPreview | null {
     warnings: [...priceResult.warnings, ...riskResult.warnings],
     missingSelections: [],
     canConfirmSell,
-    disabledReason: canConfirmSell ? null : '请在出售阶段选择库存商品后确认出售',
+    disabledReason: canConfirmSell ? null : '请选择一件未售出的库存商品',
   };
 }
 

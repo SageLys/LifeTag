@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createAppRuntime } from '../core/createAppRuntime';
 import { createDealPreview } from '../core/rules_deal';
+import { buyProduct, selectProduct, selectCustomerOrder, selectPricingMode } from '../core/actions';
 import { RunPhase } from '../core/constants';
 import type { AppRuntime } from '../core/types';
 
@@ -9,14 +10,18 @@ describe('deal preview', () => {
 
   beforeEach(() => {
     app = createAppRuntime();
-    // Set up a minimal selection for preview
-    const firstProduct = app.state.dayState.productCandidates[0];
+    // 去阶段化：直接通过玩家操作建立一笔可预览的交易（买入 → 选商品/顾客/定价）。
+    const candidate = app.state.dayState.productCandidates
+      .filter((p) => p.cost <= app.state.cash)
+      .sort((a, b) => a.cost - b.cost)[0];
     const firstOrder = app.state.dayState.customerOrders[0];
-    const firstPricingMode = app.configs.pricingModes[0];
 
-    if (firstProduct) app.state.dayState.selectedProductId = firstProduct.id;
-    if (firstOrder) app.state.dayState.selectedCustomerOrderId = firstOrder.id;
-    if (firstPricingMode) app.state.dayState.selectedPricingModeId = firstPricingMode.id;
+    if (candidate) {
+      buyProduct(app, candidate.id);
+      selectProduct(app, candidate.id);
+    }
+    if (firstOrder) selectCustomerOrder(app, firstOrder.id);
+    selectPricingMode(app, 'pricing_normal');
   });
 
   it('returns null without selections', () => {
@@ -62,11 +67,12 @@ describe('deal preview', () => {
     expect(preview.accidentPreview.levelMax).toBeTruthy();
   });
 
-  it('canConfirmSell is false outside DAY_SELL phase', () => {
-    app.state.phase = RunPhase.DayPurchase;
+  it('canConfirmSell does not depend on phase (de-phased)', () => {
     if (!app.state.dayState.selectedProductId) return;
-    const preview = createDealPreview(app);
-    if (!preview) return;
-    expect(preview.canConfirmSell).toBe(false);
+    app.state.phase = RunPhase.DayPurchase;
+    const a = createDealPreview(app)?.canConfirmSell;
+    app.state.phase = RunPhase.DaySell;
+    const b = createDealPreview(app)?.canConfirmSell;
+    expect(a).toBe(b);
   });
 });

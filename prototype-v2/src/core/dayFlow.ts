@@ -5,20 +5,8 @@ import { createNewGame } from './gameState';
 import { generateMarketEvents } from './marketGenerator';
 import { generateProductCandidates } from './productGenerator';
 import { generateRunReport } from './runReport';
-import { refreshDealPreviewIfPossible } from './rules_deal';
-import { ensureRewardState } from './rules_rewards';
 import { createRng } from './rng';
 import type { AppRuntime, RunState } from './types';
-
-const NEXT_PHASE: Partial<Record<RunPhase, RunPhase>> = {
-  [RunPhase.DayOpening]: RunPhase.DayPurchase,
-  [RunPhase.DayPurchase]: RunPhase.DayCustomer,
-  [RunPhase.DayCustomer]: RunPhase.DayDraw,
-  [RunPhase.DayDraw]: RunPhase.DayProcess,
-  [RunPhase.DayProcess]: RunPhase.DaySell,
-  [RunPhase.DaySell]: RunPhase.DayResolve,
-  [RunPhase.DayResolve]: RunPhase.DayReward,
-};
 
 function addRunLog(state: RunState, message: string): void {
   state.runLog.push(message);
@@ -38,7 +26,7 @@ function clearPhaseSelections(state: RunState): void {
   state.dayState.currentDealPreview = null;
 }
 
-function drawDailyHand(app: AppRuntime): void {
+export function drawDailyHand(app: AppRuntime): void {
   const { state } = app;
   if (state.dayState.phaseFlags.drawnToday) {
     return;
@@ -68,35 +56,15 @@ function discardHandForDayEnd(app: AppRuntime): void {
   }
 }
 
-function ensurePhaseContent(app: AppRuntime): void {
-  switch (app.state.phase) {
-    case RunPhase.DayOpening:
-      generateMarketEvents(app);
-      break;
-    case RunPhase.DayPurchase:
-      generateProductCandidates(app);
-      break;
-    case RunPhase.DayCustomer:
-      generateCustomerOrders(app);
-      break;
-    case RunPhase.DayDraw:
-      drawDailyHand(app);
-      break;
-    case RunPhase.DayReward:
-      if (!app.state.dayState.rewardState) {
-        ensureRewardState(app);
-        const rewardState = app.state.dayState.rewardState!;
-        const totalOptions =
-          rewardState.maintenanceOptions.length +
-          rewardState.freeBuildOptions.length +
-          rewardState.paidShopOptions.length +
-          rewardState.bonusOptions.length;
-        addRunLog(app.state, `第 ${app.state.currentDay} 天收店，生成 ${totalOptions} 个收店奖励选项。`);
-      }
-      break;
-    default:
-      break;
-  }
+/**
+ * 去阶段化：开店后立即确保当天的基础场景内容存在（新闻 / 货源 / 顾客）。
+ * 不在此处抽牌或生成收店奖励——那些改为玩家点击牌堆 / 保险柜时按需触发。
+ * 三个 generator 自身幂等（已有内容时直接返回），可安全重复调用。
+ */
+function ensureDailyContent(app: AppRuntime): void {
+  generateMarketEvents(app);
+  generateProductCandidates(app);
+  generateCustomerOrders(app);
 }
 
 function createEmptyDayState(app: AppRuntime, dayNumber: number): RunState['dayState'] {
@@ -199,7 +167,7 @@ export function startNewRun(app: AppRuntime): void {
   const shouldLogRestart = app.state.phase !== RunPhase.RunInit;
   app.state = createNewGame(app.configs.gameConfig);
   applyOpeningCashFloor(app);
-  ensurePhaseContent(app);
+  ensureDailyContent(app);
 
   if (shouldLogRestart) {
     addRunLog(app.state, '重新开始新局。');
@@ -235,8 +203,11 @@ export function endRun(app: AppRuntime): void {
 export function finishDayAndStartNextDay(app: AppRuntime): void {
   const { state } = app;
 
-  if (state.phase !== RunPhase.DayReward) {
-    addRunLog(state, `非法推进：${state.phase} 不能进入下一天。`);
+  // 去阶段化：不再要求 state.phase === DayReward。
+  // 是否允许收店 / 进入下一天的校验在 actions.finishRewardPhase 中通过
+  // canFinishRewardPhase 完成，这里只负责执行换天。
+  if (state.result !== RunResult.InProgress) {
+    addRunLog(state, '本局已结束，无法进入下一天。');
     return;
   }
 
@@ -257,70 +228,17 @@ export function finishDayAndStartNextDay(app: AppRuntime): void {
   applyNextDayRunModifiers(app);
   addRunLog(state, `第 ${state.currentDay} 天开店。`);
   applyOpeningCashFloor(app);
-  ensurePhaseContent(app);
+  ensureDailyContent(app);
 }
 
 export const startNextDay = finishDayAndStartNextDay;
 
-export function advancePhase(app: AppRuntime): void {
-  const { state } = app;
-
-  if (state.phase === RunPhase.RunInit || state.phase === RunPhase.RunEnd || state.phase === RunPhase.RunFailed) {
-    startNewRun(app);
-    return;
-  }
-
-  if (state.phase === RunPhase.DayReward) {
-    addRunLog(state, '请先选择一个收店奖励。');
-    return;
-  }
-
-  const nextPhase = NEXT_PHASE[state.phase];
-  if (!nextPhase) {
-    addRunLog(state, `非法推进：${state.phase} 没有可用的下一阶段。`);
-    return;
-  }
-
-  const previousPhase = state.phase;
-  syncPhase(state, nextPhase);
-  if (!(previousPhase === RunPhase.DayProcess && nextPhase === RunPhase.DaySell)) {
-    clearPhaseSelections(state);
-  }
-  if (previousPhase === RunPhase.DayProcess && nextPhase === RunPhase.DaySell) {
-    refreshDealPreviewIfPossible(app);
-  }
-  addRunLog(state, `阶段切换：${previousPhase} → ${nextPhase}。`);
-  ensurePhaseContent(app);
-}
-
-export function returnToProcess(app: AppRuntime): void {
-  const { state } = app;
-
-  if (state.phase !== RunPhase.DaySell) {
-    addRunLog(state, `非法返回：${state.phase} 不能返回 DAY_PROCESS。`);
-    return;
-  }
-
-  syncPhase(state, RunPhase.DayProcess);
-  addRunLog(state, '从 DAY_SELL 返回 DAY_PROCESS。');
-}
-
-export function skipSaleAndResolveDay(app: AppRuntime): void {
-  const { state } = app;
-
-  if (state.phase !== RunPhase.DayProcess) {
-    addRunLog(state, `非法日结：${state.phase} 不能直接进入 DAY_RESOLVE。`);
-    return;
-  }
-
-  clearPhaseSelections(state);
-  syncPhase(state, RunPhase.DayResolve);
-  addRunLog(state, '放弃本轮出售，直接进入日结。');
-}
-
+/**
+ * 去阶段化后，本局是否已结束只取决于结果状态，不再依赖具体阶段。
+ */
 export function checkRunEndConditions(app?: AppRuntime): boolean {
   if (!app) {
     return false;
   }
-  return app.state.currentDay >= app.state.maxDays && app.state.phase === RunPhase.DayReward;
+  return app.state.result !== RunResult.InProgress;
 }

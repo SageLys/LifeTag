@@ -1,5 +1,5 @@
 import { FailReason, ProductStatus, RunPhase, RunResult } from './constants';
-import { endRun, finishDayAndStartNextDay } from './dayFlow';
+import { drawDailyHand, endRun, finishDayAndStartNextDay } from './dayFlow';
 import { moveHandCardToDiscard, moveHandCardToExhaust } from './deckSystem';
 import { refreshDealPreviewIfPossible, resolveDeal } from './rules_deal';
 import {
@@ -8,6 +8,7 @@ import {
   chooseBonusReward,
   chooseFreeBuildReward,
   claimMaintenanceReward,
+  ensureRewardState,
   markRewardPhaseCompleted,
   skipBonusReward,
 } from './rules_rewards';
@@ -85,10 +86,6 @@ function addActionLog(app: AppRuntime, message: string): void {
   const fullMessage = `第 ${app.state.currentDay} 天：${message}`;
   app.state.runLog.push(fullMessage);
   app.state.dayState.log.push(fullMessage);
-}
-
-function canSelectForDeal(app: AppRuntime): boolean {
-  return app.state.phase === RunPhase.DayProcess || app.state.phase === RunPhase.DaySell;
 }
 
 function getBaseActionDef(app: AppRuntime, actionId: string): BaseActionDef | undefined {
@@ -171,10 +168,7 @@ function getTagDef(app: AppRuntime, tagId: string): TagDef | null {
 }
 
 function getCommonBaseActionDisabledReason(app: AppRuntime, actionId: string, payload: BaseActionPayload): string | null {
-  if (app.state.phase !== RunPhase.DayProcess) {
-    return '请返回处理阶段后再操作。';
-  }
-
+  // 去阶段化：不再检查 DayProcess 阶段，仅校验是否选中了可加工的库存商品及资源是否足够。
   const product = getActionProduct(app, payload);
   if (!product) {
     return '请选择一个库存商品。';
@@ -547,10 +541,7 @@ function validateCardTarget(app: AppRuntime, cardDef: CardDef): string | null {
 
 export function canPlayCard(app: AppRuntime, cardInstanceId: string, payload?: unknown): CanPlayCardResult {
   void payload;
-  if (app.state.phase !== RunPhase.DayProcess) {
-    return { ok: false, reason: '请在处理阶段使用卡牌。' };
-  }
-
+  // 去阶段化：不再检查 DayProcess 阶段，仅校验手牌、资源、目标与卡牌条件。
   const cardInstance = findCardInstanceInHand(app.state.deckState, cardInstanceId);
   if (!cardInstance) {
     return { ok: false, reason: '该卡牌不在手牌中。' };
@@ -690,14 +681,7 @@ export function playCard(app: AppRuntime, cardInstanceId: string, payload?: unkn
 }
 
 export function selectProduct(app: AppRuntime, productId: string): ActionResult {
-  if (!canSelectForDeal(app)) {
-    return {
-      ok: false,
-      reason: 'invalid_phase',
-      message: '只能在处理阶段或出售阶段选择交易商品。',
-    };
-  }
-
+  // 去阶段化：随时可以选择库存商品用于加工 / 交易，只校验商品本身是否可交易。
   const product = getInventoryProductById(app, productId);
   if (!product) {
     return {
@@ -739,14 +723,7 @@ export function selectCustomerOrder(app: AppRuntime, orderId: string): void {
 }
 
 export function selectPricingMode(app: AppRuntime, pricingModeId: string): ActionResult {
-  if (!canSelectForDeal(app)) {
-    return {
-      ok: false,
-      reason: 'invalid_phase',
-      message: '只能在处理阶段或出售阶段选择定价方式。',
-    };
-  }
-
+  // 去阶段化：随时可以选择定价方式，盲盒价仍需商品存在未知信息。
   const pricingMode = app.index.pricingModesById.get(pricingModeId);
   if (!pricingMode) {
     return {
@@ -807,10 +784,7 @@ export function clearDealSelection(app: AppRuntime): ActionResult {
 }
 
 function getConfirmSellDisabledReason(app: AppRuntime): string | null {
-  if (app.state.phase !== RunPhase.DaySell || app.state.dayState.phase !== RunPhase.DaySell) {
-    return '当前阶段不是出售阶段。';
-  }
-
+  // 去阶段化：出售只校验商品 / 顾客 / 定价 / 预览是否齐备且可成交，不再检查 DaySell 阶段。
   const selectedProductId = app.state.dayState.selectedProductId;
   if (!selectedProductId) {
     return '未选择商品。';
@@ -957,14 +931,53 @@ export function finishRewardPhase(app: AppRuntime): ActionResult {
   return { ok: true, message: '结束收店，进入下一天。' };
 }
 
+/**
+ * 去阶段化：玩家点击牌堆 / 手牌区时抽取当天手牌，每天仅一次（drawnToday 限制）。
+ */
+export function drawHand(app: AppRuntime): ActionResult {
+  if (app.state.dayState.phaseFlags.drawnToday) {
+    return { ok: false, reason: '今日已抽过手牌。', message: '今日已抽过手牌。' };
+  }
+  drawDailyHand(app);
+  return { ok: true, message: '抽取当天经营手牌。' };
+}
+
+/**
+ * 去阶段化：开启收店的具体条件（而非阶段门槛）。
+ * 当天至少完成 dailyMinimumSaleCount 笔交易后才能收店。
+ */
+export function getOpenClosingDisabledReason(app: AppRuntime): string | null {
+  const minSale = app.configs.gameConfig.dailyMinimumSaleCount ?? 0;
+  if (app.state.dayState.soldProductCount < minSale) {
+    return `今日至少完成 ${minSale} 笔交易后才能收店。`;
+  }
+  return null;
+}
+
+/**
+ * 去阶段化：玩家点击保险柜时，若满足收店条件则生成收店奖励（rewardState），否则返回短提示。
+ */
+export function openClosing(app: AppRuntime): ActionResult {
+  if (app.state.dayState.rewardState) {
+    return { ok: true, message: '收店已开启。' };
+  }
+  const reason = getOpenClosingDisabledReason(app);
+  if (reason) {
+    return { ok: false, reason, message: reason };
+  }
+  ensureRewardState(app);
+  addActionLog(app, '开启收店，生成收店奖励。');
+  return { ok: true, message: '开启收店。' };
+}
+
 export function buyProduct(app: AppRuntime, productId: string): ActionResult {
   const product = getProductCandidateById(app, productId);
   const disabledReason = getBuyProductDisabledReason(app, product);
 
   if (disabledReason || !product) {
     const message = disabledReason ?? '商品不存在';
-    app.state.runLog.push(`[第 ${app.state.currentDay} 天][${app.state.phase}] 买入失败：${message}。`);
-    app.state.dayState.log.push(`[第 ${app.state.currentDay} 天][${app.state.phase}] 买入失败：${message}。`);
+    app.state.runLog.push(`[第 ${app.state.currentDay} 天] 买入失败：${message}。`);
+    app.state.dayState.log.push(`[第 ${app.state.currentDay} 天] 买入失败：${message}。`);
     return {
       ok: false,
       reason: message,
@@ -986,8 +999,8 @@ export function buyProduct(app: AppRuntime, productId: string): ActionResult {
     if (product.darkRiskIds.length > 0) {
       const refund = 10;
       app.state.cash += refund;
-      app.state.runLog.push(`[第 ${app.state.currentDay} 天][DAY_PURCHASE] 低价收割命中暗风险，返还 ${refund} 现金。`);
-      app.state.dayState.log.push(`[第 ${app.state.currentDay} 天][DAY_PURCHASE] 低价收割命中暗风险，返还 ${refund} 现金。`);
+      app.state.runLog.push(`[第 ${app.state.currentDay} 天] 低价收割命中暗风险，返还 ${refund} 现金。`);
+      app.state.dayState.log.push(`[第 ${app.state.currentDay} 天] 低价收割命中暗风险，返还 ${refund} 现金。`);
     }
     app.state.temporaryRunModifiers = app.state.temporaryRunModifiers.filter((modifier) => modifier.consumed < modifier.uses);
   }
@@ -998,8 +1011,8 @@ export function buyProduct(app: AppRuntime, productId: string): ActionResult {
   app.state.dayState.selectedProductId = product.id;
 
   const message = `买入【${product.displayName}】，花费 ${finalCost} 现金${discount > 0 ? `（已优惠 ${discount}）` : ''}。`;
-  app.state.runLog.push(`[第 ${app.state.currentDay} 天][DAY_PURCHASE] ${message}`);
-  app.state.dayState.log.push(`[第 ${app.state.currentDay} 天][DAY_PURCHASE] ${message}`);
+  app.state.runLog.push(`[第 ${app.state.currentDay} 天] ${message}`);
+  app.state.dayState.log.push(`[第 ${app.state.currentDay} 天] ${message}`);
 
   return {
     ok: true,

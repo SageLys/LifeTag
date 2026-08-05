@@ -323,7 +323,8 @@ function applyTemporaryInsurance(app: AppRuntime, reward: RewardOptionInstance, 
 }
 
 export function canChooseReward(app: AppRuntime, reward: RewardOptionInstance | null | undefined): CanChooseRewardResult {
-  if (app.state.phase !== RunPhase.DayReward) return { ok: false, reason: '当前不是收店阶段。' };
+  // 去阶段化：奖励只能在已开启收店（rewardState 已生成）后选择，不再依赖 DayReward 阶段。
+  if (!app.state.dayState.rewardState) return { ok: false, reason: '请先在保险柜开启收店。' };
   if (!reward) return { ok: false, reason: '奖励不存在。' };
   if (app.state.cash < reward.cost) return { ok: false, reason: `现金不足，需要 ${reward.cost} 现金。` };
   if (getRewardType(reward) === RewardType.AddPassive) {

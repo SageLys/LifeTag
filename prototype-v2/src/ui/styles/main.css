@@ -63,31 +63,30 @@ body {
 .chip-label { opacity: 0.85; font-size: 11px; font-weight: 500; }
 .chip-value { font-size: 13px; font-weight: 800; }
 
-.phase-badge {
-  background: rgba(255,255,255,0.25);
-  border-radius: 999px;
-  padding: 3px 10px;
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.btn-advance, .btn-next-day, .btn-debug {
+.btn-debug {
   background: rgba(255,255,255,0.2);
   color: #fff;
   border: 2px solid rgba(255,255,255,0.35);
   border-radius: 999px;
-  padding: 4px 12px;
+  padding: 4px 8px;
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.15s;
   white-space: nowrap;
 }
-.btn-advance:hover { background: rgba(255,255,255,0.32); }
-.btn-next-day { background: rgba(60,200,60,0.3); border-color: rgba(60,255,60,0.4); }
-.btn-next-day:hover { background: rgba(60,200,60,0.5); }
-.btn-debug { padding: 4px 8px; }
+.btn-debug:hover { background: rgba(255,255,255,0.32); }
+
+/* ── Run ended banner ── */
+.run-ended-banner {
+  background: #3a2a1a;
+  color: #f5d080;
+  text-align: center;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 8px;
+  flex-shrink: 0;
+}
 
 /* ── Main Layout (zone grid + optional side panel) ── */
 .zone-grid {
@@ -514,4 +513,166 @@ body {
   font-size: 11px;
   line-height: 1.6;
   white-space: pre-wrap;
+}
+
+/* ── Buy / action buttons (de-phased interactions) ── */
+.btn-buy {
+  margin-top: 4px;
+  width: 100%;
+  background: #5ec95e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 5px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.1s;
+}
+.btn-buy:hover { background: #4ab04a; }
+
+.base-action-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.base-action-btn {
+  flex: 1;
+  background: #ffe8d0;
+  border: 2px solid #f5a050;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #a05020;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.1s;
+}
+.base-action-btn:hover:not(:disabled) { background: #ffd6b0; }
+.base-action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.cutting-divider {
+  font-size: 12px;
+  font-weight: 700;
+  color: #888;
+  border-top: 1px dashed #d0c0a0;
+  padding-top: 8px;
+  margin-bottom: 8px;
+}
+
+.btn-use-card {
+  margin-top: 4px;
+  background: #8040c0;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+.btn-use-card:hover:not(:disabled) { background: #6830a0; }
+.btn-use-card:disabled { background: #ccc; cursor: not-allowed; }
+
+/* ── Deck pile in hand bar ── */
+.deck-pile {
+  flex-shrink: 0;
+  width: 56px;
+  height: 72px;
+  background: linear-gradient(160deg, #6a4a2a 0%, #4a2a10 100%);
+  border: 2px solid #c8a060;
+  border-radius: 8px;
+  color: #f5d080;
+  font-size: 26px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.1s;
+}
+.deck-pile:hover { transform: translateY(-4px); }
+.deck-count {
+  position: absolute;
+  bottom: 4px;
+  right: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #fff;
+}
+
+/* ── Closing / rewards ── */
+.panel-hint {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 12px;
+}
+.btn-open-closing, .btn-next-day, .btn-skip-bonus {
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: inherit;
+  margin-top: 10px;
+}
+.btn-open-closing { background: #70d060; color: #fff; }
+.btn-open-closing:hover { background: #5ab84a; }
+.btn-next-day { background: #e8523a; color: #fff; }
+.btn-next-day:hover { background: #c83828; }
+.btn-skip-bonus { background: #f0f0f0; color: #666; }
+.btn-skip-bonus:hover { background: #e0e0e0; }
+
+.reward-group { margin-bottom: 14px; }
+.reward-group-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #888;
+  margin-bottom: 6px;
+}
+.btn-claim-reward {
+  margin-top: 4px;
+  width: 100%;
+  background: #70d060;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 5px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: inherit;
+}
+.btn-claim-reward:hover:not(:disabled) { background: #5ab84a; }
+.btn-claim-reward:disabled { background: #ccc; cursor: not-allowed; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20,10,0,0.92);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  z-index: 80;
+  max-width: 80%;
+  text-align: center;
+  animation: toastFade 2.4s ease forwards;
+  pointer-events: none;
+}
+@keyframes toastFade {
+  0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  12% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
 }
